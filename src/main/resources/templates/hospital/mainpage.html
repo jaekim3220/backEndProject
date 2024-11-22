@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html 
+      xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<section layout:fragment="content" class="contentsd-flex justify-content-center">
+
+	<!-- section 영역 -->
+	<section class="contents d-flex">
+	    <!-- 좌측 메뉴 바 -->
+	    <!-- 
+	    리스트(list) 메뉴 3종 세트 : ul, li, a 태그
+	    리스트(list) 메뉴 클래스 4종 세트 : {nav, nav-fill(선택)} {nav-item}, {nav-link} (가로메뉴)
+	     -->
+	    <div class="bg-warning col-2 p-0">
+	        <div class="list-unstyled w-100 h-100 d-flex flex-column justify-content-around">
+	            <div><a href="#" class="btn btn-block btn-light">진료과목</a></div>
+	            <div><a href="#" class="btn btn-block btn-light">성형외과</a></div>
+	            <div><a href="#" class="btn btn-block btn-light">정형외과</a></div>
+	            <div><a href="#" class="btn btn-block btn-light">내과</a></div>
+	            <div><a href="#" class="btn btn-block btn-light">예약내역</a></div>
+	        </div>
+	    </div>
+	
+	    <!-- 병원 이미지 -->
+	    <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+	        <img src="/img/medical-1617364_1280.jpg" alt="병원 메인 이미지" class="main-img" width="450">
+	    </div>
+	</section>
+	
+</section>
+
+<th:block layout:fragment="script">
+    <script>
+    	
+    </script>
+</th:block>

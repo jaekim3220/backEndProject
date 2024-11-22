@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+/* header, footer 영역 */
+header, footer {
+    min-height:80px;
+}
+
+/* 중앙 contents class 영역 */
+.contents {
+    min-height: 450px; /* 화면 높이에서 헤더와 푸터 크기 제외 */
+}
+/* 진료과목, 예약내역 버튼 */
+.contents .btn:hover {
+    background-color: lightslategrey;
+}
+
+/* signUp section 영역 */
+.sign-up-box {
+	width:650px; 
+	background-color:#ebebeb; 
+	margin:20px; 
+	box-shadow:5px 5px 5px 5px #BDC0C0;
+}
+.sign-up-subject {
+	margin:20px; 
+	font-weight:bold;
+}
