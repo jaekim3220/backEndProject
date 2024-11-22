@@ -1,5 +1,10 @@
 server:
   port: 80
 spring:
-  thymeleaf:
-    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/medinfo_241121?characterEncoding=UTF-8
+    username: root
+    password: root
+mybatis:
+  mapper-locations: mappers/*Mapper.xml

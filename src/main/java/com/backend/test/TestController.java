@@ -1,11 +1,15 @@
 package com.backend.test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.backend.customer.mapper.CustomerMapper;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
@@ -22,6 +26,12 @@ Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 
 @Controller
 public class TestController {
+	
+	
+	// 어노테이션(Annotation)
+	@Autowired // DI(Dependency Injection) : 의존성 주입
+	private CustomerMapper customerMapper;
+	
 
 	@ResponseBody
 	@GetMapping("/test1")
@@ -52,5 +62,13 @@ public class TestController {
 	// http:localhost/test4
 	public String test4() {
 		return "test/test";
+	}
+	
+	
+	@ResponseBody
+	@GetMapping("/test5")
+	// http:localhost/test5
+	public List<Map<String, Object>> test5() {
+		return customerMapper.selectCustomerList();
 	}
 }
