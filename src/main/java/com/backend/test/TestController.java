@@ -33,4 +33,11 @@ public class TestController {
 		map.put("b", 222);
 		return map;
 	}
+	
+	
+	@GetMapping("/test4")
+	// http:localhost/test4
+	public String test4() {
+		return "test/test";
+	}
 }
