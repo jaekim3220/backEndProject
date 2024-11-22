@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html 
+      xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<!-- section 영역 : Layout 문법 사용 -->
+<section layout:fragment="content" class="contents d-flex justify-content-center">
+	
+	<div class="sign-up-box">
+		<h1 class="m-4 font-weight-bold">회원가입</h1>
+		
+		<!-- 
+		form 태그 3종 세트 : 
+		form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+		-->
+		<form id="signUpForm" method="post" action="/doctor/sign-up">
+			
+			<!-- ID 영역 -->
+			<span class="sign-up-subject">아이디</span>
+			<div class="d-flex ml-3 mt-3 w-100">
+				<input type="text" id="loginId" name="loginId" class="form-control col-8" placeholder="ID를 입력해주세요">
+				<button type="button" id="loginIdCheckBtn" class="btn btn-success">중복확인</button>
+			</div>
+			
+			<!-- ID 중복확인용 영역 - JS로 구현 -->
+			<div class="ml-3 mb-3">
+				<div id="idCheckLength" class="small text-danger d-none">ID를 4자 이상 입력해주세요.</div>
+				<div id="idCheckDuplicated" class="small text-danger d-none">이미 사용중인 ID입니다.</div>
+				<div id="idCheckOk" class="small text-success d-none">사용 가능한 ID 입니다.</div>
+			</div>
+			
+			<!-- 비밀번호 -->
+			<span class="sign-up-subject">비밀번호</span>
+			<div class="m-3 w-100">
+				<input type="password" id="password" name="password" class="form-control col-8" placeholder="비밀번호를 입력하세요">
+			</div>
+			
+			<!-- 비밀번호 확인 -->
+			<span class="sign-up-subject">비밀번호 확인</span>
+			<div class="m-3">
+				<input type="password" id="confirmPassword" name="confirmPassword" class="form-control col-8" placeholder="비밀번호를 입력하세요">
+			</div>
+			
+			<!-- 이름 입력 -->
+			<span class="sign-up-subject">성함</span>
+			<div class="m-3">
+				<input type="text" id="name" name="name" class="form-control col-8" placeholder="성함을 입력하세요">
+			</div>
+			
+			<!-- 이메일 입력 -->
+			<span class="sign-up-subject">이메일</span>
+			<div class="m-3">
+				<input type="text" id="email" name="email" class="form-control col-8" placeholder="이메일을 입력하세요">
+			</div>
+			
+			<!-- 진료 과목 선택 -->
+			<span class="sign-up-subject">진료과목</span>
+			<div>
+				<select class="depart-select m-3">
+				  <option selected>-- 진료 과목 --</option>
+				  <option value="plastic ">성형외과</option>
+				  <option value="orthopaedic">정형외과</option>
+				  <option value="intervention">내과</option>
+				</select>
+			</div>
+			<div class="m-3">
+				<input type="text" id="email" name="email" class="form-control col-8" placeholder="이메일을 입력하세요">
+			</div>
+			
+			
+			<!-- 취소 버튼 -->
+			<div class="d-flex justify-content-center m-3">
+				<div>
+					<a id="cancelBtn" class="btn btn-info" href="/hospital">취소하기</a>
+				</div>
+			
+				<!-- 가입 버튼 -->
+				<div>
+					<button type="submit" id="signUpBtn" class="btn btn-info">가입하기</button>
+				</div>
+			</div>
+
+			
+		</form>
+	</div>
+</section>
+
+
+<th:block layout:fragment="script">
+    <script>
+    </script>
+</th:block>
