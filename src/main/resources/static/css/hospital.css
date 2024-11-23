@@ -47,7 +47,7 @@ header, footer {
 }
 
 /* 의사 정보, 예약하기 영역 */
-.doctorInfoReserve-box {
+.doctorInfoReserve-box, .reserveCreate-box {
     min-height: 350px;
     background-color: #ebebeb;
     margin: 20px;
