@@ -26,3 +26,22 @@ header, footer {
 	margin:20px; 
 	font-weight:bold;
 }
+
+/* signIn section 영역 */
+.login-box {
+	width:550px;
+	height:300px;
+	background-color:#ebebeb; 
+	margin:20px;
+	box-shadow:5px 5px 5px 5px #BDC0C0;
+    display: flex; /* 내부 요소를 중앙 정렬하기 위해 flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+.login-content {
+    width: 75%; /* login-box의 75% 너비 */
+    margin: 0 auto; /* 수평 중앙 정렬 */
+}
+#loginBtn, .btn-block {
+    margin-top: 10px; /* 버튼 간 간격 추가 */
+}
