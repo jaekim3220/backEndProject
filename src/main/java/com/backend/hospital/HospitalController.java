@@ -2,6 +2,7 @@ package com.backend.hospital;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
@@ -17,6 +18,7 @@ Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 */
 
 @Controller
+@RequestMapping("/hospital")
 public class HospitalController {
 
 
@@ -24,7 +26,7 @@ public class HospitalController {
 	 * 병원 메인 화면
 	 * @return
 	 */
-	@GetMapping("/hospital")
+	@GetMapping("")
 	// http:localhost/hospital
 	public String hospital() {
 		return "hospital/mainpage";

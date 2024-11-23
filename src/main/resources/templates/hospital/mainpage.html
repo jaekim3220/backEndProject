@@ -15,10 +15,36 @@
 	     -->
 	    <div class="bg-warning col-2 p-0">
 	        <div class="list-unstyled w-100 h-100 d-flex flex-column justify-content-around">
-	            <div><a href="#" class="btn btn-block btn-light">진료과목</a></div>
-	            <div><a href="#" class="btn btn-block btn-light">성형외과</a></div>
-	            <div><a href="#" class="btn btn-block btn-light">정형외과</a></div>
-	            <div><a href="#" class="btn btn-block btn-light">내과</a></div>
+	            <!-- 진료과목 텍스트 -->
+	            <div><div class="text-center bg-light py-2 fw-bold">진료과목</div></div>
+	            
+	            <!-- 성형외과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
+	            <div>
+	                <a href="#cosmeticDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="cosmeticDoctorList">성형외과</a>
+	                <div id="cosmeticDoctorList" class="collapse">
+                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
+                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                </div>
+	            </div>
+	            
+	            <!-- 정형외과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
+	            <div>
+	                <a href="#orthopedicDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="orthopedicDoctorList">정형외과</a>
+	                <div id="orthopedicDoctorList" class="collapse">
+                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
+                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                </div>
+	            </div>
+	            
+	            <!-- 내과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
+	            <div>
+	                <a href="#internalDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="internalDoctorList">내과</a>
+	                <div id="internalDoctorList" class="collapse">
+                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
+                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                </div>
+	            </div>
+	            
 	            <div><a href="#" class="btn btn-block btn-light">예약내역</a></div>
 	        </div>
 	    </div>
@@ -32,7 +58,6 @@
 </section>
 
 <th:block layout:fragment="script">
-    <script>
-    	
-    </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+	</script>
 </th:block>
