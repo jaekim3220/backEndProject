@@ -26,4 +26,14 @@ public class DoctorController {
 	public String signUpView() {
 		return "doctor/doctorSignUp";
 	}
+	
+	
+	// 환자(고객) 로그인 화면
+	@GetMapping("/doctor/sign-in-view")
+	// http:localhost/doctor/sign-in-view
+	public String signInView() {
+		return "doctor/doctorSignIn";
+	}
+	
+	
 }

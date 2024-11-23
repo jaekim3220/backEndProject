@@ -30,4 +30,13 @@ public class PatientController {
 		return "patient/patientSignUp";
 	}
 	
+	
+	// 환자(고객) 로그인 화면
+	@GetMapping("/patient/sign-in-view")
+	// http:localhost/patient/sign-in-view
+	public String signInView() {
+		return "patient/patientSignIn";
+	}
+	
+	
 }

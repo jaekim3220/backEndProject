@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html 
+      xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<section layout:fragment="content" class="contents d-flex justify-content-center align-items-center">
+	<div class="login-box">
+		<h1 class="mb-4">로그인</h1>
+		
+		<!-- 
+		form 태그 3종 세트 : 
+		form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+		-->
+		<!-- 키보드 Enter키로 로그인이 될 수 있도록 form 태그를 만들어준다.(submit 타입의 버튼이 동작됨) -->
+		<form id="loginForm" action="/patient/sign-in" method="post">
+			
+			<!-- 아이디 -->
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text">아이디</span>
+				</div>
+				<input type="text" class="form-control" id="loginId" name="loginId">
+			</div>
+			
+			<!-- 비밀번호 -->
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<span class="input-group-text">비밀번호</span>
+				</div>
+				<input type="password" class="form-control" id="password" name="password">
+			</div>
+			
+			<!-- 로그인/회원가입 -->
+			<input type="submit" id="loginBtn" class="btn btn-block btn-warning" value="로그인">
+			<a class="btn btn-block btn-primary" href="/patient/sign-up-view">회원가입</a>
+		</form>
+	</div>
+</section>
+
+<th:block layout:fragment="script">
+    <script>
+    </script>
+</th:block>
