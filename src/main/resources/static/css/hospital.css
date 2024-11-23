@@ -45,3 +45,13 @@ header, footer {
 #loginBtn, .btn-block {
     margin-top: 10px; /* 버튼 간 간격 추가 */
 }
+
+/* 의사 정보, 예약하기 영역 */
+.doctorInfoReserve-box {
+    min-height: 350px;
+    background-color: #ebebeb;
+    margin: 20px;
+    display: flex; /* 내부 요소를 중앙 정렬하기 위해 flexbox 사용 */
+    justify-content: center; /* 내부 가로 중앙 정렬 */
+    align-items: center; /* 내부 세로 중앙 정렬 */
+}
