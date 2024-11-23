@@ -3,6 +3,7 @@
 /* header, footer 영역 */
 header, footer {
     min-height:80px;
+    background-color: 	#6495ED;
 }
 
 /* 중앙 contents class 영역 */
