@@ -46,8 +46,8 @@ header, footer {
     margin-top: 10px; /* 버튼 간 간격 추가 */
 }
 
-/* 의사 정보, 예약하기 영역 */
-.doctorInfoReserve-box, .reserveCreate-box {
+/* 의사 정보, 예약하기, 예약 상세 영역 */
+.doctorInfoReserve-box, .reserveCreate-box, .reserveDetail-box {
     min-height: 350px;
     background-color: #ebebeb;
     margin: 20px;

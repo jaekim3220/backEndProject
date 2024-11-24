@@ -37,7 +37,7 @@ public class HospitalController {
 	// 확인을 위한 임시 @GetMapping : 의사의 고유 id 값을 받아서 해당 의사 예약 페이지로 이동할 것
 	// /hospital/{doctors.id}/doctor-reserve-view
 	@GetMapping("/doctor-reserve-view")
-	// http:localhost/hospital
+	// http:localhost/hospital/doctor-reserve-view
 	public String doctorReserve() {
 		return "hospital/doctorReserve";
 	}

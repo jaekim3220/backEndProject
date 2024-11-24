@@ -68,4 +68,14 @@ public class PatientController {
 	}
 	
 	
+	// 예약 상세 페이지 화면
+	// /patient/{reservers.id}/reserve-detail
+	// 확인을 위한 임시 @GetMapping : 의사의 고유 id 값을 받아서 해당 의사 예약 페이지로 이동할 것
+	@GetMapping("/reserve-detail-view")
+	// localhost/patient/reserve-detail-view
+	public String reserveDetailView() {
+		return "patient/reserveDetail";
+	}
+	
+	
 }
