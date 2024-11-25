@@ -2,7 +2,9 @@ package com.backend.patient.bo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,13 @@ public class CustomerBO {
 	@Autowired // DI(Dependency Injection) : 필드를 사용한 의존성 주입
 	private CustomerRepository customerRepository;
 	
-	 
+	
+	// input : customerId
+	// output : CustomerEntity or null (단건)
+	// @GetMapping("/is-duplicate-id") - 아이디 중복 확인
+	public CustomerEntity getCustomerEntityByCustomerId(String customerId) {
+		return customerRepository.findByCustomerId(customerId); // 메서드 생성
+	}
+	
 	
 }

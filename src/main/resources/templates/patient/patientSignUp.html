@@ -25,7 +25,7 @@
 			
 			<!-- ID 중복확인용 영역 - JS로 구현 -->
 			<div class="ml-3 mb-3">
-				<div id="idCheckLength" class="small text-danger d-none">ID를 4자 이상 입력해주세요.</div>
+				<div id="idCheckLength" class="small text-danger d-none">ID를 6자 이상 입력해주세요.</div>
 				<div id="idCheckDuplicated" class="small text-danger d-none">이미 사용중인 ID입니다.</div>
 				<div id="idCheckOk" class="small text-success d-none">사용 가능한 ID 입니다.</div>
 			</div>
@@ -75,5 +75,63 @@
 
 <th:block layout:fragment="script">
     <script>
+    	
+    	$(document).ready(function() {
+    		
+    		// 환자 회원가입 페이지 `중복확인 버튼`
+    		$("#loginIdCheckBtn").on("click", function() {
+    			// alert("중복확인");
+    			
+    			// `중복확인 버튼` 클릭 시 로그인 아이디 관련 경고 문구 초기화
+				$("#idCheckLength").addClass("d-none");
+				$("#idCheckDuplicated").addClass("d-none");
+				$("#idCheckOk").addClass("d-none");
+				
+				// validation(parameter 확인)
+				// DB에 설정한 환자의 로그인 아이디 column과 동일하게 맞춤
+				let customerId = $("#loginId").val().trim();
+				// alert(loginId);
+				
+				// 로그인 아이디 길이 관련 경고문구 설정
+				if(customerId.length < 6) {
+					$("#idCheckLength").removeClass("d-none");
+					return;
+				}
+				
+				
+				// AJAX 요청
+				$.ajax({
+					// request
+					type:"GET", // type 생략 시 자동 GET
+					url:"/patient/is-duplicate-id",
+					data:{"customerId":customerId}, 
+					
+					// response
+					success:function(data) { // Dictionary 형태
+						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+						// => Dictionary 형식으로 변경
+						// 종복 확인 성공인데 중복인 경우: {"code":200, "is_duplicate_id":true}
+						// 종복 확인 성공인데 중복이 아닌 경우: {"code":200, "is_duplicate_id":false}
+						if (data.code == 200) { // 종복 확인 성공일 경우
+							if(data.is_duplicate_id) { // 중복인 경우가 true
+								// 중복일 경우 사용 불가 문구 활성화
+								$("#idCheckDuplicated").removeClass("d-none");
+							} else {
+								// 해당 환자 아이디 사용 가능 => 사용 가능 문구 활성화
+								$("#idCheckOk").removeClass("d-none");
+							}
+						}
+					}, 
+					error:function(e) {
+						alert("아이디 중복확인에 실패했습니다.");
+					}
+				}); // AJAX 요청 종료
+    			
+    			
+    		}); // 환자 회원가입 페이지 `중복확인 버튼` 종료
+    		
+    		
+    	});
+    	
     </script>
 </th:block>
