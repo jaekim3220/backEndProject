@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html 
+      xmlns:th="http://www.thymeleaf.org"
+     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
+	
+	<div class="w-50 patientStatus-box p-4 d-flex flex-column bg-light">
+		<!-- 페이지 설명 -->
+		<h2 class="text-center mb-4">금주 일정표</h2>
+			
+		<!-- FullCalendar를 사용하기 위한
+		JS의 FullCalendar Individual Plugins -->
+	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js'></script>
+	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
+    
+
+	    <script>
+	    	document.addEventListener('DOMContentLoaded', function() {
+	    		var calendarEl = document.getElementById('calendar');
+	    		var today = new Date(); // 오늘 날짜 추출
+	    		var todayFormatted = today.toISOString().split('T')[0]; // 'yyyy-MM-dd' 형식으로 포맷팅
+	    		var calendar = new FullCalendar.Calendar(calendarEl, {
+	    			initialView: 'dayGridWeek', // 기본 설정 : 1주일
+	    			locale: 'ko', // 한국어 설정
+	    			initialDate: today, // 달력의 시작 날짜 설정(시작 날짜를 오늘로 설정)
+	    			// 이벤트 데이터 (달력에 표시할 일정들)
+	    			events: [ // 달력에 표시할 내용
+	    				// 달력에 표시할 내용 형식
+	    				{
+                      		title: '메모제목', // 제목
+                      		start: '2024-11-29', // 날짜
+                      		sortIdx: 0, // 순서
+                  		},
+                  		{
+                      		title: '메모제목3', // 제목
+                      		start: '2024-11-24', // 날짜
+                      		sortIdx: 1, // 순서
+                  		},
+                                
+	    			],
+	    			eventOrder: 'sortIdx', // 이벤트 정렬 방식 (sortIdx 값을 기준으로 정렬)
+	    			headerToolbar: { // 달력 상단의 버튼과 툴바 설정
+	    				left: 'prev,next today',
+		            	center: '',
+		            	right: ''
+	    			},
+	    			buttonText: { // 버튼의 텍스트 설정
+	    				today: `금일 : ${todayFormatted}`,
+	    			},
+	    			eventDidMount: function(info) { // 이벤트가 화면에 표시될 때 추가 작업 정의
+	    				// 이벤트 날짜 가져오기
+	    				var eventDate = new Date(info.event.start); // 이벤트 시작 날짜
+	    				eventDate.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 초기화하여 날짜 비교
+	    				if (eventDate < today) { // 오늘 이전 날짜인지 확인
+	                        info.el.classList.add('bg-danger'); // 오늘 이전 날짜의 이벤트 배경 색상 변경
+	    				}
+	    			}
+		        });
+	        calendar.render(); // 설정한 달력을 화면에 렌더링(구현)
+	      });
+	    </script>
+	    
+	    <!-- FullCalendar 화면에 불러오기 -->
+	    <div class="">
+			<div id='calendar'></div>
+	    </div>
+		
+		
+	</div>
+	
+</section>
+
+<th:block layout:fragment="script">
+    <script>
+    </script>
+</th:block>

@@ -56,4 +56,13 @@ public class DoctorController {
 	}
 	
 	
+	// 의사 `일정표 화면`
+	// /doctor/{doctors.id}/week-plan-view
+	@GetMapping("/calendar-plan-view")
+	// localhost/doctor/calendar-plan-view
+	public String calendarPlanView() {
+		return "doctor/calendarPlan";
+	}
+	
+	
 }
