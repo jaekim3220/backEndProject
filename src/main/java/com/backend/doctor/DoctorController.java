@@ -47,4 +47,13 @@ public class DoctorController {
 	}
 	
 	
+	// 의사 `진료 현황 화면`
+	// /doctor/{doctors.id}/patient-status-view
+	@GetMapping("/patient-status-view")
+	// localhost/doctor/patient-status-view
+	public String patientStatusView() {
+		return "doctor/patientStatus";
+	}
+	
+	
 }
