@@ -19,7 +19,7 @@
 			<!-- ID 영역 -->
 			<span class="sign-up-subject">아이디</span>
 			<div class="d-flex ml-3 mt-3 w-100">
-				<input type="text" id="loginId" name="loginId" class="form-control col-8" placeholder="ID를 입력해주세요">
+				<input type="text" id="loginId" name="customerId" class="form-control col-8" placeholder="ID를 입력해주세요">
 				<button type="button" id="loginIdCheckBtn" class="btn btn-success">중복확인</button>
 			</div>
 			
@@ -190,6 +190,13 @@
 				if(!email.includes("@")) {
 					$("#emailFormCheck").removeClass("d-none");
 					return false; // submit일 경우 false
+				}
+				
+				// loginId 중복 확인 후 사용 가능 여부 확인
+				// #idCheckOk에 d-none이 있으면 alert
+				if($("#idCheckOk").hasClass("d-none")) {
+					alert("아이디 중복을 확인해주세요.");
+					return false;
 				}
 				
 				

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
 import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.repository.CustomerRepository;
@@ -77,11 +78,17 @@ public class PatientRestController {
 			@RequestParam("birthDate") String birthDate,
 			@RequestParam("email") String email) {
 		
+		
 		// parameter(비밀번호) 암호화 - breakPoint
 		
+		// 1. Salt(난수) 생성
+		String salt = EncryptUtils.generateSalt();
+		
+		// 2. 비밀번호 해싱
+		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
 		
 		// DB INSERT - breakPoint
-		CustomerEntity customer = customerBO.addCustomer(customerId, password, name, birthDate, email);
+		CustomerEntity customer = customerBO.addCustomer(customerId, hashedPassword, salt, name, birthDate, email);
 		
 		
 		// Response(JSON String) - breakPoint
