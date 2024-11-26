@@ -62,7 +62,7 @@ public class PatientRestController {
 		// {"code":200, "is_duplicate_id":true}
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
-		result.put("id_duplicated_id", isDuplicateId);
+		result.put("is_duplicate_id", isDuplicateId);
 		
 		return result;
 	}
