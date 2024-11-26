@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,38 @@ public class PatientRestController {
 		result.put("id_duplicated_id", isDuplicateId);
 		
 		return result;
+	}
+	
+	
+	// form 태그(post)를 사용한 회원가입 기능
+	@PostMapping("/sign-up")
+	public Map<String, Object> patientSignUp(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("customerId") String customerId,
+			@RequestParam("password") String password,
+			@RequestParam("name") String name,
+			@RequestParam("birthDate") String birthDate,
+			@RequestParam("email") String email) {
+		
+		// parameter(비밀번호) 암호화 - breakPoint
+		
+		
+		// DB INSERT - breakPoint
+		CustomerEntity customer = customerBO.addCustomer(customerId, password, name, birthDate, email);
+		
+		
+		// Response(JSON String) - breakPoint
+		// {"code" : 200, "result" : "회원가입 성공"}
+		Map<String, Object> result = new HashMap<>();
+		if(customer != null) {
+			result.put("code", 200);
+			result.put("result", "성공");
+		} else {
+			result.put("code", 500);
+			result.put("error_message", "회원가입에 실패했습니다.");
+		}
+		return result;
+		
 	}
 	
 }
