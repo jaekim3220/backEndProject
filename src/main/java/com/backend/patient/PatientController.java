@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpSession;
+
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
 */
@@ -83,6 +85,20 @@ public class PatientController {
 	// localhost/patient/reserve-detail-view
 	public String reserveDetailView() {
 		return "patient/reserveDetail";
+	}
+	
+	
+	// 로그아웃 기능 구현
+	// PatientRestController에서 생성한 session 초기화
+	@GetMapping("/sign-out")
+	public String patientSignOut(HttpSession session) {
+		// session 내용 초기화
+		session.removeAttribute("customerId");
+		session.removeAttribute("customerLoginId");
+		session.removeAttribute("customerName");
+		
+		// 로그인 페이지로 이동(redirect)
+		return "redirect:/patient/sign-in-view";
 	}
 	
 	

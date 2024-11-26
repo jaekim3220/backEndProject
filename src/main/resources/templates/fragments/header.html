@@ -2,14 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 
 	<th:block th:fragment="headerFragment">
-        <!-- Header -->
-        <header class="d-flex justify-content-between align-items-center text-white p-3">
-            <a id="signupBtn" class="btn btn-link text-white" href="/patient/sign-up-view">회원가입</a>
-            <a id="mainBtn" class="btn btn-link text-white" href="/hospital"><h1>VIP 병동</h1></a> 
-            <a id="loginBtn" class="btn btn-link text-white" href="/patient/sign-in-view">로그인</a>
-            <a id="logoutBtn" class="btn btn-link text-white d-none">로그아웃</a>
-        </header>
+	    <header class="d-flex justify-content-between align-items-center text-white p-3">
+	        <!-- 회원가입 버튼 (비로그인 상태) -->
+	        <a th:if="${session.customerName == null}" id="signupBtn" 
+	           class="btn btn-link text-white" href="/patient/sign-up-view">회원가입</a>
+	        
+	        <!-- VIP 병동 중앙 버튼 -->
+	        <a id="mainBtn" class="btn btn-link text-white mx-auto" href="/hospital">
+	            <h1>VIP 병동</h1>
+	        </a>
+	
+	        <!-- 로그인 버튼 (비로그인 상태) -->
+	        <a th:if="${session.customerName == null}" id="loginBtn" 
+	           class="btn btn-link text-white" href="/patient/sign-in-view">로그인</a>
+	        
+	        <!-- 로그아웃 버튼 (로그인 상태) -->
+	        <a th:if="${session.customerName != null}" id="logoutBtn" 
+	           class="btn btn-link text-white" href="/patient/sign-out">로그아웃</a>
+	    </header>
 	</th:block>
 
-	<!-- TODO : 해당 영역에 로그인/로그아웃 여부에 따라 JS문, AJAX문을 추가할 수 있는지 확인할것 -->
 </html>
