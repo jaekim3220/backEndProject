@@ -44,17 +44,20 @@ public class DoctorRestController {
 		
 		
 		// DB SELECT - breakpoint
-		Doctors doctors = doctorsBO.getDoctorsByDoctorId(doctorId);
-		
+		Map<String, Object> doctors = doctorsBO.getDoctorsByDoctorId(doctorId);
+
 		
 		// Response 응답값 - breakpoint
-		// 중복인 경우/아닌 경우 구분 (Console 창의 SQL문에서 입력 값 return 확인)
+		// 중복인 경우/아닌 경우 구분 (Console 창의 SQL문에서 입력 값 return 확인) - breakpoint
+        // 응답 값 처리 (doctorId가 존재하면 중복, 존재하지 않으면 중복 아님)
+        boolean isDuplicateId = (doctors != null && !doctors.isEmpty());
+		
 		// 응답값 => Map => JSON String
 		// 성공이면서 중복 : {"code":200, "is_duplicate_id":true}
 		// 성공이면서 중복아님 : {"code":200, "is_duplicate_id":false}
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
-		result.put("is_duplicate_id", false);
+		result.put("is_duplicate_id", isDuplicateId);
 		
 		return result;
 		

@@ -1,5 +1,8 @@
 package com.backend.doctor.bo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.backend.doctor.domain.Doctors;
@@ -25,9 +28,13 @@ public class DoctorsBO {
 	// input : doctorId
 	// output : Doctors or null (단건)
 	// @GetMapping("/is-duplicate-id") - 아이디 중복 확인
-	public Doctors getDoctorsByDoctorId(String doctorId) {
-		return doctorsMapper.selectDoctorsByDoctorId(doctorId);
-	}
+    public Map<String, Object> getDoctorsByDoctorId(String doctorId) {
+    	
+    	Map<String, Object> doctors = doctorsMapper.selectDoctorsByDoctorId(doctorId);
+    	
+    	// null 방지
+    	return doctors != null ? doctors : new HashMap<>(); // null 방지 처리
+    }
 	
 	
 }

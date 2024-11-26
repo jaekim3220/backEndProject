@@ -20,7 +20,9 @@ public interface DoctorsMapper {
 	// input : doctorId
 	// output : Doctors or null (단건)
 	// @GetMapping("/is-duplicate-id") - 아이디 중복 확인
-	public Doctors selectDoctorsByDoctorId(@Param("doctorId") String doctorId);
+	// XML에서 map으로 반환
+	// Doctors 객체를 받으려면 resultType="com.backend.doctor.domain.Doctors"로 설정
+	Map<String, Object> selectDoctorsByDoctorId(@Param("doctorId") String doctorId);
 	
 	
 }
