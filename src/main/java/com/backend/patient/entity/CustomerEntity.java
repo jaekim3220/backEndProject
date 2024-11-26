@@ -43,6 +43,8 @@ public class CustomerEntity {
 	
 	private String password;
 	
+	private String salt;
+	
 	private String name;
 	
 	@Column(name = "birthDate") // 카멜 케이스 설정

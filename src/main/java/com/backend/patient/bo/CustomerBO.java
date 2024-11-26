@@ -35,16 +35,17 @@ public class CustomerBO {
 	}
 	
 	
-	// input : 5개
+	// input : 5개 + salt
 	// output : CustomerEntity
 	// @PostMapping("/sign-up")
-	public CustomerEntity addCustomer(String customerId, String password,
+	public CustomerEntity addCustomer(String customerId, String password, String salt,
 			String name, String birthDate, String email) {
 		
 		return customerRepository.save(
 				CustomerEntity.builder()
 				.customerId(customerId)
 				.password(password)
+				.salt(salt)
 				.name(name)
 				.birthDate(birthDate)
 				.email(email)
