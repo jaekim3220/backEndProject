@@ -21,7 +21,7 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text">아이디</span>
 					</div>
-					<input type="text" class="form-control" id="loginId" name="loginId">
+					<input type="text" class="form-control" id="loginId" name="customerId">
 				</div>
 				
 				<!-- 비밀번호 -->
@@ -42,5 +42,67 @@
 
 <th:block layout:fragment="script">
     <script>
+    	
+    	$(document).ready(function() {
+    		
+    		// 로그인 submit
+    		// "submit"은 Form 형식
+    		$("#loginForm").on("submit", function(e) {
+    			e.preventDefault(); // submit 중단(페이지 이동 차단)
+    			
+    			//alert("로그인 버튼");
+    			
+    			
+    			// validation(parameter)
+    			let customerId = $("#loginId").val().trim();
+    			let password = $("#password").val().trim();
+    			// console.log(customerId);
+    			// console.log(password);
+    			
+    			
+    			// 공백처리
+    			if(!customerId) {
+    				alert("아이디를 입력해주세요.");
+    				return false; // submit일 경우 false
+    			}
+    			if(!password) {
+    				alert("비밀번호를 입력해주세요.");
+    				return false; // submit일 경우 false
+    			}
+    			
+    			
+				// 전송 1) : form 전송 => 다음 화면으로 이동(form은 restcontroller 불가)
+				/*$(this)[0].submit(); // 0번째 form을 전송*/
+				
+				// 전송 2) : AJAX 호출 => JSON 응답
+				// form 태그를 활용한 AJAX 호출
+				let url = $(this).attr("action"); // form 태그의 action 값을 추출
+				// console.log(url);
+				
+				// form 태그의 name 속성과 value를 직렬화(입력값 불러오기) 
+				// => request 파라미터로 구성, 직렬화 : 전송을 위한 정렬
+				let params = $(this).serialize(); 
+				// console.log(params);
+				
+				
+				// post 형식으로 JSON 구현
+				// AJAX가 아닌 $.post 사용
+				// $.ajax는 GET, POST 메서드 중 선택해 데이터를 요청 
+				// $.post()메서드는 HTTP POST 요청만을 사용하여 서버에서 데이터를 요청
+				$.post(url, params) // request 영역
+				.done(function(data) { // response - callback 영역
+					if(data.result == "로그인 성공") {
+						// 로그인 성공 시 예약 목록화면으로 이동
+						location.href = "/patient/reserve-list-view";
+					} else {
+						alert(data.error_message);
+					}
+				}); // post 형식으로 JSON 구현 종료
+				
+    			
+    		});
+    		
+    	});
+    	
     </script>
 </th:block>
