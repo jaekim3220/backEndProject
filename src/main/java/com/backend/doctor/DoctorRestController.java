@@ -142,9 +142,9 @@ public class DoctorRestController {
 		if(doctor != null) { // 입력한 doctorId, password 존재 : 로그인 성공
 			// 로그인 정보를 session에 저장
 			HttpSession session = request.getSession();
-	        session.setAttribute("doctorId", (String) doctor.get("id"));
-	        session.setAttribute("doctorLoginId", (String) doctor.get("doctorId"));
-	        session.setAttribute("doctorName", (String) doctor.get("name"));
+	        session.setAttribute("doctorId", doctor.get("id"));
+	        session.setAttribute("doctorLoginId", doctor.get("doctorId"));
+	        session.setAttribute("doctorName", doctor.get("name"));
 
 			result.put("code", 200);
 			result.put("result", "로그인 성공");
