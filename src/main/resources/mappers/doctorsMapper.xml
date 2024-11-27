@@ -17,7 +17,7 @@
 		FROM
 			`doctors`
 		WHERE
-			`doctorId = #{doctorId}
+			`doctorId` = #{doctorId}
 	</select>
 	
 </mapper>
