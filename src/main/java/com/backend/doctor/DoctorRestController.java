@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.backend.common.EncryptUtils;
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
 import com.backend.doctor.mapper.DoctorsMapper;
@@ -63,5 +65,51 @@ public class DoctorRestController {
 		
 		
 	}
+	
+	
+	// form 태그(post)를 사용한 회원가입 기능
+	@PostMapping("/sign-up")
+	// localhost/doctor/sign-up
+	public Map<String, Object> doctorSignUp(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("doctorId") String doctorId,
+			@RequestParam("password") String password,
+			@RequestParam("name") String name,
+			@RequestParam("birthDate") String birthDate,
+			@RequestParam("email") String email,
+			@RequestParam("department") Integer department) {
+		
+	    
+		// parameter(password) 암호화 - breakPoint
+		// SHA-2, Salt(난수) 알고리즘 결합
+		
+//		// 1. Salt(난수) 생성
+//		String salt = EncryptUtils.generateSalt();
+//		
+//		// 2. 비밀번호 해싱(Hashing)
+//		// 해싱된 번호와 Salt 난수 결합
+//		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
+		
+		
+		// DB INSERT - breakPoint
+		// boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, hashedPassword, salt, name, birthDate, email, department); 
+		
+		
+		// Response(JSON String) - breakPoint
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("result", "회원가입 성공");
+//		if(!isExist) {
+//			result.put("code", 200);
+//			result.put("result", "회원가입 성공");
+//		} else {
+//			result.put("code", 500);
+//			result.put("error_message", "회원가입에 실패했습니다.");
+//		}
+		
+		return result;
+		
+	}
+	
 	
 }

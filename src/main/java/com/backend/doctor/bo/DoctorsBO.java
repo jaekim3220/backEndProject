@@ -3,6 +3,7 @@ package com.backend.doctor.bo;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.backend.doctor.domain.Doctors;
@@ -35,6 +36,20 @@ public class DoctorsBO {
     	// null 방지
     	return doctors != null ? doctors : new HashMap<>(); // null 방지 처리
     }
+    
+    
+	// input : 7 parameters
+	// output : Doctors 객체
+	// @PostMapping("/sign-up") - 회원가입
+	public boolean addDoctorsSignUp(String doctorId, String password,
+			String salt, String name, String birthDate,
+			String email, Integer department) {
+		
+		int isExist = doctorsMapper.insertDoctorsSignUp(doctorId, password, salt, name, birthDate, email, department);
+		
+		return isExist > 0 ? true : false;
+		
+	}
 	
 	
 }

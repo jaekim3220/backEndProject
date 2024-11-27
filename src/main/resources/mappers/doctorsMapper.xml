@@ -20,4 +20,33 @@
 			`doctorId` = #{doctorId}
 	</select>
 	
+	
+	<!-- @PostMapping("/sign-up") -->
+	<insert id="insertDoctorsSignUp" parameterType="map">
+		INSERT INTO `doctors`
+		(
+			`doctorId`,
+			`password`,
+			`salt`,
+			`name`,
+			`birthDate`,
+			`email`,
+			`department`,
+			`createdAt`,
+			`updatedAt`
+		)
+		VALUES
+		(
+			#{doctorId},
+			#{password},
+			#{salt},
+			#{name},
+			#{birthDate},
+			#{email},
+			#{department},
+			NOW(),
+			NOW()
+		)
+	</insert>
+	
 </mapper>

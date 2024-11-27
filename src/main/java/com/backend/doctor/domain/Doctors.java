@@ -22,7 +22,7 @@ public class Doctors {
 	private String name;
 	private String birthDate;
 	private String email;
-	private String department;
+	private Integer department;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }

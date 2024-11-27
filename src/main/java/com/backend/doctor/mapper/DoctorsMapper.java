@@ -25,4 +25,19 @@ public interface DoctorsMapper {
 	Map<String, Object> selectDoctorsByDoctorId(@Param("doctorId") String doctorId);
 	
 	
+	// input : 7 parameters
+	// output : X
+	// @PostMapping("/sign-up") - 회원가입
+	public int insertDoctorsSignUp(
+			@Param("doctorId") String doctorId,
+			@Param("password") String password,
+			@Param("salt") String salt,
+			@Param("name") String name,
+			@Param("birthDate") String birthDate,
+			@Param("email") String email,
+			@Param("department") Integer department);
+	
+	
+	
+	
 }
