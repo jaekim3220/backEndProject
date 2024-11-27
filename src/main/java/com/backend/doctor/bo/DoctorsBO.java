@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import com.backend.common.EncryptUtils;
 import com.backend.doctor.domain.Doctors;
 import com.backend.doctor.mapper.DoctorsMapper;
 
@@ -51,5 +52,34 @@ public class DoctorsBO {
 		
 	}
 	
+	
+	// input : doctorId, password
+	// output : Doctors(Map 형식) or null (단건)
+	// @PostMapping("/sign-up") - 회원가입
+	public Map<String, Object> getDoctorsByDoctorIdAndPassword(String doctorId, String password) {
+		
+		/*
+		Salt 사용 방법 - BO에서
+		클라이언트에서 doctorId와 password를 송신
+		서버에서 doctorId로 해당 사용자의 salt 값을 DB에서 수령
+		서버는 수령한 password와 DB에서 가져온 salt를 사용해 비밀번호를 해싱하고, DB에 저장된 해시값과 비교하여 로그인 여부를 결정
+		*/
+		
+		// DB 조회 - breakpoint (입력한 로그인 아이디랑 동일한 row 추출) - breakpoint
+		Map<String, Object> doctors = doctorsMapper.selectDoctorsByDoctorId(doctorId);
+		
+        // doctorId가 존재하지 않으면 null 반환
+        if (doctors == null || doctors.isEmpty()) {
+            return null;
+        }
+        
+        // 저장된 Salt를 사용해 비밀번호 Hashing - breakpoint
+        String salt = (String) doctors.get("salt");
+        String hashedPassword = EncryptUtils.hashingSHA2(password, salt); 
+
+        // 해싱된 비밀번호로 사용자 조회
+        return doctorsMapper.selectDoctorsByDoctorIdAndPassword(doctorId, hashedPassword);
+		
+	}
 	
 }

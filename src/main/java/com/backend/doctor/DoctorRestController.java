@@ -14,6 +14,8 @@ import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
 import com.backend.doctor.mapper.DoctorsMapper;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -109,6 +111,50 @@ public class DoctorRestController {
 		
 		return result;
 		
+	}
+	
+	
+	// form 태그(post)를 사용한 로그인 기능
+	@PostMapping("/sign-in")
+	// http:localhost/doctor/sign-in
+	public Map<String, Object> doctorSignIn(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("doctorId") String doctorId,
+			@RequestParam("password") String password,
+			HttpServletRequest request) {
+		
+		/*
+		Salt 사용 방법 - BO에서
+		클라이언트에서 doctorId와 password를 송신
+		서버에서 doctorId로 해당 사용자의 salt 값을 DB에서 수령
+		서버는 수령한 password와 DB에서 가져온 salt를 사용해 비밀번호를 해싱하고, DB에 저장된 해시값과 비교하여 로그인 여부를 결정
+		*/
+		
+		
+		// DB SELECT - breakPoint
+		Map<String, Object> doctor = doctorsBO.getDoctorsByDoctorIdAndPassword(doctorId, password);
+		
+		
+		// Response(JSON String) - breakPoint
+		// "{"code" : 200, "result" : "로그인 성공"}"
+		Map<String, Object> result = new HashMap<>();
+		
+		if(doctor != null) { // 입력한 doctorId, password 존재 : 로그인 성공
+			// 로그인 정보를 session에 저장
+			HttpSession session = request.getSession();
+	        session.setAttribute("doctorId", (String) doctor.get("id"));
+	        session.setAttribute("doctorLoginId", (String) doctor.get("doctorId"));
+	        session.setAttribute("doctorName", (String) doctor.get("name"));
+
+			result.put("code", 200);
+			result.put("result", "로그인 성공");
+		} else { // 로그인 실패
+	        result.put("code", 403);
+	        result.put("error_message", "로그인 실패 : 아이디 또는 비밀번호를 확인하세요.");
+	    }
+		
+	    return result;
+	    
 	}
 	
 	

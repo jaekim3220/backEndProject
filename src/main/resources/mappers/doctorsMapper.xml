@@ -10,6 +10,7 @@
 			`id`,
 			`doctorId`,
 			`password`,
+			`salt`,
 			`name`,
 			`birthDate`,
 			`email`,
@@ -48,5 +49,24 @@
 			NOW()
 		)
 	</insert>
+	
+	
+	<!-- @PostMapping("/sign-in") -->
+	<select id="selectDoctorsByDoctorIdAndPassword" resultType="map">
+		SELECT
+			`id`,
+			`doctorId`,
+			`password`,
+			`salt`,
+			`name`,
+			`birthDate`,
+			`email`,
+			`department`
+		FROM
+			`doctors`
+		WHERE
+			`doctorId` = #{doctorId} AND
+			`password` = #{password}
+	</select>
 	
 </mapper>

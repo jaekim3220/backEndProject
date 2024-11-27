@@ -38,6 +38,11 @@ public interface DoctorsMapper {
 			@Param("department") Integer department);
 	
 	
+	// input : doctorId, password
+	// output : Doctors(Map 형식) or null (단건)
+	// @PostMapping("/sign-up") - 회원가입
+	Map<String, Object> selectDoctorsByDoctorIdAndPassword(@Param("doctorId") String doctorId, 
+			@Param("password") String password);
 	
 	
 }
