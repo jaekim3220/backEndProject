@@ -79,20 +79,20 @@ public class DoctorRestController {
 			@RequestParam("email") String email,
 			@RequestParam("department") Integer department) {
 		
-	    
+		
 		// parameter(password) 암호화 - breakPoint
 		// SHA-2, Salt(난수) 알고리즘 결합
 		
-//		// 1. Salt(난수) 생성
-//		String salt = EncryptUtils.generateSalt();
-//		
-//		// 2. 비밀번호 해싱(Hashing)
-//		// 해싱된 번호와 Salt 난수 결합
-//		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
+		// 1. Salt(난수) 생성
+		String salt = EncryptUtils.generateSalt();
+		
+		// 2. 비밀번호 해싱(Hashing)
+		// 해싱된 번호와 Salt 난수 결합
+		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
 		
 		
 		// DB INSERT - breakPoint
-		// boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, hashedPassword, salt, name, birthDate, email, department); 
+		boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, hashedPassword, salt, name, birthDate, email, department); 
 		
 		
 		// Response(JSON String) - breakPoint
