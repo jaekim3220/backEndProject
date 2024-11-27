@@ -59,17 +59,19 @@
 			<span class="sign-up-subject">이메일</span>
 			<div class="m-3">
 				<input type="text" id="email" name="email" class="form-control col-8" placeholder="이메일을 입력하세요">
+				<div id="emailFormCheck" class="small text-danger d-none">이메일 형식을 확인하세요.</div>
 			</div>
 			
 			<!-- 진료 과목 선택 -->
 			<span class="sign-up-subject m-3">진료과목</span>
 			<div>
-				<select class="depart-select m-3">
+				<select id="department" class="depart-select m-3">
 				  <option selected>-- 진료 과목 --</option>
-				  <option value="plastic ">성형외과</option>
-				  <option value="orthopaedic">정형외과</option>
-				  <option value="intervention">내과</option>
+				  <option value="1">성형외과</option>
+				  <option value="2">정형외과</option>
+				  <option value="3">내과</option>
 				</select>
+				<div id="departmentCheck" class="small text-danger d-none">진료 과목 선택하세요.</div>
 			</div>
 			
 			
@@ -151,6 +153,85 @@
     			
     			
     		}); // `중복확인` 버튼 클릭 종료
+    		
+    		
+    		// `가입하기` 버튼 클릭
+    		// "submit"은 form 형식이므로 `Btn` 대신 `Form` 사용
+    		$("#signUpForm").on("submit", function(e) {
+    			
+    			// 문구 초기화
+				$("#birthDateLength").addClass("d-none");
+				$("#emailFormCheck").addClass("d-none");
+				$("#departmentCheck").addClass("d-none");
+    			
+				e.preventDefault(); // submit 중단(페이지 이동 차단)
+    			
+    			// alert("가입하기");
+				
+				
+				// validation(parameter 확인)
+				// DB에 설정한 의사 로그인 데이터 column과 동일하게 맞춤
+				let doctorId = $("#loginId").val().trim();
+				let password = $("#password").val().trim();
+				let confirmPassword = $("#confirmPassword").val().trim();
+				let name = $("#name").val().trim();
+				let birthDate = $("#birthDate").val().trim();
+				let email = $("#email").val().trim();
+				let department = $("#department").val().trim();
+    			// console.log(department);
+    			
+    			
+    			// 공백처리
+    			if(!doctorId) {
+					alert("아이디를 입력하세요.");
+					return false; // submit일 경우 false
+				}
+				if(!password || !confirmPassword) {
+					alert("비밀번호를 입력하세요.");
+					return false; // submit일 경우 false
+				}
+				if(!name) {
+					alert("성함을 입력하세요.");
+					return false; // submit일 경우 false
+				}
+				if(!birthDate) {
+					alert("생년월일 8자를 입력하세요.");
+					return false; // submit일 경우 false
+				}
+				// 회원가입 생년월일 길이 관련 경고문구 설정
+				if(birthDate.length != 8) {
+					$("#birthDateLength").removeClass("d-none");
+					return;
+				}
+				if(!email) {
+					alert("이메일을 입력하세요.");
+					return false; // submit일 경우 false
+				}
+				if(!email.includes("@")) {
+					$("#emailFormCheck").removeClass("d-none");
+					return false; // submit일 경우 false
+				}
+				// 진료 과목 선택이 올바르지 않은 경우 경고 메시지 표시
+			    if (!department || isNaN(department)) {
+			        $("#departmentCheck").removeClass("d-none");
+			        return false; // submit일 경우 false
+			    }
+				
+				
+				// doctorId 중복 확인 후 사용 가능 여부 확인
+				// #idCheckOk에 d-none이 있으면 alert
+				if($("#idCheckOk").hasClass("d-none")) {
+					alert("아이디 중복을 확인해주세요.");
+					return false;
+				}
+				
+				// TODO : AJAX 요청
+				
+				
+    			
+    			
+    		});
+    		
     		
     	});
     	
