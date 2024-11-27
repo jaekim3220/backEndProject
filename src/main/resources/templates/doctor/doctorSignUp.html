@@ -225,12 +225,43 @@
 					return false;
 				}
 				
-				// TODO : AJAX 요청
+				
+				// 전송 1) : form 전송 => 다음 화면으로 이동(form은 restcontroller 불가)
+				/*$(this)[0].submit(); // 0번째 form을 전송*/
+				
+				// 전송 2) : AJAX 호출 => JSON 응답
+				// form 태그를 활용한 AJAX 호출
+				let url = $(this).attr("action");  // form 태그의 action 값(URL)을 추출
+				
+				// console.log(url);
+				
+				// form 태그의 name 속성과 value를 직렬화(입력값 불러오기)
+				// => request 파라미터로 구성, 직렬화 : 전송을 위한 정렬
+				let params = $(this).serialize(); // parameter 추출
+				
+				// console.log(params);
 				
 				
-    			
-    			
-    		});
+				// post 형식으로 JSON 구현
+				// AJAX가 아닌 $.post 사용
+				// $.ajax는 GET, POST 메서드 중 선택해 데이터를 요청 
+				// $.post()메서드는 HTTP POST 요청만을 사용하여 서버에서 데이터를 요청
+				$.post(url, params) // request 영역
+				.done(function(data) { // response - callback 영역
+					// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+					// => Dictionary 형식으로 변경
+					// 성공 : "{"code" : 200, "result" : "회원가입 성공"}"
+					// 실패 : "{"code" : 500, "error_message" : "회원가입에 실패했습니다"}"
+					if(data.code == 200) {
+						alert("선생님의 회원가입을 환영합니다. 로그인 해주세요.");
+						location.href = "/doctor/sign-in-view"; // 의사 로그인 화면으로 이동
+					} else { // 로직 상 실패
+						alert(data.error_message); // 에러 메시지 추출
+					}
+				}); // post 형식으로 JSON 구현 종료
+				
+				
+    		}); // `가입하기` 버튼 클릭 종료
     		
     		
     	});
