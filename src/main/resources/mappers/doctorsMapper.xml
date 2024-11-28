@@ -81,4 +81,14 @@
     		`id` ASC
 	</select>
 	
+	
+	<!-- @GetMapping("/{id}/doctor-reserve-view") : localhost//{doctors.id}/doctor-reserve-view -->
+	<select id="selectDoctorsById" resultType="com.backend.doctor.domain.Doctors">
+		SELECT * 
+		FROM 
+			`doctors`
+		WHERE
+			`id` = #{id}
+	</select>
+	
 </mapper>

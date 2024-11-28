@@ -52,5 +52,10 @@ public interface DoctorsMapper {
 	public List<Doctors> selectDoctorsByDepartment(@Param("department") Integer department);
 
 	
+	// input : doctors.id
+	// output : doctors.id에 맞는 의사 데이터
+	// @GetMapping("/{id}/doctor-reserve-view") : localhost//{doctors.id}/doctor-reserve-view
+	public Doctors selectDoctorsById(@Param("id") int id);
+	
 	
 }

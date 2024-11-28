@@ -94,4 +94,12 @@ public class DoctorsBO {
 	}
 	
 	
+	// input : doctors.id
+	// output : doctors.id에 맞는 의사 데이터
+	// @GetMapping("/{id}/doctor-reserve-view") : localhost//{doctors.id}/doctor-reserve-view
+	public Doctors getDoctorsById(int id) {
+		return doctorsMapper.selectDoctorsById(id);
+	}
+	
+	
 }
