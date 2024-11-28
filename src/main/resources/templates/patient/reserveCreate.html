@@ -19,10 +19,11 @@
 		<!-- 날짜 영역 -->
 		<div class="form-group d-flex flex-column w-100 mb-4">
 			<label for="visitDate">원하는 방문 날짜를 입력하세요.</label>
-			<input type="datetime-local" id="visitDate" name="meeting-time"
+			<input type="datetime-local" id="visitDate" name="visitDate"
 			th:value="${currentDate}"
 			th:min="${minDate}"
 			th:max="${maxDate}" />
+			<div id="visitDateCheck" class="small text-danger">금일은 예약이 불가능합니다.</div>
 		</div>
 		
 		<!-- 파일 선택 버튼 -->
@@ -32,7 +33,7 @@
 		
 		<div class="d-flex w-100 justify-content-around">
 			<a id="cancelReserveBtn" href="javascript:history.back()" class="btn btn-warning w-45 text-white">취소하기</a>
-			<a id="confirmReserveBtn" href="#" class="btn btn-warning w-45 text-white">예약 하기</a>
+			<a id="confirmReserveBtn" href="/patient/reserving" class="btn btn-warning w-45 text-white">예약 하기</a>
 		</div>
 		
 	</div>
@@ -41,5 +42,79 @@
 
 <th:block layout:fragment="script">
     <script>
+    	
+    	$(document).ready(function() {
+    		
+    		// 예약하기 버튼
+    		$("#confirmReserveBtn").on("click", function(e) {
+    			
+    			e.preventDefault(); // submit 중단(페이지 이동 차단)
+    			
+    			// alert("예약하기버튼");
+    			
+    			
+    			// validation(parameter)
+    			let title = $("#inputTitle").val().trim();
+    			let description = $("#inputContent").val().trim();
+    			let visitDate = $("#visitDate").val().trim();
+    			let fileName = $("#file").val().trim();
+
+    			// console.log(imagePath);
+    			// C:\fakepath\teddy-8783348_1280.jpg
+    			
+    			
+    			// 공백 처리
+    			if(!title) {
+    				alert("제목을 입력해주세요.");
+    				return;
+    			}
+    			if(!description) {
+    				alert("상태와 증상을 입력해주세요.");
+    				return;
+    			}
+                // visitDate가 오늘 날짜면 경고
+                // 1. 오늘 날짜 추출
+                let today = new Date().toISOString().slice(0, 10);  // "yyyy-mm-dd" 형식으로 변환
+                // 2. visitDate에서 `날짜`만 추출
+                let visitDateOnly = visitDate.split("T")[0];  // "yyyy-mm-dd" 형식으로 추출
+                // console.log("visitDateOnly : ", visitDateOnly);
+                // console.log("today : ", today);
+                // 3. 경고문구 출력
+                
+                if (visitDateOnly == today) {
+                    alert("내원 날짜를 선택해주세요. 금일은 예약이 불가합니다.");
+                    return;
+                }
+    			
+    			
+                // 파일명이 있으면 확장자 체크
+    			if(fileName) {
+    				// alert("파일이 있다.");
+    				// C:\fakepath\teddy-8783348_1280.jpg
+    				
+    				// 확장자 추출
+    				let extension = fileName.split(".").pop().toLowerCase();
+    				// console.log(extension);
+    				
+    				// 이미지 형시이 아닌 파일 선택 시 alert 띄운 후 파일 drop
+    				if($.inArray(extension, ["jpg", "png", "gif"]) == -1) {
+    					alert("이미지 파일만 업로드 할 수 있습니다.");
+    					$("#file").val(""); // 파일 초기화
+    					return;
+    				}
+    			} // 파일 확장자 완료
+    			
+    			
+    			// 이미지 저장(이미지는 form 태그 필수 => JS에서 구현 가능)
+    			// form을 JS에서 생성 후 AJAX에서 구현 가능
+    			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+                
+                
+    			
+    			
+    		}); // 예약하기 버튼 종료
+    		
+    	});
+    	
     </script>
 </th:block>
