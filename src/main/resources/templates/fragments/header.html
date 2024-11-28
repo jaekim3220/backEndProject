@@ -4,7 +4,7 @@
 	<th:block th:fragment="headerFragment">
 	    <header class="d-flex justify-content-between align-items-center text-white p-3">
 	        <!-- 회원가입 버튼 (비로그인 상태) -->
-	        <a th:if="${session.customerName == null}" id="signupBtn" 
+	        <a th:if="${session.customerName == null and session.doctorName == null}" id="signupBtn" 
 	           class="btn btn-link text-white" href="/patient/sign-up-view">회원가입</a>
 	        
 	        <!-- VIP 병동 중앙 버튼 -->
@@ -13,7 +13,7 @@
 	        </a>
 	
 	        <!-- 로그인 버튼 (비로그인 상태) -->
-	        <a th:if="${session.customerName == null}" id="loginBtn" 
+	        <a th:if="${session.customerName == null and session.doctorName == null}" id="loginBtn" 
 	           class="btn btn-link text-white" href="/patient/sign-in-view">로그인</a>
 	        
 	        <!-- 로그아웃 버튼 (로그인 상태) -->

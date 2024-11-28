@@ -8,14 +8,14 @@
             <div class="small">대표자 : 홍길동</div>
             <div class="small">Copyright XXXX, XXXX</div>
             
-            <a th:if="${session.doctorName == null}" id="doctSignUpBtn" 
+            <a th:if="${session.customerName == null and session.doctorName == null}" id="doctSignUpBtn" 
             class="btn btn-link text-white" href="/doctor/sign-up-view">직원 회원가입</a>
             
-            <a th:if="${session.doctorName == null}" id="doctSignInBtn" 
+            <a th:if="${session.customerName == null and session.doctorName == null}" id="doctSignInBtn" 
             class="btn btn-link text-white" href="/doctor/sign-in-view">직원 로그인</a>
             
             <a th:unless="${session.doctorName == null}" id="doctSignOutBtn" 
-            class="btn btn-link text-white" href="/doctor/sign-out>직원 로그아웃</a>
+            class="btn btn-link text-white" href="/doctor/sign-out">직원 로그아웃</a>
         </footer>
 	</th:block>
 
