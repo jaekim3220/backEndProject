@@ -3,10 +3,15 @@ package com.backend.patient;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.backend.doctor.bo.DoctorsBO;
+import com.backend.doctor.domain.Doctors;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -26,6 +31,10 @@ Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 @Controller
 @RequestMapping("/patient")
 public class PatientController {
+	
+	// 어노테이션(Annotation)
+	@Autowired // DI(Dependency Injection) : 필드를 사용한 의존성 주입
+	private DoctorsBO doctorsBO;
 
 	
 	/**
@@ -48,12 +57,17 @@ public class PatientController {
 	
 	
 	// 예약 페이지 화면
-	// /patient/{doctors.id}/reserve-view
-	// 확인을 위한 임시 @GetMapping : 의사의 고유 id 값을 받아서 해당 의사 예약 페이지로 이동할 것
-	@GetMapping("/reserve-view")
-	// http:localhost/patient/reserve-view
-	public String reserveCreateView(Model model) {
+	@GetMapping("/{id}/reserve-view")
+	// http:localhost/patient/{doctors.id}/reserve-view
+	// URL 중간에 parameter가 삽입되어 @RequestParam 대신 @PathVariable 사용
+	public String reserveCreateView(@PathVariable("id") int id, Model model) {
 
+		// 특정 의사 데이터 추출
+		Doctors doctor = doctorsBO.getDoctorsById(id);
+		
+		// Model에 데이터 삽입
+		model.addAttribute("doctorId", doctor.getId());
+		
 		// 달력에 금일, 최소/최대 예약 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
 	    LocalDateTime now = LocalDateTime.now();

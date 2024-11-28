@@ -21,7 +21,8 @@
         <!-- 예약하기 버튼 -->
         <div class="text-center w-75">
         	<!-- href = "/patient/{doctors.id}/reserve-view" -->
-            <a id="reservingBtn" class="btn btn-warning text-white px-4 py-2 w-100" href="#">예약하기</a>
+            <a id="reservingCheck" class="btn btn-warning text-white px-4 py-2 w-100" th:if="${session.customerName == null and session.doctorName == null}" href="/patient/sign-in-view">예약은 로그인 후 가능합니다.</a>
+            <a id="reservingBtn" class="btn btn-warning text-white px-4 py-2 w-100" th:if="${session.customerName != null or session.doctorName != null}" th:href="@{'/patient/' + ${doctorId} + '/reserve-view'}">예약하기</a>
         </div>
         
 	</div>

@@ -67,7 +67,7 @@ public class HospitalController {
 		Doctors doctor = doctorsBO.getDoctorsById(id);
 		
 		// Model에 데이터 삽입
-		model.addAttribute("doctor.id", doctor.getId());
+		model.addAttribute("doctorId", doctor.getId());
 		
 		return "hospital/doctorReserve";
 	}
