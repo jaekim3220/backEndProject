@@ -69,4 +69,16 @@
 			`password` = #{password}
 	</select>
 	
+	
+	<!-- @GetMapping("") : localhost/hospital -->
+	<select id="selectDoctorsByDepartment" resultType="com.backend.doctor.domain.Doctors">
+		SELECT * 
+		FROM 
+			`doctors`
+		WHERE
+			`department` = #{department}
+		ORDER BY
+    		`id` ASC
+	</select>
+	
 </mapper>

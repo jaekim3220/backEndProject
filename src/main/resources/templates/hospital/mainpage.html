@@ -21,27 +21,27 @@
 	            <!-- 성형외과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
 	            <div>
 	                <a href="#cosmeticDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="cosmeticDoctorList">성형외과</a>
-	                <div id="cosmeticDoctorList" class="collapse">
-                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
-                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                <div th:each="cosmeticDdoctor : ${cosmeticDoctors}" id="cosmeticDoctorList" class="collapse">
+	                	<!-- session이 아닌 Model에 데이터를 저장해서 진행 -->
+                        <a th:href="@{'/hospital/' + ${cosmeticDdoctor.id} + '/doctor-reserve-view'}"  class="btn btn-secondary w-100 my-2" th:text="${cosmeticDdoctor.name}">의사 1</a>
 	                </div>
 	            </div>
 	            
 	            <!-- 정형외과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
 	            <div>
 	                <a href="#orthopedicDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="orthopedicDoctorList">정형외과</a>
-	                <div id="orthopedicDoctorList" class="collapse">
-                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
-                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                <div th:each="orthopedicDoctor : ${orthopedicDoctors}" id="orthopedicDoctorList" class="collapse">
+	                	<!-- session이 아닌 Model에 데이터를 저장해서 진행 -->
+                        <a th:href="@{'/hospital/' + ${orthopedicDoctor.id} + '/doctor-reserve-view'}"  class="btn btn-secondary w-100 my-2" th:text="${orthopedicDoctor.name}">의사 1</a>
 	                </div>
 	            </div>
 	            
 	            <!-- 내과 버튼, 클릭 시 의사 목록 펼쳐짐 -->
 	            <div>
 	                <a href="#internalDoctorList" class="btn btn-block btn-light" data-bs-toggle="collapse" aria-expanded="false" aria-controls="internalDoctorList">내과</a>
-	                <div id="internalDoctorList" class="collapse">
-                        <a href="#" class="btn btn-secondary w-100 my-2">의사 1</a>
-                        <a href="#" class="btn btn-secondary w-100 mb-2">의사 2</a>
+	                <div th:each="internalDoctor : ${internalDoctors}" id="internalDoctorList" class="collapse">
+	                	<!-- session이 아닌 Model에 데이터를 저장해서 진행 -->
+                        <a th:href="@{'/hospital/' + ${internalDoctor.id} + '/doctor-reserve-view'}"  class="btn btn-secondary w-100 my-2" th:text="${internalDoctor.name}">의사 1</a>
 	                </div>
 	            </div>
 	            

@@ -1,5 +1,6 @@
 package com.backend.doctor.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -43,6 +44,13 @@ public interface DoctorsMapper {
 	// @PostMapping("/sign-up") - 회원가입
 	Map<String, Object> selectDoctorsByDoctorIdAndPassword(@Param("doctorId") String doctorId, 
 			@Param("password") String password);
+	
+	
+	// input : department
+	// output : 부서별 의사 목록
+	// @GetMapping("") : localhost/hospital - 부서별 의사 목록
+	public List<Doctors> selectDoctorsByDepartment(@Param("department") Integer department);
+
 	
 	
 }

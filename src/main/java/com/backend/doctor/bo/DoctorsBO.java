@@ -1,6 +1,7 @@
 package com.backend.doctor.bo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -83,5 +84,14 @@ public class DoctorsBO {
         return doctorsMapper.selectDoctorsByDoctorIdAndPassword(doctorId, hashedPassword);
 		
 	}
+	
+	
+	// input : department
+	// output : 부서별 의사 목록
+	// @GetMapping("") : localhost/hospital - 부서별 의사 목록
+	public List<Doctors> getDoctorsByDepartment(Integer department) {
+		return doctorsMapper.selectDoctorsByDepartment(department);
+	}
+	
 	
 }
