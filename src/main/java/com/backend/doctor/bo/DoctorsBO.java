@@ -46,8 +46,10 @@ public class DoctorsBO {
 			String salt, String name, String birthDate,
 			String email, Integer department) {
 		
+		// DB INSERT 성공 시 1(영향을 받은 행 수) 반환
 		int isExist = doctorsMapper.insertDoctorsSignUp(doctorId, password, salt, name, birthDate, email, department);
 		
+		// DB INSERT 성공 시 1 => true
 		return isExist > 0 ? true : false;
 		
 	}

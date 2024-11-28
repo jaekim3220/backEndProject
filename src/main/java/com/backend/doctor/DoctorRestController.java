@@ -94,6 +94,7 @@ public class DoctorRestController {
 		
 		
 		// DB INSERT - breakPoint
+		// DoctorsBO에서 DB INSERT 성공 시 1(영향을 받은 행 수) 반환 => true 반환함
 		boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, hashedPassword, salt, name, birthDate, email, department); 
 		
 		
@@ -101,7 +102,7 @@ public class DoctorRestController {
 		Map<String, Object> result = new HashMap<>();
 //		result.put("code", 200);
 //		result.put("result", "회원가입 성공");
-		if(!isExist) {
+		if(isExist) {
 			result.put("code", 200);
 			result.put("result", "회원가입 성공");
 		} else {
