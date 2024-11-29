@@ -36,6 +36,8 @@
 			<a id="confirmReserveBtn" href="/patient/reserving" class="btn btn-warning w-45 text-white">예약 하기</a>
 		</div>
 		
+		<input type="hidden" id="doctorId" th:value="${doctorId}">
+		
 	</div>
 	
 </section>
@@ -58,6 +60,8 @@
     			let description = $("#inputContent").val().trim();
     			let visitDate = $("#visitDate").val().trim();
     			let fileName = $("#file").val().trim();
+    			// 의사 아이디 `doctorNum` 추가
+    			let doctorNum = $("#doctorId").val().trim();
 
     			// console.log(imagePath);
     			// C:\fakepath\teddy-8783348_1280.jpg
@@ -108,8 +112,53 @@
     			// 이미지 저장(이미지는 form 태그 필수 => JS에서 구현 가능)
     			// form을 JS에서 생성 후 AJAX에서 구현 가능
     			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
-                
-                
+    			let formData = new FormData(); // form 데이터 생성
+    			
+    			// 의사 고유 번호 데이터 삽입
+    			formData.append("doctorNum", doctorNum);
+    			// 제목 데이터 삽입
+    			formData.append("title", title ); // requestParameter 이름 + form 태그의 name
+    			// 내용 데이터 삽입
+    			formData.append("description", description);
+    			// 날짜 데이터 삽입
+    			formData.append("visitDate", visitDate);
+    			// 이미지 데이터 삽입
+    			formData.append("file", $("#file")[0].files[0]); // 다중 파일의 경우 배열 처리 후 진행
+    			
+    			/* formData.forEach((value, key) => {
+    			    console.log(`${key} : ${value}`);
+    			}); */
+    			
+    			
+    			// AJAX 요청
+    			// formData 사용
+    			$.ajax({
+    				// request
+    				type:"POST", // 용량이 큰 text, img 파일
+    				url:"/patient/reserving",
+    				data:formData, // json, key-value, formData
+    				processData:false, // 파일 업로드 필수 설정(form)
+    				contentType:false, // 파일 업로드 필수 설정(form)
+    				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩
+    				
+    				// response
+    				success:function(data) {
+    					// 성공일 때 alert 후 예약 목록 화면으로 이동
+    					if (data.code == 200) { // Dictionary 형태
+    						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+    						// => Dictionary 형식으로 변경
+    						// "{"code" : 200, "result" : "예약 신청 성공"}"
+    						alert("예약 신청이 완료되었습니다. 잠시만 기다려주세요.");
+    						location.href = "/patient/reserve-list-view";
+    					} else {
+    						alert(data.error_message);
+    					}
+    				}, // 성공일 경우
+    				error:function(e) {
+    					alert("원하시는 날짜에 예약을 실패했습니다.");
+    				}
+    				
+    			}); // AJAX 요청 종료
     			
     			
     		}); // 예약하기 버튼 종료
