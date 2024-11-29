@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
@@ -163,7 +164,7 @@ public class PatientRestController {
 			@RequestParam("description") String description,
 			@RequestParam("visitDate") String visitDate,
 			// 비필수 파라미터 불러오기2 : 기본값 설정 (추천)
-			@RequestParam(value = "imagePath", required = false)  String imagePath,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpSession session) {
 		
 		
@@ -175,7 +176,7 @@ public class PatientRestController {
 		
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
-		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, imagePath, customerLoginId, null);
+		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, description, visitDate, file);
 		
 		
 		// Response(응답값) - breakpoint
