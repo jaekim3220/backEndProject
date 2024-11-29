@@ -28,14 +28,14 @@ public class ReserversBO {
 	// input : 
 	// output : int(성공한 행의 개수)
 	// @PostMapping("/reserving")
-	public int addPatientReserve(int customerId, int doctorNum, String title, 
+	public int addPatientReserve(int customerId, String customerLoginId, int doctorNum, String title, 
 			String description, String visitDate, MultipartFile file) {
 		
 		
 		// 이미지 파일 저장 선택 - breakpoint
 		String imagePath = null;
-		if(file == null) { // 이미지 파일 존재
-			imagePath = fileManagerService.uploadFile(file, customerId);  // 파일이 있는 경우에만 파일 저장
+		if(file != null) { // 이미지 파일 존재
+			imagePath = fileManagerService.uploadFile(file, customerLoginId);  // 파일이 있는 경우에만 파일 저장
 		}
 		
 		

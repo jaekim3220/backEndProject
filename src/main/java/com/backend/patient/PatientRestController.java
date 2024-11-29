@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
+import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.entity.CustomerEntity;
+import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +41,9 @@ public class PatientRestController {
 	// 어노테이션(Annotation)
 	@Autowired // DI(Dependency Injection) : 필드를 사용한 의존성 주입
 	private CustomerBO customerBO;
+	
+	@Autowired
+	private ReserversBO reserversBO;
 	
 	// 아이디 중복 확인
 	// 단순한 select문으로 JPA(Object Relational Mapping) 사용
@@ -146,7 +151,49 @@ public class PatientRestController {
 	    }
 	    return result;
 		
-		
 	}
+	
+	
+	// 환자 예약
+	@PostMapping("/reserving")
+	public Map<String, Object> patientCreateReserve(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("doctorNum") int doctorNum,
+			@RequestParam("title") String title,
+			@RequestParam("description") String description,
+			@RequestParam("visitDate") String visitDate,
+			// 비필수 파라미터 불러오기2 : 기본값 설정 (추천)
+			@RequestParam(value = "imagePath", required = false)  String imagePath,
+			HttpSession session) {
+		
+		
+		// 고객 고유 번호, 로그인 아이디 추출(비로그인 방지) - breakpoint
+		// session => customerId(DB), customerLoginId(BD)
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		int customerId = (int) session.getAttribute("customerId"); // customer.id
+		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
+		
+		
+		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
+		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, imagePath, customerLoginId, null);
+		
+		
+		// Response(응답값) - breakpoint
+		// Dictionary 형태
+		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+		// => Dictionary 형식으로 변경
+		// "{"code" : 200, "result" : "예약 신청 성공"}"
+		Map<String, Object> result = new HashMap<>();
+		if(rowCount > 0) {
+			result.put("code", 200);
+			result.put("result", "예약 신청 성공");
+		} else {
+			result.put("code", 500);
+			result.put("error_message", "예약 신청에 실패했습니다. 관리자에게 문의하세요.");
+		}
+		
+		return result;
+	}
+	
 	
 }

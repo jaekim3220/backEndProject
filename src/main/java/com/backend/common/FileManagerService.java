@@ -25,12 +25,12 @@ public class FileManagerService {
 	// 메서드 생성
 	// input : MultipartFile, customerLoginId => customerLoginId로 폴더, 파일 생성
 	// output : String(이미지 경로)
-	public String uploadFile(MultipartFile file, int customerId) {
+	public String uploadFile(MultipartFile file, String customerLoginId) {
 		
 		// 폴더(directory) + 이미지 저장 경로 생성 - breakpoint
 		// 예 : aaaa_17237482234/sun.png
 		// 이미지 저장 경로(폴더) 생성 설정
-		String directoryName = customerId + "_" + System.currentTimeMillis(); // 밀리 초까지 계산 - aaaa_17237482234
+		String directoryName = customerLoginId + "_" + System.currentTimeMillis(); // 밀리 초까지 계산 - aaaa_17237482234
 		String filePath = FILE_UPLOAD_PATH + directoryName + "/";
 		
 		
@@ -48,8 +48,9 @@ public class FileManagerService {
 			// ★★★★★ 한글이 들어간 이미지는 업로드 불가 => 영문자 이미지 사용 ★★★★★
 			Path path = Paths.get(filePath + file.getOriginalFilename()); // 어느 경로에 어느 이름으로 넣을 것인지 지정
 			Files.write(path, bytes); // 설정한 path에 bytes 데이터(파일) 추가
+	        log.info("파일 업로드 성공: " + path.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+	        log.error("파일 업로드 실패: ", e);
 			return null; // 이미지 업로드 시 실패하면 결로를 null로 return해 DB INSERT를 정상적으로 진행
 		}
 		
