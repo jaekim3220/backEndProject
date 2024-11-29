@@ -49,7 +49,7 @@ public class ReserversBO {
                 .description(description)
                 .visitDate(visitDate)
                 .imagePath(imagePath)
-                .status("대기중")
+                .status("예약대기")
                 .build();
         
         // DB INSERT - breakpoint
