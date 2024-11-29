@@ -8,6 +8,7 @@ import com.backend.patient.entity.ReserversEntity;
 import com.backend.patient.repository.ReserversRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper, XML) <--> DB영역 
@@ -15,6 +16,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 
 // Service(BO)영역
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReserversBO {
@@ -39,20 +41,26 @@ public class ReserversBO {
 		}
 		
 		
-		// ReserversEntity 객체 생성 및 DB INSERT - breakpoint
-		ReserversEntity savedEntity = reserversRepository.save(
-				ReserversEntity.builder()
-				.customerId(customerId)
-				.doctorNum(doctorNum)
-				.title(title)
-				.description(description)
-				.visitDate(visitDate)
-				.imagePath(imagePath)
-				.condition(null)
-				.build());
-		
-		// 저장된 Entity의 row(id) 반환 - breakpoint
-		return savedEntity != null ? 1 : 0; // 저장된 경우 1 반환, 실패 시 0 반환
+        // ReserversEntity 객체 생성 - breakpoint
+        ReserversEntity reserving = ReserversEntity.builder()
+                .customerId(customerId)
+                .doctorNum(doctorNum)
+                .title(title)
+                .description(description)
+                .visitDate(visitDate)
+                .imagePath(imagePath)
+                .status("대기중")
+                .build();
+        
+        // DB INSERT - breakpoint
+        try {
+            ReserversEntity savedEntity = reserversRepository.save(reserving);
+            return savedEntity != null ? 1 : 0; // 저장된 경우 1 반환, 실패 시 0 반환
+        } catch (Exception e) {
+            // e.printStackTrace();
+            log.error("[!!!!!DB INSERT 실패!!!!!] : ", e);
+            return 0;
+        }
 	}
 	
 }

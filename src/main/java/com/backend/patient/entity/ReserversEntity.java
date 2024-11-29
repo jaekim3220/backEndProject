@@ -53,7 +53,8 @@ public class ReserversEntity {
 	@Column(name = "imagePath") // 카멜 케이스 설정
 	private String imagePath;
 	
-	private String condition;
+	@Column(name = "status", nullable = true) // 명시적으로 nullable 설정
+	private String status;
 	
 	@CreationTimestamp // 값이 null 이어도 insert 되는 시간으로 설정
 	@Column(name = "createdAt") // 카멜 케이스 설정
