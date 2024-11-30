@@ -6,7 +6,7 @@
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
 	
-	<div class="w-50 reserveList-box p-4 d-flex flex-column">
+	<div class="w-75 reserveList-box p-4 d-flex flex-column">
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">예약 목록</h2>
 		
@@ -24,13 +24,14 @@
 			</thead>
 			
 			<tbody>
-				<tr>
-					<td><a href="#" id="reserveDepart">진료과목</a></td>
-					<td><a href="#" id="reserveTitle">제목</a></td>
-					<td>내용</td>
-					<td>방문날짜</td>
-					<td>신청날짜</td>
-					<td>예약상태</td>
+				<tr  th:each="reserves : ${reserveList}">
+					<!-- [[${reserves}]] -->
+					<td><a href="#" id="reserveDepart" th:text="${reserves.doctorNum}">진료과목</a></td>
+					<td><a href="#" id="reserveTitle" th:text="${reserves.title}">제목</a></td>
+					<td th:text="${reserves.description}">내용</td>
+					<td th:text="${reserves.visitDate}">방문날짜</td>
+					<td th:text="${reserves.updatedAt}">신청날짜</td>
+					<td th:text="${reserves.status}">예약상태</td>
 				</tr>
 			</tbody>
 		</table>

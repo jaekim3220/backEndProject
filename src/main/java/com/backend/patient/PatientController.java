@@ -2,6 +2,7 @@ package com.backend.patient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
+import com.backend.patient.bo.ReserversBO;
+import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -35,6 +38,9 @@ public class PatientController {
 	// 어노테이션(Annotation)
 	@Autowired // DI(Dependency Injection) : 필드를 사용한 의존성 주입
 	private DoctorsBO doctorsBO;
+	
+	@Autowired
+	private ReserversBO reserversBO;
 
 	
 	/**
@@ -87,7 +93,24 @@ public class PatientController {
 	// 예약 목록 페이지 화면
 	@GetMapping("/reserve-list-view")
 	// localhost/patient/reserve-list-view
-	public String reserveListView() {
+	public String reserveListView(Model model, HttpSession session) {
+		
+		// 로그인 여부 확인(권한 검사) - breakpoint
+		Integer customerId = (Integer) session.getAttribute("customerId");
+		if(customerId == null) {
+			// 로그인 페이지로 이동
+			return "redirect:/patient/sign-in-view";
+		}
+		
+		
+		// DB SELECT => 본인(로그인한 사람)이 쓴 글을 session을 통해 수령 - breakpoint
+		 List<ReserversEntity> reserveList = reserversBO.getreserveListBycustomerId(customerId);
+		
+		
+		// Model에 데이터 삽입 - breakpoint
+		model.addAttribute("reserveList", reserveList);
+		
+		
 		return "patient/reserveList";
 	}
 	

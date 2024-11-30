@@ -1,6 +1,10 @@
 package com.backend.patient.bo;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.FileManagerService;
@@ -61,6 +65,27 @@ public class ReserversBO {
             log.error("[!!!!!DB INSERT 실패!!!!!] : ", e);
             return 0;
         }
+	}
+	
+	
+	// input : customerId(int)
+	// output : List<ReserversEntity>
+	// @GetMapping("/reserve-list-view")
+	public List<ReserversEntity> getreserveListBycustomerId(
+			@Param("customerId") int customerId) {
+		
+		
+		// DB SELECT - breakpoint
+		List<ReserversEntity> reserveList = reserversRepository.findByCustomerId(customerId);
+        
+        if (reserveList.isEmpty()) {
+            log.info("!!!!!예약 목록 없음!!!!! : {}", customerId);
+        } else {
+            log.info("!!!!!예약 목록 존재!!!!! : {}개", reserveList.size());
+        }
+        
+        
+        return reserveList;
 	}
 	
 }
