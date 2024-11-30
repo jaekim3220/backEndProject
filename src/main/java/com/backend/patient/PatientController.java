@@ -18,7 +18,9 @@ import com.backend.doctor.domain.Doctors;
 import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.entity.ReserversEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
@@ -33,6 +35,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 */
 
+@Slf4j
 @Controller
 @RequestMapping("/patient")
 public class PatientController {
@@ -96,8 +99,20 @@ public class PatientController {
 	@GetMapping("/reserve-list-view")
 	// localhost/patient/reserve-list-view
 	public String reserveListView(Model model, HttpSession session,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "3") int size) {
+			// 비필수 파라미터 불러오기2 : 기본값 설정 (추천)
+	        @RequestParam(name = "page", defaultValue = "0") int page,
+	        @RequestParam(name = "size", defaultValue = "3") int size,
+	        HttpServletRequest request) { // HttpServletRequest : 전체 url을 보기위한 패키지
+		
+	    // 전체 URL logging
+	    String fullURL = request.getRequestURL().toString(); // 기본 URL
+	    String queryString = request.getQueryString(); // 쿼리 파라미터
+	    if (queryString != null) {
+	        fullURL += "?" + queryString; // URL + 쿼리 파라미터
+	    }
+	    log.info("!!!!! 전체 URL : {} !!!!!", fullURL);
+	    log.info("!!!!! 페이징에 사용될 파라미터 - page: {}, size: {} !!!!!", page, size);
+	    
 		
 		// 로그인 여부 확인(권한 검사) - breakpoint
 		Integer customerId = (Integer) session.getAttribute("customerId");
