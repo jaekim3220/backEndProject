@@ -145,6 +145,13 @@ public class PatientController {
 	@GetMapping("/reserve-detail-view")
 	// localhost/patient/reserve-detail-view
 	public String reserveDetailView() {
+		// TODO 
+		// 로그인한 사용자의 Id(customer.id), 화면에서 클릭한 예약 번호(reservers.id)와 일치하는 row 추출
+		// Model에 추출한 데이터 삽입 => UPDATE 
+		
+		// DB SELECT - breakpoint
+		
+		
 		return "patient/reserveDetail";
 	}
 	
