@@ -2,6 +2,8 @@ package com.backend.patient.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.backend.patient.entity.ReserversEntity;
@@ -20,6 +22,10 @@ public interface ReserversRepository extends JpaRepository<ReserversEntity, Inte
 	// input : customerId(int)
 	// output : List<ReserversEntity>
 	// @GetMapping("/reserve-list-view")
-	List<ReserversEntity> findByCustomerId(int customerId);
-	
+	// List<ReserversEntity> findByCustomerId(int customerId);
+	// 고객 ID를 기반으로 예약 목록을 페이징(정렬) 처리하여 가져오는 메서드
+    Page<ReserversEntity> findByCustomerId(int customerId, Pageable pageable);
+    // 고객 ID를 기반으로 예약 목록의 수를 가져오는 메서드
+    long countByCustomerId(int customerId);
+
 }

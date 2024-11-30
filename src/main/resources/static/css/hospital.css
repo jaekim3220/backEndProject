@@ -55,3 +55,10 @@ header, footer {
     justify-content: center; /* 내부 가로 중앙 정렬 */
     align-items: center; /* 내부 세로 중앙 정렬 */
 }
+
+.truncate-text {
+    white-space: nowrap; /*텍스트가 한 줄에 표시*/
+    overflow: hidden; /*넘치는 텍스트를 숨김*/
+    text-overflow: ellipsis; /*넘칠 때 '...' 표시*/
+    max-width: 200px; /*텍스트가 최대 200px까지만 표시되도록 함 (필요에 맞게 조정)*/
+}

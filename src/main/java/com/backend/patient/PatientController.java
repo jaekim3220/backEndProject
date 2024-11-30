@@ -5,11 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
@@ -93,7 +95,9 @@ public class PatientController {
 	// 예약 목록 페이지 화면
 	@GetMapping("/reserve-list-view")
 	// localhost/patient/reserve-list-view
-	public String reserveListView(Model model, HttpSession session) {
+	public String reserveListView(Model model, HttpSession session,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "3") int size) {
 		
 		// 로그인 여부 확인(권한 검사) - breakpoint
 		Integer customerId = (Integer) session.getAttribute("customerId");
@@ -102,13 +106,18 @@ public class PatientController {
 			return "redirect:/patient/sign-in-view";
 		}
 		
-		
+		// List<ReserversEntity> reserveList = reserversBO.getreserveListBycustomerId(customerId);
 		// DB SELECT => 본인(로그인한 사람)이 쓴 글을 session을 통해 수령 - breakpoint
-		 List<ReserversEntity> reserveList = reserversBO.getreserveListBycustomerId(customerId);
+		// customerId와 일치하는 row 데이터를 페이지 번호, 페이지 크기를 설정 후 SELECT
+		List<ReserversEntity> reserveList = reserversBO.getreserveListBycustomerId(customerId, page, size);
+		// 전체 페이지 수 계산 = {로그인한 환자의 예약 목록 수 / 3(페이지에 보여줄 목록 수)}
+		int totalPages = reserversBO.getTotalPagesByCustomerId(customerId, size);
 		
 		
 		// Model에 데이터 삽입 - breakpoint
 		model.addAttribute("reserveList", reserveList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 		
 		
 		return "patient/reserveList";

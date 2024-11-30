@@ -3,6 +3,10 @@ package com.backend.patient.bo;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,20 +76,41 @@ public class ReserversBO {
 	// output : List<ReserversEntity>
 	// @GetMapping("/reserve-list-view")
 	public List<ReserversEntity> getreserveListBycustomerId(
-			@Param("customerId") int customerId) {
+			int customerId, int page, int size) {
 		
-		
-		// DB SELECT - breakpoint
-		List<ReserversEntity> reserveList = reserversRepository.findByCustomerId(customerId);
+        // PageRequest의 Pageable 객체 생성 : 페이지 번호, 페이지 크기, 정렬 순서를 지정
+		// page : 조회할 페이지 번호
+		// size : 한 페이지당 조회할 항목의 수(Limit)
+		// descending() : 내림차순 정렬(ORDER BY)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         
-        if (reserveList.isEmpty()) {
+        // DB SELECT - breakpoint
+        // PageRequest의 Pageable 객체 조건으로 정렬한 customerId 값과 동일한 id 값이 있는 row 데이터
+        Page<ReserversEntity> reserveList = reserversRepository.findByCustomerId(customerId, pageable);
+		
+//		// DB SELECT - breakpoint
+//		List<ReserversEntity> reserveList = reserversRepository.findByCustomerId(customerId);
+        
+        if (reserveList.isEmpty()) { // 예약 목록이 없을 경우
             log.info("!!!!!예약 목록 없음!!!!! : {}", customerId);
-        } else {
-            log.info("!!!!!예약 목록 존재!!!!! : {}개", reserveList.size());
+        } else { // 예약 목록이 있을 경우
+            log.info("!!!!!예약 목록 존재!!!!! : {}개", reserveList.getSize());
         }
         
-        
-        return reserveList;
+        // 현재 페이지에 해당하는 데이터 반환
+        return reserveList.getContent();
 	}
+    // 총 페이지 수 조회 메서드
+    public int getTotalPagesByCustomerId(int customerId, int size) {
+    	// 로그인한 고객의 예약 목록 계산
+        long totalCount = reserversRepository.countByCustomerId(customerId);
+        
+        // 로그인한 고객의 예약 목록을
+        // size(한 페이지당 조회할 항목의 수)를 사용해 페이지 계산
+        int pages = (int) Math.ceil((double) totalCount / size);
+        
+        return pages;
+    }
+    
 	
 }
