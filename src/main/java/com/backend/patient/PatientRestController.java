@@ -19,6 +19,8 @@ import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +41,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 */
 
+@Slf4j
 @RestController
 @RequestMapping("/patient")
 public class PatientRestController {
@@ -201,10 +204,30 @@ public class PatientRestController {
 	}
 	
 	
-//	// 예약 수정하기 API
-//	@PutMapping("/update")
-//	public Map<String, Object> reservesUpdate() {
-//		
-//	}
+	// 예약 수정하기 API
+	@PutMapping("/update")
+	public Map<String, Object> reservesUpdate(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id,
+			@RequestParam("customerId") int customerId,
+			@RequestParam("doctorNum") int doctorNum,
+			@RequestParam("title") String title,
+			@RequestParam("description") String description,
+			@RequestParam("visitDate") String visitDate,
+			// 비필수 파라미터 불러오기2 : 기본값 설정 (추천)
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpSession session) {
+		/* id, customerId, doctorNum, title, description, visitDate, imagePath */
+		
+		// 고객 로그인 아이디 추출(이미지 업로드용) - breakpoint
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
+		log.info("!!!!! customerLoginId : {} !!!!!", customerLoginId);
+		
+		// DB Update + 파일 업로드(옵션) - breakpoint
+		reserversBO.updateByIdcustomerId		
+		
+		// Model
+	}
 	
 }

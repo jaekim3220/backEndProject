@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.FileManagerService;
@@ -122,5 +123,52 @@ public class ReserversBO {
     	return reserversRepository.findByIdAndCustomerId(id, customerId);
     }
     
-	
+    
+    // input : id, customerId, doctorNum, title, description, visitDate, imagePath
+    // output : X(void)
+	// @PutMapping("/update")
+    public void updateByIdcustomerId(int id, int customerId, String customerLoginId, 
+    		int doctorNum, String title, String description, 
+    		String visitDate, MultipartFile file) {
+    	
+    	
+    	// DB SELECT(기존 데이터 확인) - breakpoint
+    	ReserversEntity receivedEntity = reserversRepository.findByIdAndCustomerId(id, customerId);
+    	log.info("!!!!! DB SELECT 결과 :  {} !!!!!", receivedEntity);
+    	
+        if (receivedEntity == null) {
+        	log.info("!!!!! [글 수정] post is null. id : {}, customerId : {} !!!!!", id, customerId);
+            return; // 해당 ID와 Customer ID에 대한 예약이 없을 경우
+        }
+        
+        
+		// 파일 존재 시 새 이미지 업로드 - breakpoint
+		/*
+		기존 글에 이미지가 부재
+		- 파일 업로드 => 성공 시 DB 저장
+				=> 실패 시 DB 저장 X
+
+		기존 글에 이미지가 존재
+		- 파일 업로드 => 성공 시 기존 이미지 제거 후 DB 저장
+				=> 실패 시 기존 이미지 그대로, DB 저장 X
+		*/
+        String imagePath = null;
+        if(file != null) {  // 새로 업로드 할 이미지가 존재
+        	// 새로 업로드할 이미지 주소
+        	imagePath = fileManagerService.uploadFile(file, customerLoginId);
+        }
+        log.info("!!!!! imagePath : {} !!!!!", imagePath);
+        
+        
+        // 새로운 이미지 업로드 성공 && 기존 이미지가 존재 시 삭제
+        if(imagePath != null && receivedEntity.getImagePath() != null) {
+        	// 폴더, 이미지 제거(컴퓨터-서버에서)
+        	// TODO : FileManagerService에서 폴더와 이미지 제거 메서드 생성
+        }
+        
+        return;
+    	
+    }
+    
+    
 }
