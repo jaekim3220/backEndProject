@@ -140,16 +140,27 @@ public class PatientController {
 	
 	
 	// 예약 상세 페이지 화면
-	// /patient/{reservers.id}/reserve-detail
-	// 확인을 위한 임시 @GetMapping : 의사의 고유 id 값을 받아서 해당 의사 예약 페이지로 이동할 것
 	@GetMapping("/reserve-detail-view")
-	// localhost/patient/reserve-detail-view
-	public String reserveDetailView() {
-		// TODO 
-		// 로그인한 사용자의 Id(customer.id), 화면에서 클릭한 예약 번호(reservers.id)와 일치하는 row 추출
+	// localhost/patient/reserve-detail?id={reservers.id}
+	public String reserveDetailView(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id, 
+			HttpSession session, Model model) {
+		// 로그인한 사용자의 id(customer.id), 화면에서 클릭한 예약 번호 
+		// customerId(reservers.id)와 일치하는 row 추출
 		// Model에 추출한 데이터 삽입 => UPDATE 
 		
-		// DB SELECT - breakpoint
+		
+		// DB SELECT(reservers.id, reservers.customerId - session - breakpoint
+		// id와 customerId가 일치하는 row 데이터 추출(PatientRestController의 session 참고)
+		int customerId = (int) session.getAttribute("customerId");
+		ReserversEntity reservers = reserversBO.getReserversByIdCustomerId(id, customerId);
+		log.info("!!!!! DB SELECT Result : {} !!!!!", reservers);
+		
+		
+		// Model에 데이터 삽입
+		model.addAttribute("reservers", reservers);
+		
 		
 		
 		return "patient/reserveDetail";

@@ -27,5 +27,11 @@ public interface ReserversRepository extends JpaRepository<ReserversEntity, Inte
     Page<ReserversEntity> findByCustomerId(int customerId, Pageable pageable);
     // 고객 ID를 기반으로 예약 목록의 수를 가져오는 메서드
     long countByCustomerId(int customerId);
+    
+    
+	// input : id(customer.id), customerId(reservers.id)
+	// output : ReserversEntity(단건) or Null
+	// @GetMapping("/reserve-detail-view")
+    ReserversEntity findByIdAndCustomerId(int id, int customerId);
 
 }

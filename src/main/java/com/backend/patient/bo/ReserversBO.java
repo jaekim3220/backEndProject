@@ -112,5 +112,15 @@ public class ReserversBO {
         return pages;
     }
     
+    
+	// input : id(customer.id), customerId(reservers.id)
+	// output : ReserversEntity(단건) or Null
+	// @GetMapping("/reserve-detail-view")
+    public ReserversEntity getReserversByIdCustomerId(int id, int customerId) {
+    	
+    	// DB SELECT - breakpoint
+    	return reserversRepository.findByIdAndCustomerId(id, customerId);
+    }
+    
 	
 }
