@@ -10,6 +10,9 @@
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">예약 상세 페이지</h2>
 		
+		<!-- 의사 번호 영역 -->
+		<input type="hidden" id="doctorId" th:value="${reserves.doctorNum}">
+		
 		<!-- 제목 영역 -->
 		<input type="text" id="inputTitle" class="form-control mb-1" placeholder="제목을 입력하세요" th:value="${reserves.title}">
 		
@@ -67,13 +70,15 @@
     			
     			
     			// validation(Parameter)
-    			/* title, description, visitDate, imagePath */
+    			/* doctorNum, title, description, visitDate, imagePath */
+    			let doctorNum = $("#doctorId").val().trim();
     			let title = $("#inputTitle").val().trim();
     			let description = $("#inputContent").val().trim();
     			let visitDate = $("#visitDate").val().trim();
     			let fileName = $("#file").val().trim(); // 새로운 이미지를 고르지 않으면 기존 이미지 유지를 위해 수정하지 않으면 공백
     			
-    			/* console.log(title);
+    			/* console.log(doctorNum);
+    			console.log(title);
     			console.log(description);
     			console.log(visitDate);
     			console.log(fileName); */
@@ -129,6 +134,8 @@
     			let formData = new FormData();
                 
                 // formData 삽입
+                // 의사 번호(doctors.id)
+                formData.append("doctorNum", doctorNum);
                 // 예약 제목
                 formData.append("title", title);
                 // 예약 내용
@@ -139,9 +146,9 @@
                 formData.append("file", $("#file")[0].files[0]); // 진짜 file 객체 삽입(다중 파일의 경우 배열 처리 후 진행)
                 
                 // 데이터 확인
-    			/* formData.forEach((value, key) => {
+    			formData.forEach((value, key) => {
     				console.log(`${key} : ${value}`);
-    			}); */
+    			});
     			
     			
     			// AJAX 요청
@@ -157,6 +164,20 @@
     				
     				// response
     				// TODO : API의 JSON 데이터 보내기 
+    				success:function(data) { // Dictionary 형태
+						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+						// => Dictionary 형식으로 변경
+						// "{"code" : 200, "result" : "예약 수정 성공"}"
+						if(data.code == 200) {
+							alert("예약이 수정되었습니다.");
+							location.href="patient/reserve-list-view"
+						} else {
+							alert(data.error_message);
+						}
+    				},
+    				error:function(e) {
+    					alert("예약 수정에 실패했습니다.");
+    				}
     				
     			}) // AJAX 요청 종료
     			
