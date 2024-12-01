@@ -26,8 +26,8 @@
 			<tbody>
 				<tr  th:each="reserves : ${reserveList}">
 					<!-- [[${reserves}]] -->
-					<td><a th:href="@{/reserve-detail-view(id=${reserves.id})}" id="reserveDepart" th:text="${reserves.doctorNum}">진료과목</a></td>
-					<td><a th:href="@{/reserve-detail-view(id=${reserves.id})}" id="reserveTitle" th:text="${reserves.title}">제목</a></td>
+					<td><a th:href="@{reserve-detail-view(id=${reserves.id})}" id="reserveDepart" th:text="${reserves.doctorNum}">진료과목</a></td>
+					<td><a th:href="@{rerve-detail-view(id=${reserves.id})}" id="reserveTitle" th:text="${reserves.title}">제목</a></td>
 					<td th:text="${reserves.description}" class="truncate-text">내용</td>
 					<td th:text="${reserves.visitDate}">방문날짜</td>
 					<td th:text="${reserves.updatedAt}">신청날짜</td>
