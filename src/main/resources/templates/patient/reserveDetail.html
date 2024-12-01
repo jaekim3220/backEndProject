@@ -37,9 +37,11 @@
 		</div>
 		
 		<div class="d-flex w-100 justify-content-around">
-			<a id="changeCancelBtn" href="/patient/reserve-list-view" class="btn btn-warning w-45 text-white">취소하기</a>
-			<a id="changeBtn" href="#" class="btn btn-warning w-45 text-white">수정하기</a>
-			<a id="reserveDeleteBtn" href="#" class="btn btn-warning w-45 text-white">예약취소</a>
+			<a id="changeCancelBtn" href="javascript:history.back()" class="btn btn-warning w-45 text-white">취소하기</a>
+			<!-- <a id="changeBtn" href="/patient/update" class="btn btn-warning w-45 text-white">수정하기</a> -->
+			<button type="button" id="changeBtn" class="btn btn-warning w-45 text-white" th:data-reserves-id="${reserves.id}">수정하기</button>
+			<!-- <a id="reserveDeleteBtn" href="#" class="btn btn-warning w-45 text-white">예약취소</a> -->
+			<button type="button" id="reserveDeleteBtn" class="btn btn-warning w-45 text-white" th:data-reserves-id="${reserves.id}">예약취소</button>
 		</div>
 		
 	</div>
@@ -49,10 +51,117 @@
 <th:block layout:fragment="script">
     <script>
     	
-    	$(documnet).ready(function() {
+    	$(document).ready(function() {
     		
-        	// TODO
-        	// UPDATE 구문
+    		// `수정하기` 버튼
+    		$("#changeBtn").on("click", function(e) {
+    			e.preventDefault(); // 페이지 이동 차단
+    			
+    			// alert("수정하기");
+    			
+    			
+    			// 수정하기 버튼의 id(reservers.id) 값 추출
+    			let id = $(this).data("reserves-id");
+    			// console.log(id);
+    			// return;
+    			
+    			
+    			// validation(Parameter)
+    			/* title, description, visitDate, imagePath */
+    			let title = $("#inputTitle").val().trim();
+    			let description = $("#inputContent").val().trim();
+    			let visitDate = $("#visitDate").val().trim();
+    			let fileName = $("#file").val().trim(); // 새로운 이미지를 고르지 않으면 기존 이미지 유지를 위해 수정하지 않으면 공백
+    			
+    			/* console.log(title);
+    			console.log(description);
+    			console.log(visitDate);
+    			console.log(fileName); */
+    			
+    			
+    			// 공백 처리
+    			if(!title) {
+    				alert("제목을 입력해주세요.")
+    				return; // subject일 경우 return flase, click일 경우 return
+    			}
+    			if(!description) {
+    				alert("상태와 증상을 입력해주세요.")
+    				return; // subject일 경우 return flase, click일 경우 return
+    			}
+    			// visitDate가 오늘 날짜면 경고
+                
+    			// 1. 오늘 날짜 추출
+                let today = new Date().toISOString().slice(0, 10);  // "yyyy-mm-dd" 형식으로 변환
+                
+                // 2. visitDate에서 `날짜`만 추출
+                let visitDateOnly = visitDate.split("T")[0];  // "yyyy-mm-dd" 형식으로 추출
+                // console.log("visitDateOnly : ", visitDateOnly);
+                // console.log("today : ", today);
+                
+                // 3. 날짜 비교 후 오늘 날짜일 경우 경고 문구 출력
+                
+                if(visitDateOnly == today) {
+                	alert("내원 날짜를 선택해 주세요. \n금일은 예약이 불가합니다.");
+                	return;
+                }
+    			
+                // 새로 선택한 파일이 있으면 확장자 체크
+                if(fileName) {
+                	// alert(fileName);
+                	// C:\fakepath\whooper-swans-8640045_1280.jpg
+                	
+                	// 파일 확장자 추출
+                	let extension = fileName.split(".").pop().toLowerCase();
+                	
+                	// 파일 확장자가 "jpg", "png", "gif"가 아닐 경우 선택 파일 삭제
+                	if ($.inArray(extension, ["jpg", "png", "gif"]) == -1) {
+                        alert("이미지 파일만 업로드 할 수 있습니다.");
+                        $("#file").val(""); // 선택 파일 삭제
+                        return;
+                    }
+                }
+                
+                
+                // 이미지 파일 때문에 form 태그를 JS에서 생성
+                // 이미지는 form 태그 필수 => JS에서 구현 가능
+                // form을 JS에서 생성 후 AJAX에서 구현 가능
+    			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+    			let formData = new FormData();
+                
+                // formData 삽입
+                // 예약 제목
+                formData.append("title", title);
+                // 예약 내용
+                formData.append("description", description);
+                // 방문 날짜
+                formData.append("visitDate", visitDate);
+                // 이미지 파일
+                formData.append("file", $("#file")[0].files[0]); // 진짜 file 객체 삽입(다중 파일의 경우 배열 처리 후 진행)
+                
+                // 데이터 확인
+    			/* formData.forEach((value, key) => {
+    				console.log(`${key} : ${value}`);
+    			}); */
+    			
+    			
+    			// AJAX 요청
+    			// formData 형식 사용
+    			$.ajax({
+    				// request
+    				type:"POST", // 용량이 큰 text, img 파일
+    				url:"/patient/update", // 
+    				data:formData, // data에는 json, key-value, formData
+    				processData:false, // 파일 업로드 필수 설정(form)
+    				contentType:false, // 파일 업로드 필수 설정(form)
+    				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩 용
+    				
+    				// response
+    				// TODO : API의 JSON 데이터 보내기 
+    				
+    			}) // AJAX 요청 종료
+    			
+    			
+    		}); // `수정하기` 버튼 종료
         	
     	});
     	
