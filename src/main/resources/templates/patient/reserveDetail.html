@@ -6,23 +6,29 @@
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
 	
-	<div class="w-50 reserveDetail-box p-4 d-flex flex-column">
+	<div class="w-50 reserveDetail-box p-4 d-flex flex-column" th:each="reserves : ${reserveDict}">
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">예약 상세 페이지</h2>
 		
 		<!-- 제목 영역 -->
-		<input type="text" id="inputTitle" class="form-control mb-1" placeholder="제목을 입력하세요">
+		<input type="text" id="inputTitle" class="form-control mb-1" placeholder="제목을 입력하세요" th:value="${reserves.title}">
 		
 		<!-- 내용 영역 -->
-		<textarea id="inputContent" class="form-control mb-1" placeholder="본인의 증상 및 상태를 입력해 주세요" rows="4"></textarea>
+		<textarea id="inputContent" class="form-control mb-1" placeholder="본인의 증상 및 상태를 입력해 주세요" rows="4" th:text="${reserves.description}"></textarea>
 
 		<!-- 날짜 영역 -->
 		<div class="form-group d-flex flex-column w-100 mb-4">
 			<label for="visitDate">원하는 방문 날짜를 입력하세요.</label>
-			<input type="datetime-local" id="visitDate" name="meeting-time"
+			<input type="datetime-local" id="visitDate" name="visitDate"
 			th:value="${currentDate}"
 			th:min="${minDate}"
 			th:max="${maxDate}" />
+			<div id="visitDateCheck" class="small text-danger">금일은 예약이 불가능합니다.</div>
+		</div>
+				
+		<!-- 이미지 영역 : 이미지가 있을 경우에만 -->
+		<div class="my-3" th:if="${reserves.imagePath != null}">
+			<img th:src="${reserves.imagePath}" alt="본문 이미지" width="300">
 		</div>
 		
 		<!-- 파일 선택 버튼 -->

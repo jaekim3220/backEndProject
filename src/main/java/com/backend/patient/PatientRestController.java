@@ -19,6 +19,10 @@ import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper, XML) <--> DB영역 
@@ -196,5 +200,11 @@ public class PatientRestController {
 		return result;
 	}
 	
+	
+//	// 예약 수정하기 API
+//	@PutMapping("/update")
+//	public Map<String, Object> reservesUpdate() {
+//		
+//	}
 	
 }

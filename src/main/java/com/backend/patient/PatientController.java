@@ -158,10 +158,21 @@ public class PatientController {
 		log.info("!!!!! DB SELECT Result : {} !!!!!", reservers);
 		
 		
-		// Model에 데이터 삽입
-		model.addAttribute("reservers", reservers);
+		// 달력에 금일, 최소/최대 예약 날짜 설정을 
+		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime tomorrow = now.plusDays(1);
+	    LocalDateTime nextMonth = now.plusMonths(1);
+        
+        
+	    DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        
 		
-		
+        // Model에 데이터 삽입
+		model.addAttribute("reserveDict", reservers);
+        model.addAttribute("currentDate", now.format(dateformat)); // 오늘 날짜 00:00
+        model.addAttribute("minDate", tomorrow.format(dateformat)); // 내일 날짜 00:00
+        model.addAttribute("maxDate", nextMonth.format(dateformat)); // 한 달 뒤 날짜 23:59		
 		
 		return "patient/reserveDetail";
 	}
