@@ -83,8 +83,8 @@ public class ReserversBO {
         // PageRequest의 Pageable 객체 생성 : 페이지 번호, 페이지 크기, 정렬 순서를 지정
 		// page : 조회할 페이지 번호
 		// size : 한 페이지당 조회할 항목의 수(Limit)
-		// descending() : 내림차순 정렬(ORDER BY)
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+		// ascending() : 오름차순 정렬(ORDER BY)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("visitDate").ascending());
         
         // DB SELECT - breakpoint
         // PageRequest의 Pageable 객체 조건으로 정렬한 customerId 값과 동일한 id 값이 있는 row 데이터
