@@ -159,4 +159,11 @@ public class DoctorRestController {
 	}
 	
 	
+	// SELECT 후 의사 id(doctors.id)와 일치하는 데이터 행 목록(List)를 나열
+//	@PostMapping("/load-out")
+//	public Map<String, Object> doctorScheduleLoad() {
+//		
+//	}
+	
+	
 }
