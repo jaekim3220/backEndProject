@@ -134,6 +134,8 @@
     			let formData = new FormData();
                 
                 // formData 삽입
+                // id 번호
+                formData.append("id", id);
                 // 의사 번호(doctors.id)
                 formData.append("doctorNum", doctorNum);
                 // 예약 제목
@@ -155,7 +157,7 @@
     			// formData 형식 사용
     			$.ajax({
     				// request
-    				type:"POST", // 용량이 큰 text, img 파일
+    				type:"PUT", // 용량이 큰 text, img 파일
     				url:"/patient/update", // 
     				data:formData, // data에는 json, key-value, formData
     				processData:false, // 파일 업로드 필수 설정(form)
@@ -163,7 +165,6 @@
     				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩 용
     				
     				// response
-    				// TODO : API의 JSON 데이터 보내기 
     				success:function(data) { // Dictionary 형태
 						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
 						// => Dictionary 형식으로 변경

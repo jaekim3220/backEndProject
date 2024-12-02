@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,15 +16,10 @@ import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
 import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.entity.CustomerEntity;
-import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 /*
@@ -205,7 +201,7 @@ public class PatientRestController {
 	
 	
 	// 예약 수정하기 API
-	@PostMapping("/update")
+	@PutMapping("/update")
 	public Map<String, Object> reservesUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			@RequestParam("id") int id,
