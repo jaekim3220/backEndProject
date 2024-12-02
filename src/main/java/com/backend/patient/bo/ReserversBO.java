@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -183,6 +184,33 @@ public class ReserversBO {
             log.error("!!!!! 예약 정보 업데이트 실패 !!!!!", e);
         }
         
+    }
+    
+
+    // input : id(reservers.id), customerId
+    // output : X
+	// @DeleteMapping("/delete")
+    public void deleteReserveByIdCustomerId(int id, int customerId) {
+    	
+    	
+    	// DB SELECT - breakpoint
+    	ReserversEntity targetEntity =  reserversRepository.findByIdAndCustomerId(id, customerId);
+    	log.info("!!!!! 삭제 대상 데이터 : {} !!!!!", targetEntity);
+    	if(targetEntity == null) {
+    		log.info("!!!!! 삭제 대상 데이터 부재 id : {}, customerId : {}!!!!!", id, customerId);
+    		return;
+    	}
+    	
+    	
+    	// DB 행 삭제 - breakpoint
+    	reserversRepository.deleteById(id);
+    	
+    	
+    	// 기존글에 이미지가 있다면 서버에서 폴더/파일 삭제 - breakpoint
+    	if(targetEntity.getImagePath() != null) {
+    		fileManagerService.deleteFolderFile(targetEntity.getImagePath());
+    	}
+    	
     }
     
     

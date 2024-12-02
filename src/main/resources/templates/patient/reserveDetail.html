@@ -188,6 +188,51 @@
     			
     			
     		}); // `수정하기` 버튼 종료
+    		
+    		
+    		// `예약취소`버튼
+    		$("#reserveDeleteBtn").on("click", function(e) {
+    			e.preventDefault();
+    			
+    			// alert("예약취소");
+    			
+    			// 버튼 id값 출력(reservers.id)
+    			let id = $(this).data("reserves-id");
+    			// console.log(id); // 일치 확인
+    			
+    			
+    			// AJAX 요청
+    			$.ajax({
+    				// request
+    				type:"delete",
+    				url:"/patient/delete",
+    				data:{"id":id},
+    				
+    				// response
+    				success:function(data) { // Dictionary 형태
+    					// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+    					// => Dictionary 형식으로 변경
+    					// "{"code" : 200, "result" : "예약 내역 삭제 성공"}"
+    					if(data.code == 200) {
+    						alert("예약 내역을 삭제합니다.");
+    						location.href = "/patient/reserve-list-view";
+    					} else if(data.code == 403) {
+    						alert("로그인 후 삭제가 나으합니다.");
+    						location.href + "/patient/sign-in-view"
+    					} else {
+    						alert(data.error_message);
+    					}
+    				}, 
+    				errror:function(e) {
+    					alert("예약 내역을 삭제하는데 실패했습니다.");
+    				}
+    				
+    				
+    			}); // AJAX 요청 종료
+    			
+    			
+    		}); // `예약취소`버튼 종료
+    		
         	
     	});
     	

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -240,6 +241,42 @@ public class PatientRestController {
 		
 		return result;
 	}
+	
+	
+	// 예약 목록 삭제 API
+	@DeleteMapping("/delete")
+	public Map<String, Object> reservesDelete(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id,
+			HttpSession session) {
+
+		// 고객 로그인 아이디 추출(로그인/비로그인 구분) - breakpoint
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		Integer customerId = (Integer) session.getAttribute("customerId");
+		Map<String, Object> result = new HashMap<>();
+		if(customerId == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 예약 목록 삭제가 가능합니다.");
+		}
+		
+		
+		// DB DELETE + 파일 업로드(삭제) - breakpoint
+		reserversBO.deleteReserveByIdCustomerId(id, customerId);
+		
+		
+		
+		// Response(응답값) - breakpoint
+		// Dictionary 형태
+		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+		// => Dictionary 형식으로 변경
+		// "{"code" : 200, "result" : "예약 내역 삭제 성공"}"
+		result.put("code", 200);
+		result.put("result", "예약 내역 삭제 성공");
+		
+		return result;
+		
+	}
+	
 	
 	
 }

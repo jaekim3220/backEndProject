@@ -78,8 +78,24 @@ public class FileManagerService {
 		// 이미지 폴더, 파일 주소(경로)
 		Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", ""));
 		log.info("!!!!! 삭제할 이미지 경로 : {} !!!!!", path);
+		Path folderPath = path.getParent();
+		log.info("!!!!! 삭제할 폴더 경로 : {} !!!!!", folderPath);
+		
 		
 		// 삭제할 이미지(폴더, 파일) 존재 확인
+		if(Files.exists(path)) {
+			// 서버에서 이미지 폴더, 파일 삭제
+			try {
+				Files.delete(path);
+				Files.delete(folderPath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.error("!!!!! 파일 삭제 실패 : {} !!!!!", e);
+			}
+		}
+		
+		// 폴더 삭제
 		if(Files.exists(path)) {
 			// 서버에서 이미지 폴더, 파일 삭제
 			try {
@@ -90,6 +106,7 @@ public class FileManagerService {
 				log.error("!!!!! 파일 삭제 실패 : {} !!!!!", e);
 			}
 		}
+		
 		
 	}
 	
