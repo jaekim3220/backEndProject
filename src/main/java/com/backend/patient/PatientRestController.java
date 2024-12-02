@@ -205,7 +205,7 @@ public class PatientRestController {
 	
 	
 	// 예약 수정하기 API
-	@PutMapping("/update")
+	@PostMapping("/update")
 	public Map<String, Object> reservesUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			@RequestParam("id") int id,
@@ -231,13 +231,19 @@ public class PatientRestController {
 		}
 		
 		// DB Update + 파일 업로드(옵션) - breakpoint
-		reserversBO.updateByIdcustomerId		
+		reserversBO.updateByIdcustomerId(id, customerId, customerLoginId, doctorNum, title, description, visitDate, file);		
+		
 		
 		// Response(응답값) - breakpoint
 		// Dictionary 형태
 		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
 		// => Dictionary 형식으로 변경
-		// "{"code" : 200, "result" : "예약 신청 성공"}"
+		// "{"code" : 200, "result" : "예약 수정 성공"}"
+		result.put("code", 200);
+		result.put("result", "예약 수정 성공");
+		
+		return result;
 	}
+	
 	
 }

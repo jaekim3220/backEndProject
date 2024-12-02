@@ -64,4 +64,34 @@ public class FileManagerService {
 	}
 	
 	
+	
+	// 삭제 메서드 생성
+	// 삭제할 이미지 위치(주소) 추출 및 삭제 기능 구현
+	// input : imagePath(이미지 폴더, 파일 주소)
+	// output : X
+	public void deleteFolderFile(String imagePath) {
+		// 저장 폴더 - D:\\JAVA\\0_backend_project\\workspace\\images/
+		// DB 저장 URL - /images/cccccc_1732882920080/whooper-swans-8640045_1280.jpg
+		// 삭제할 이미지 경로 - D:\\JAVA\\0_backend_project\\workspace\\images//images/cccccc_1732882920080/whooper-swans-8640045_1280.jpg
+		// images가 중복
+		
+		// 이미지 폴더, 파일 주소(경로)
+		Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", ""));
+		log.info("!!!!! 삭제할 이미지 경로 : {} !!!!!", path);
+		
+		// 삭제할 이미지(폴더, 파일) 존재 확인
+		if(Files.exists(path)) {
+			// 서버에서 이미지 폴더, 파일 삭제
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				log.error("!!!!! 파일 삭제 실패 : {} !!!!!", e);
+			}
+		}
+		
+	}
+	
+	
 }

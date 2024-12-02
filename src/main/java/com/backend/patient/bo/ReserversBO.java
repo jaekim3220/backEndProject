@@ -127,7 +127,7 @@ public class ReserversBO {
     // input : id, customerId, doctorNum, title, description, visitDate, imagePath
     // output : X(void)
 	// @PutMapping("/update")
-    public void updateByIdcustomerId(int id, int customerId, String customerLoginId, 
+    public void updateByIdcustomerId(int id, Integer customerId, String customerLoginId, 
     		int doctorNum, String title, String description, 
     		String visitDate, MultipartFile file) {
     	
@@ -137,12 +137,12 @@ public class ReserversBO {
     	log.info("!!!!! DB SELECT 결과 :  {} !!!!!", receivedEntity);
     	
         if (receivedEntity == null) {
-        	log.info("!!!!! [글 수정] post is null. id : {}, customerId : {} !!!!!", id, customerId);
+        	log.info("!!!!! [글 수정] receivedEntity is null. id : {}, customerId : {} !!!!!", id, customerId);
             return; // 해당 ID와 Customer ID에 대한 예약이 없을 경우
         }
         
         
-		// 파일 존재 시 새 이미지 업로드 - breakpoint
+		// 파일 존재 시 삭제 후 새 이미지 업로드 - breakpoint
 		/*
 		기존 글에 이미지가 부재
 		- 파일 업로드 => 성공 시 DB 저장
@@ -156,18 +156,33 @@ public class ReserversBO {
         if(file != null) {  // 새로 업로드 할 이미지가 존재
         	// 새로 업로드할 이미지 주소
         	imagePath = fileManagerService.uploadFile(file, customerLoginId);
+        	log.info("!!!!! imagePath : {} !!!!!", imagePath);
+        	
+        	// 새로운 이미지 업로드 성공 && 기존 이미지가 존재 시 삭제
+        	if(imagePath != null && receivedEntity.getImagePath() != null) {
+        		// 기존에 존재하는 이미지 폴더, 파일 제거(서버)
+        		fileManagerService.deleteFolderFile(receivedEntity.getImagePath());
+        	}
         }
-        log.info("!!!!! imagePath : {} !!!!!", imagePath);
         
         
-        // 새로운 이미지 업로드 성공 && 기존 이미지가 존재 시 삭제
-        if(imagePath != null && receivedEntity.getImagePath() != null) {
-        	// 폴더, 이미지 제거(컴퓨터-서버에서)
-        	// TODO : FileManagerService에서 폴더와 이미지 제거 메서드 생성
+        // 필드 값 업데이트
+        ReserversEntity updateEntity = receivedEntity.toBuilder()
+                .doctorNum(doctorNum)
+                .title(title)
+                .description(description)
+                .visitDate(visitDate)
+                .imagePath(imagePath != null ? imagePath : receivedEntity.getImagePath()) // 새 이미지 파일 : 기존 이미지 파일
+                .build();
+        
+        // DB Update - breakpoint
+        try {
+            reserversRepository.save(updateEntity );
+            log.info("!!!!! 업데이트한 예약 정보 : {} !!!!!", updateEntity);
+        } catch (Exception e) {
+            log.error("!!!!! 예약 정보 업데이트 실패 !!!!!", e);
         }
         
-        return;
-    	
     }
     
     
