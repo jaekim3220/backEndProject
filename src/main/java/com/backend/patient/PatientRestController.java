@@ -209,25 +209,35 @@ public class PatientRestController {
 	public Map<String, Object> reservesUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			@RequestParam("id") int id,
-			@RequestParam("customerId") int customerId,
 			@RequestParam("doctorNum") int doctorNum,
 			@RequestParam("title") String title,
 			@RequestParam("description") String description,
 			@RequestParam("visitDate") String visitDate,
-			// 비필수 파라미터 불러오기2 : 기본값 설정 (추천)
+			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpSession session) {
 		/* id, customerId, doctorNum, title, description, visitDate, imagePath */
 		
 		// 고객 로그인 아이디 추출(이미지 업로드용) - breakpoint
 		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		Integer customerId = (Integer) session.getAttribute("customerId"); // customer.id (@RequestParam 대신 session 사용)
 		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
-		log.info("!!!!! customerLoginId : {} !!!!!", customerLoginId);
+		log.info("!!!!! customerId : {}, customerLoginId : {} !!!!!", customerId, customerLoginId);
+		
+		Map<String, Object> result = new HashMap<>();
+		if(customerId == null || customerLoginId == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용 가능합니다.");
+		}
 		
 		// DB Update + 파일 업로드(옵션) - breakpoint
 		reserversBO.updateByIdcustomerId		
 		
-		// Model
+		// Response(응답값) - breakpoint
+		// Dictionary 형태
+		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+		// => Dictionary 형식으로 변경
+		// "{"code" : 200, "result" : "예약 신청 성공"}"
 	}
 	
 }

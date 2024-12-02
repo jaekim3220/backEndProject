@@ -170,8 +170,12 @@
 						// "{"code" : 200, "result" : "예약 수정 성공"}"
 						if(data.code == 200) {
 							alert("예약이 수정되었습니다.");
-							location.href="patient/reserve-list-view"
-						} else {
+							location.href="/patient/reserve-list-view"
+						} else if(data.code == 403) {
+							alert(data.result);
+							location.href="/patient/sign-in-view"
+						}
+						else {
 							alert(data.error_message);
 						}
     				},
