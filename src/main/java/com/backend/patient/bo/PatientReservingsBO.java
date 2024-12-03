@@ -44,7 +44,7 @@ public class PatientReservingsBO {
 		
 		// ReservingsEntity 객체 생성 - breakpoint
 		PatientReservingsEntity reservings = PatientReservingsEntity.builder()
-				.doctorNumber(customerId)
+				.doctorNumber(doctorNumber)
 				.customerId(customerId)
 				.customerName(customerName)
 				.title(title)
