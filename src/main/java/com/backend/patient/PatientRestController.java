@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
 import com.backend.patient.bo.ReserversBO;
+import com.backend.patient.bo.PatientReservingsBO;
 import com.backend.patient.entity.CustomerEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,6 +50,7 @@ public class PatientRestController {
 	
 	@Autowired
 	private ReserversBO reserversBO;
+	private PatientReservingsBO patientReservingsBO;
 	
 	// 아이디 중복 확인
 	// 단순한 select문으로 JPA(Object Relational Mapping) 사용
@@ -177,10 +179,13 @@ public class PatientRestController {
 		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
 		int customerId = (int) session.getAttribute("customerId"); // customer.id
 		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
+		String customerName = (String) session.getAttribute("customerName"); // customer.name
 		
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
+		int rowCount1 = patientReservingsBO.addToReservings(doctorNum, customerId, customerName, title, description, visitDate, file, customerLoginId);
 		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, description, visitDate, file);
+		log.info("!!!!! patientReservingsBO : {} !!!!!", patientReservingsBO);
 		
 		
 		// Response(응답값) - breakpoint
