@@ -286,6 +286,10 @@ public class PatientRestController {
 		
 		
 		// DB DELETE + 파일 업로드(삭제) - breakpoint
+		// `reservings` 테이블
+		patientReservingsBO.deleteReservingsByIdCustomerId(id, customerId);
+		
+		// `reservers` 테이블
 		reserversBO.deleteReserveByIdCustomerId(id, customerId);
 		
 		

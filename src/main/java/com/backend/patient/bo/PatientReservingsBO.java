@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.FileManagerService;
+import com.backend.doctor.domain.Reservings;
 import com.backend.patient.entity.PatientReservingsEntity;
+import com.backend.patient.entity.ReserversEntity;
 import com.backend.patient.repository.PatientReservingsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -130,5 +132,30 @@ public class PatientReservingsBO {
         log.info("!!!!! 업데이트한 `reservings` 테이블 예약 정보 : {} !!!!!", updateReservingsEntity);
     }
 	
+    
+    // input : id(reservings.id), customerId
+    // output : X
+	// @DeleteMapping("/delete")
+    public void deleteReservingsByIdCustomerId(int id, int customerId) {
+    	
+    	// DB SELECT - breakpoint
+    	PatientReservingsEntity reservingsEntity =  patientReservingsRepository.findByIdAndCustomerId(id, customerId);
+    	log.info("!!!!! 삭제 대상 데이터 : {} !!!!!", reservingsEntity);
+    	if(reservingsEntity == null) {
+    		log.info("!!!!! 삭제 대상 데이터 부재 id : {}, customerId : {}!!!!!", id, customerId);
+    		return;
+    	}
+    	
+    	
+    	// DB DELETE - breakpoint
+    	patientReservingsRepository.deleteById(id);
+    	
+    	
+    	// 기존글에 이미지가 있다면 서버에서 폴더/파일 삭제 - breakpoint
+    	if(reservingsEntity.getImagePath() != null) {
+    		fileManagerService.deleteFolderFile(reservingsEntity.getImagePath());
+    	}
+    	
+    }
     
 }
