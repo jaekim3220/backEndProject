@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.FileManagerService;
-import com.backend.patient.entity.ReserversEntity;
 import com.backend.patient.entity.PatientReservingsEntity;
-import com.backend.patient.repository.ReserversRepository;
 import com.backend.patient.repository.PatientReservingsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,6 +52,7 @@ public class PatientReservingsBO {
 				.visitDate(visitDate)
 				.imagePath(imagePath)
 				.status("예약대기")
+				.treatment("진료대기")
 				.build();
 		
 		log.error("[!!!!! savedReservingsEntity : {} !!!!!] : ", reservings);
