@@ -41,9 +41,6 @@ public class PatientReservingsEntity {
 	@Column(name = "doctorNumber") // 카멜 케이스 설정
 	private int doctorNumber;
 	
-	@Column(name = "reserveId") // 카멜 케이스 설정
-	private int reserveId;
-	
 	@Column(name = "customerId") // 카멜 케이스 설정
 	private int customerId;
 	

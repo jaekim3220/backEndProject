@@ -48,9 +48,9 @@ public class FileManagerService {
 			// ★★★★★ 한글이 들어간 이미지는 업로드 불가 => 영문자 이미지 사용 ★★★★★
 			Path path = Paths.get(filePath + file.getOriginalFilename()); // 어느 경로에 어느 이름으로 넣을 것인지 지정
 			Files.write(path, bytes); // 설정한 path에 bytes 데이터(파일) 추가
-	        log.info("파일 업로드 성공: " + path.toString());
+	        log.info("!!!!! 파일 업로드 성공 : {} !!!!!", path.toString());
 		} catch (IOException e) {
-	        log.error("파일 업로드 실패: ", e);
+	        log.error("!!!!! 파일 업로드 실패 : !!!!!", e);
 			return null; // 이미지 업로드 시 실패하면 결로를 null로 return해 DB INSERT를 정상적으로 진행
 		}
 		
