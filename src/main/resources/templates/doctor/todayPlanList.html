@@ -24,9 +24,9 @@
 			</thead>
 			
 			<tbody>
-				<tr>
-					<td><a href="#" id="reserveDepart">환자이름</a></td>
-					<td><a href="#" id="reserveTitle">제목</a></td>
+				<tr th:each="reservingList : ${doctorsReservingsList}">
+					<td><a href="#" id="reserveDepart" th:text="${reservingList.customerName}">환자이름</a></td>
+					<td><a href="#" id="reserveTitle" th:text="${reservingList.title}">제목</a></td>
 					<td>내용</td>
 					<td>방문날짜</td>
 					<td>예약상태</td>
