@@ -4,9 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.FileManagerService;
-import com.backend.doctor.domain.Reservings;
 import com.backend.patient.entity.PatientReservingsEntity;
-import com.backend.patient.entity.ReserversEntity;
 import com.backend.patient.repository.PatientReservingsRepository;
 
 import lombok.RequiredArgsConstructor;

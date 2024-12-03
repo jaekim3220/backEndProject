@@ -178,7 +178,7 @@ public class PatientRestController {
 		
 		// 고객 고유 번호, 로그인 아이디 추출(비로그인 방지) - breakpoint
 		// session => customerId(DB), customerLoginId(BD)
-		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 @PostMapping("/sign-in") 참고
 		int customerId = (int) session.getAttribute("customerId"); // customer.id
 		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
 		String customerName = (String) session.getAttribute("customerName"); // customer.name
@@ -232,7 +232,7 @@ public class PatientRestController {
 		/* id, customerId, doctorNum, title, description, visitDate, imagePath */
 		
 		// 고객 로그인 아이디 추출(이미지 업로드용) - breakpoint
-		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 @PostMapping("/sign-in") 참고
 		Integer customerId = (Integer) session.getAttribute("customerId"); // customer.id (@RequestParam 대신 session 사용)
 		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
 		String customerName = (String) session.getAttribute("customerName"); // customer.name
@@ -276,7 +276,7 @@ public class PatientRestController {
 			HttpSession session) {
 
 		// 고객 로그인 아이디 추출(로그인/비로그인 구분) - breakpoint
-		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 @PostMapping("/sign-in") 참고
 		Integer customerId = (Integer) session.getAttribute("customerId");
 		Map<String, Object> result = new HashMap<>();
 		if(customerId == null) {
