@@ -10,6 +10,7 @@
  	아무 버튼을 누르지 않았을 때의 기능을 구현하기 위한 쿼리문 포함 -->
 	<select id="selectReservingsByDoctorId" parameterType="map" resultType="com.backend.doctor.domain.DoctorsReservings">
 		SELECT
+			`id`
 			`doctorNumber`,
 			`customerId`,
 			`customerName`,

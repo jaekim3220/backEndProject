@@ -86,8 +86,9 @@ public class DoctorController {
 		if(doctorsReservingsList.isEmpty() == false) { // postList가 비어있지 않을 때 페이징 정보 세팅
 			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 Id 값 할당
 			nextId = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getId(); // 가장 마지막 칸의 post 객체(행) 추출 + 해당 글 번호(id) 추출
+			log.info("##### nextId : {} #####", nextId);
 			prevId = doctorsReservingsList.get(0).getId(); // 첫 번째 칸 id
-			
+			log.info("##### prevId : {} #####", prevId);
 		}
 		
 		// Model에 객체 삽입
