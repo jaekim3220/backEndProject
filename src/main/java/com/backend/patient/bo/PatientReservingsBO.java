@@ -70,4 +70,65 @@ public class PatientReservingsBO {
 	}
 	
 	
+	// input : 
+	// int id, int customerId, Integer customerId, String customerLoginId, String customerName, 
+	// String title, String description, String visitDate, MultipartFile file	
+    // output : X(void)
+	// @PutMapping("/update")
+    public void updateToReservings(int id, Integer customerId, String customerLoginId, 
+    		String customerName, int doctorNum, String title, String description, 
+    		String visitDate, MultipartFile file) {
+    	
+    	
+    	// DB SELECT(기존 데이터 확인) - breakpoint
+    	PatientReservingsEntity patientReservings = patientReservingsRepository.findByIdAndCustomerId(id, customerId);
+    	log.info("!!!!! `reservings` DB SELECT 결과 :  {} !!!!!", patientReservings);
+    	
+        if (patientReservings == null) {
+        	log.info("!!!!! [글 수정] patientReservings is null. id : {}, customerId : {} !!!!!", id, customerId);
+            return; // 해당 ID와 Customer ID에 대한 예약이 없을 경우
+        }
+    	
+		// 파일 존재 시 삭제 후 새 이미지 업로드 - breakpoint
+		/*
+		기존 글에 이미지가 부재
+		- 파일 업로드 => 성공 시 DB 저장
+				=> 실패 시 DB 저장 X
+
+		기존 글에 이미지가 존재
+		- 파일 업로드 => 성공 시 기존 이미지 제거 후 DB 저장
+				=> 실패 시 기존 이미지 그대로, DB 저장 X
+		*/
+        String imagePath = null;
+        if(file != null) {  // 새로 업로드 할 이미지가 존재
+        	// 새로 업로드할 이미지 주소
+        	imagePath = fileManagerService.uploadFile(file, customerLoginId);
+        	log.info("!!!!! imagePath : {} !!!!!", imagePath);
+        	
+        	// 새로운 이미지 업로드 성공 && 기존 이미지가 존재 시 삭제
+        	if(imagePath != null && patientReservings.getImagePath() != null) {
+        		// 기존에 존재하는 이미지 폴더, 파일 제거(서버)
+        		fileManagerService.deleteFolderFile(patientReservings.getImagePath());
+        	}
+        }
+        
+        
+        // 필드 값 업데이트 - breakpoint
+        PatientReservingsEntity updateReservingsEntity = patientReservings.toBuilder()
+        		.doctorNumber(doctorNum)
+        		.customerId(customerId)
+        		.customerName(customerName)
+        		.title(title)
+        		.description(description)
+        		.visitDate(visitDate)
+        		.imagePath(imagePath != null ? imagePath : patientReservings.getImagePath()) // 새 이미지 파일 : 기존 이미지 파일
+        		.build();
+        		
+        
+        // DB Update - breakpoint
+        patientReservingsRepository.save(updateReservingsEntity);
+        log.info("!!!!! 업데이트한 `reservings` 테이블 예약 정보 : {} !!!!!", updateReservingsEntity);
+    }
+	
+    
 }

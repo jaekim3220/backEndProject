@@ -245,7 +245,14 @@ public class PatientRestController {
 		}
 		
 		// DB Update + 파일 업로드(옵션) - breakpoint
+		// `reservings` 테이블
 		patientReservingsBO.updateToReservings(id, customerId, customerLoginId, customerName, doctorNum, title, description, visitDate, file);
+		if(patientReservingsBO == null) {
+			result.put("code", 500);
+			result.put("error_message", "예약 수정에 실패했습니다. 관리자에게 문의하세요.");
+		}
+		
+		// `reservers` 테이블
 		reserversBO.updateByIdcustomerId(id, customerId, customerLoginId, doctorNum, title, description, visitDate, file);		
 		
 		
