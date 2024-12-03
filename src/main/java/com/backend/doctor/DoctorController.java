@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.bo.DoctorsReservingsBO;
 import com.backend.doctor.domain.DoctorsReservings;
 
@@ -60,7 +59,11 @@ public class DoctorController {
 	// /doctor/{doctors.id}/today-plan-view
 	@GetMapping("/today-plan-view")
 	// localhost/doctor/today-plan-view
-	public String todayPlanView(Model model, HttpSession session) {
+	public String todayPlanView(
+			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
+			@RequestParam(value = "prevId", required = false) Integer prevIdParam,
+            @RequestParam(value = "nextId", required = false) Integer nextIdParam,
+            Model model, HttpSession session) {
 		
 		
 		// 로그인 여부 검사 - breakpoint
@@ -73,12 +76,24 @@ public class DoctorController {
 		
 		// DB SELECT - breakpoint
 		// `reservings` 테이블에서 (reservings.doctorNumber)가 본인 id(doctors.id)와 동일한 행 List 추출
-		List<DoctorsReservings> doctorsReservings = doctorsReservingsBO.getReservingsByDoctorId(doctorId);
-		log.info("##### 의사의 예약 목록 : {}개 #####", doctorsReservings.size());
+		List<DoctorsReservings> doctorsReservingsList = doctorsReservingsBO.getReservingsByDoctorId(doctorId, prevIdParam, nextIdParam);
+		int prevId = 0;
+		int nextId = 0;
+		log.info("##### 의사의 예약 목록 : {}개 #####", doctorsReservingsList.size());
+
 		
+		// 공백 처리 - breakpoint
+		if(doctorsReservingsList.isEmpty() == false) { // postList가 비어있지 않을 때 페이징 정보 세팅
+			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 Id 값 할당
+			nextId = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getId(); // 가장 마지막 칸의 post 객체(행) 추출 + 해당 글 번호(id) 추출
+			prevId = doctorsReservingsList.get(0).getId(); // 첫 번째 칸 id
+			
+		}
 		
 		// Model에 객체 삽입
-		model.addAttribute("doctorsReservingsList", doctorsReservings);
+		model.addAttribute("doctorsReservingsList", doctorsReservingsList);
+        model.addAttribute("nextId", nextId);
+        model.addAttribute("prevId", prevId);
 		
 		
 		return "doctor/todayPlanList";

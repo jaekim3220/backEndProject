@@ -5,7 +5,10 @@
 <mapper namespace="com.backend.doctor.mapper.DoctorsReservingsMapper">
 
 	<!-- @GetMapping("/today-plan-view") -->
-	<select id="selectReservingsByDoctorId" resultType="com.backend.doctor.domain.DoctorsReservings">
+ 	<!-- `내림차순`으로 정렬한 DoctorsReservings List 데이터를 `다음버튼` 클릭으로 내림차순으로 나열, 
+ 	`이전버튼` 클릭으로  이전 목록이 있는 DoctorsReservings List 데이터를 역순으로 정렬해 나열하는 기능, 
+ 	아무 버튼을 누르지 않았을 때의 기능을 구현하기 위한 쿼리문 포함 -->
+	<select id="selectReservingsByDoctorId" parameterType="map" resultType="com.backend.doctor.domain.DoctorsReservings">
 		SELECT
 			`doctorNumber`,
 			`customerId`,
@@ -23,6 +26,29 @@
 			`reservings`
 		WHERE
 			`doctorNumber` = #{doctorId}
+		<!-- 다음 버튼 : 기준 날짜 이후 데이터 (오름차순 정렬) -->
+        <if test="direction == 'next'">
+            <![CDATA[
+            AND `id` > #{standardId}
+            ]]>
+            ORDER BY `visitDate` ASC
+        </if>
+		
+		<!-- 이전 버튼: 기준 날짜 이후 데이터 (내림차순 정렬) -->
+        <if test="direction == 'prev'">
+            <![CDATA[
+            AND `id` < #{standardId}
+            ]]>
+            ORDER BY `visitDate` DESC
+        </if>
+ 		
+ 		<!-- 기본 동작 : 모든 데이터를 오름차순 정렬 -->
+        <if test="direction == null">
+            ORDER BY `visitDate` ASC
+        </if>
+        
+ 		LIMIT ${limit}
+ 		
 	</select>
 
 </mapper>

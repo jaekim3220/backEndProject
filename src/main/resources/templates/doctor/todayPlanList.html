@@ -29,8 +29,12 @@
 					<td><a href="#" id="reserveTitle" th:text="${reservingList.title}" class="truncate-text">제목</a></td>
 					<td th:text="${reservingList.description}" class="truncate-text">내용</td>
 					<td th:text="${reservingList.visitDate}">방문날짜</td>
-					<td th:text="${reservingList.status}">예약상태</td>
-					<td th:text="${reservingList.treatment}">진행상태</td>
+					<td th:if="${reservingList.status} == '예약대기'" class="text-warning" th:text="${reservingList.status}">예약상태</td>
+					<td th:if="${reservingList.status} == '예약확정'" class="text-success" th:text="${reservingList.status}">예약상태</td>
+					<td th:if="${reservingList.status} == '예약불가'" class="text-danger" th:text="${reservingList.status}">예약상태</td>
+					<td th:if="${reservingList.treatment} == '진료대기'" class="text-warning" th:text="${reservingList.treatment}">진행상태</td>
+					<td th:if="${reservingList.treatment} == '진료중'" class="text-success" th:text="${reservingList.treatment}">진행상태</td>
+					<td th:if="${reservingList.treatment} == '진료완료'" class="text-dark" th:text="${reservingList.treatment}">진행상태</td>
 				</tr>
 			</tbody>
 		</table>
@@ -45,9 +49,9 @@
 		url 변동 없이 데이터만 변환 하도록 설계(Thymeleaf 문법 사용)
 		-->
 		<div class="text-center">
-			<a href="#" class="mr-5">&lt;&lt; 이전 목록</a>
+			<a th:href="|/doctor/today-plan-view?prevId=${prevId}|" class="mr-5">&lt;&lt; 이전</a>
 			
-			<a href="#" class="ml-5">다음 목록 &gt;&gt;</a>
+        	<a th:href="|/doctor/today-plan-view?nextId=${nextId}|" class="ml-5">다음 &gt;&gt;</a>
 		</div>
 		
 	</div>

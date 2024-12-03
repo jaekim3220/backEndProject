@@ -22,7 +22,11 @@ public interface DoctorsReservingsMapper {
 	// input : 의사 고유 번호(doctors.id) => doctorId
 	// output : List<Map<String, Object>>
 	// @GetMapping("/today-plan-view")
-	public List<DoctorsReservings> selectReservingsByDoctorId(@Param("doctorId") Integer doctorId);
+	public List<DoctorsReservings> selectReservingsByDoctorId(
+			@Param("doctorId") Integer doctorId,
+	        @Param("standardId") Integer standardId,
+	        @Param("direction") String direction,
+	        @Param("limit") int limit);
 	
 	
 }
