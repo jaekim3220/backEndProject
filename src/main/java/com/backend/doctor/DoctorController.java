@@ -83,9 +83,11 @@ public class DoctorController {
 
 		
 		// 공백 처리 - breakpoint
-		if(doctorsReservingsList.isEmpty() == false) { // postList가 비어있지 않을 때 페이징 정보 세팅
+		if(!doctorsReservingsList.isEmpty()) { // postList가 비어있지 않을 때 페이징 정보 세팅
 			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 Id 값 할당
-			nextId = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getId(); // 가장 마지막 칸의 post 객체(행) 추출 + 해당 글 번호(id) 추출
+			nextId = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getId(); // 가장 마지막 칸의 객체(행) 번호 추출 => 해당 번호의 다음 글을 추출하도록 유도
+			log.info("##### doctorsReservingsList : {} #####", doctorsReservingsList);
+			log.info("##### doctorsReservingsList.size() : {} #####", doctorsReservingsList.size());
 			log.info("##### nextId : {} #####", nextId);
 			prevId = doctorsReservingsList.get(0).getId(); // 첫 번째 칸 id
 			log.info("##### prevId : {} #####", prevId);

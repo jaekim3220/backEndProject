@@ -46,12 +46,12 @@ public class DoctorsReservingsBO {
 		String direction = null; // 페이지 변경 방향(prev 또는 next) 초기 값 null - prev, next 여부에 따라서 (`prev` or `next`)
 		
 		if(prevId != null) { // 이전버튼 클릭 한 경우 - breakpoint
-			standardId = prevId;
+			standardId = prevId; // 화면에 보이는 글 목록의 첫 번째 id 번호
 			direction = "prev";
 			
 			// 역순으로 생성 - breakpoint
 			// 1) row 불러오기
-			List<DoctorsReservings> reservingsList = doctorsReservingsMapper.selectReservingsByDoctorId(nextId, standardId, direction, VIEW_MAX_SIZE);
+			List<DoctorsReservings> reservingsList = doctorsReservingsMapper.selectReservingsByDoctorId(doctorId, standardId, direction, VIEW_MAX_SIZE);
 			log.info("##### reservingsList : {} #####", reservingsList);
 			// 2) 역순 정렬
 			Collections.reverse(reservingsList); // 순서 뒤집고 저장
@@ -59,7 +59,7 @@ public class DoctorsReservingsBO {
 			
 			return reservingsList;
 		} else if(nextId != null) { // 다음버튼 클릭 한 경우 - breakpoint
-			standardId = nextId;
+			standardId = nextId; // 화면에 보이는 글 목록의 마지막 id 번호
 			direction = "next";
 		}
 		
