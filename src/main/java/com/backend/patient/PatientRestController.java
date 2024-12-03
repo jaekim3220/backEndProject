@@ -50,6 +50,8 @@ public class PatientRestController {
 	
 	@Autowired
 	private ReserversBO reserversBO;
+	
+	@Autowired
 	private PatientReservingsBO patientReservingsBO;
 	
 	// 아이디 중복 확인
@@ -183,7 +185,16 @@ public class PatientRestController {
 		
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
+		// `reservings` 테이블
 		int rowCount1 = patientReservingsBO.addToReservings(doctorNum, customerId, customerName, title, description, visitDate, file, customerLoginId);
+		if(rowCount1 != 1) {
+	        Map<String, Object> result = new HashMap<>();
+	        result.put("code", 500);
+	        result.put("error_message", "예약 신청에 실패했습니다. 관리자에게 문의하세요.");
+	        return result; // 클라이언트로 실패 응답 전송
+		}
+		
+		// `reservers` 테이블
 		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, description, visitDate, file);
 		log.info("!!!!! patientReservingsBO : {} !!!!!", patientReservingsBO);
 		
@@ -224,6 +235,7 @@ public class PatientRestController {
 		// session에 담을 변수(parameter)가 기억나지 않을 경우 PatientController 참고
 		Integer customerId = (Integer) session.getAttribute("customerId"); // customer.id (@RequestParam 대신 session 사용)
 		String customerLoginId = (String) session.getAttribute("customerLoginId"); // customer.customerId
+		String customerName = (String) session.getAttribute("customerName"); // customer.name
 		log.info("!!!!! customerId : {}, customerLoginId : {} !!!!!", customerId, customerLoginId);
 		
 		Map<String, Object> result = new HashMap<>();
@@ -233,6 +245,7 @@ public class PatientRestController {
 		}
 		
 		// DB Update + 파일 업로드(옵션) - breakpoint
+		patientReservingsBO.updateToReservings(id, customerId, customerLoginId, customerName, doctorNum, title, description, visitDate, file);
 		reserversBO.updateByIdcustomerId(id, customerId, customerLoginId, doctorNum, title, description, visitDate, file);		
 		
 		
