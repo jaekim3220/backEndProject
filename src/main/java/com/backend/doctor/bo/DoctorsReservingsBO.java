@@ -73,6 +73,11 @@ public class DoctorsReservingsBO {
 		String minVisitDate = doctorsReservingsMapper.selectReservingsdBydoctorNumberAsSort(doctorId, "ASC");
 		return minVisitDate.equals(prevVisitDate); // 같으면 true 반환
 	}
-	
+	// `다음` 페이지의 마지막인가
+	// 날짜가 가장 빠른(작은) 경우 첫 번째 ROW
+	public boolean isNextLastPageByVisitDate(int doctorId, String nextVisitDate) {
+		String minVisitDate = doctorsReservingsMapper.selectReservingsdBydoctorNumberAsSort(doctorId, "DESC");
+		return minVisitDate.equals(nextVisitDate); // 같으면 true 반환
+	}
 	
 }

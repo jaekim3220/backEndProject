@@ -98,6 +98,11 @@ public class DoctorController {
 			if (doctorsReservingsBO.isPrevLastPageByVisitDate(doctorId, prevVisitDate)) {
 	            prevVisitDate = null; // 비활성화 조건
 	        }
+			// 더 이상 받아 올 다음 visitDate 데이터가 없다면 - breakpoint
+			// 유저가 쓴 글들 중 제일 큰 큰 날짜가 visitDate와 같을 때 더 이상 없음
+			if (doctorsReservingsBO.isNextLastPageByVisitDate(doctorId, nextVisitDate)) {
+				nextVisitDate = null; // 비활성화 조건
+	        }
 		}
 		
 		// Model에 객체 삽입
