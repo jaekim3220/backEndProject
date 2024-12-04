@@ -24,7 +24,7 @@ public interface DoctorsReservingsMapper {
 	// @GetMapping("/today-plan-view")
 	public List<DoctorsReservings> selectReservingsByDoctorId(
 			@Param("doctorId") Integer doctorId,
-	        @Param("standardId") Integer standardId,
+			@Param("standardVisitDate") String standardVisitDate,
 	        @Param("direction") String direction,
 	        @Param("limit") int limit);
 	

@@ -60,9 +60,9 @@ public class DoctorController {
 	@GetMapping("/today-plan-view")
 	// localhost/doctor/today-plan-view
 	public String todayPlanView(
-			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
-			@RequestParam(value = "prevId", required = false) Integer prevIdParam,
-            @RequestParam(value = "nextId", required = false) Integer nextIdParam,
+			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
+			@RequestParam(value = "prevVisitDate", required = false) String prevVisitDateParam,
+			@RequestParam(value = "nextVisitDate", required = false) String nextVisitDateParam,
             Model model, HttpSession session) {
 		
 		
@@ -76,27 +76,27 @@ public class DoctorController {
 		
 		// DB SELECT - breakpoint
 		// `reservings` 테이블에서 (reservings.doctorNumber)가 본인 id(doctors.id)와 동일한 행 List 추출
-		List<DoctorsReservings> doctorsReservingsList = doctorsReservingsBO.getReservingsByDoctorId(doctorId, prevIdParam, nextIdParam);
-		int prevId = 0;
-		int nextId = 0;
+		List<DoctorsReservings> doctorsReservingsList = doctorsReservingsBO.getReservingsByDoctorId(doctorId, prevVisitDateParam, nextVisitDateParam);
+	    String prevVisitDate = null;
+	    String nextVisitDate = null;
 		log.info("##### 의사의 예약 목록 : {}개 #####", doctorsReservingsList.size());
 
 		
 		// 공백 처리 - breakpoint
 		if(!doctorsReservingsList.isEmpty()) { // postList가 비어있지 않을 때 페이징 정보 세팅
 			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 Id 값 할당
-			nextId = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getId(); // 가장 마지막 칸의 객체(행) 번호 추출 => 해당 번호의 다음 글을 추출하도록 유도
+			nextVisitDate = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getVisitDate(); // List에 있는 가장 마지막 칸의 객체(행) 날짜 추출 => 해당 날짜의 다음 글을 추출하도록 유도
 			log.info("##### doctorsReservingsList : {} #####", doctorsReservingsList);
 			log.info("##### doctorsReservingsList.size() : {} #####", doctorsReservingsList.size());
-			log.info("##### nextId : {} #####", nextId);
-			prevId = doctorsReservingsList.get(0).getId(); // 첫 번째 칸 id
-			log.info("##### prevId : {} #####", prevId);
+			log.info("##### nextId : {} #####", nextVisitDate);
+			prevVisitDate = doctorsReservingsList.get(0).getVisitDate(); // List에 있는 가장 첫 번째 칸의 객체(행) 날짜 추출 => 해당 날짜의 이전 글을 추출하도록 유도
+			log.info("##### prevId : {} #####", prevVisitDate);
 		}
 		
 		// Model에 객체 삽입
 		model.addAttribute("doctorsReservingsList", doctorsReservingsList);
-        model.addAttribute("nextId", nextId);
-        model.addAttribute("prevId", prevId);
+	    model.addAttribute("nextVisitDate", nextVisitDate);
+	    model.addAttribute("prevVisitDate", prevVisitDate);
 		
 		
 		return "doctor/todayPlanList";

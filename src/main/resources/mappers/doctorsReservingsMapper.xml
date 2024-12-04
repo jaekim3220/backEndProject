@@ -30,7 +30,7 @@
 		<!-- 다음 버튼 : 기준 날짜 이후 데이터 (오름차순 정렬) -->
         <if test="direction == 'next'">
             <![CDATA[
-            AND `id` > #{standardId}
+            AND `visitDate` > #{standardVisitDate}
             ]]>
             ORDER BY `visitDate` ASC
         </if>
@@ -38,7 +38,7 @@
 		<!-- 이전 버튼: 기준 날짜 이후 데이터 (내림차순 정렬) -->
         <if test="direction == 'prev'">
             <![CDATA[
-            AND `id` < #{standardId}
+            AND `visitDate` < #{standardVisitDate}
             ]]>
             ORDER BY `visitDate` DESC
         </if>

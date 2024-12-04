@@ -49,9 +49,15 @@
 		url 변동 없이 데이터만 변환 하도록 설계(Thymeleaf 문법 사용)
 		-->
 		<div class="text-center">
-			<a th:if="${prevId != 0}" th:href="|/doctor/today-plan-view?prevId=${prevId}|" class="mr-5">&lt;&lt; 이전</a>
+			<!-- 이전 버튼 -->
+			<a th:if="${prevVisitDate != null}" 
+			   th:href="|/doctor/today-plan-view?prevVisitDate=${prevVisitDate}|" 
+			   class="mr-5">&lt;&lt; 이전</a>
 			
-        	<a th:if="${nextId != 0}" th:href="|/doctor/today-plan-view?nextId=${nextId}|" class="ml-5">다음 &gt;&gt;</a>
+			<!-- 다음 버튼 -->
+        	<a th:if="${nextVisitDate != null}" 
+        	   th:href="|/doctor/today-plan-view?nextVisitDate=${nextVisitDate}|" 
+        	   class="ml-5">다음 &gt;&gt;</a>
 		</div>
 		
 	</div>
