@@ -70,6 +70,7 @@
 	<!-- @GetMapping("/patient-status-view") - 의사 진료 현황 화면 -->
 	<select id="selectByIdAndDoctorNumber" resultType="com.backend.doctor.domain.DoctorsReservings" parameterType="map">
 		SELECT
+			`id`,
 			`doctorNumber`, 
 			`customerId`,
 			`customerName`,
