@@ -116,10 +116,31 @@ public class DoctorController {
 	
 	
 	// 의사 `진료 현황 화면`
-	// /doctor/{doctors.id}/patient-status-view
 	@GetMapping("/patient-status-view")
-	// localhost/doctor/patient-status-view
-	public String patientStatusView() {
+	// localhost/doctor/patient-status-view/{reservings.id}
+	public String patientStatusView(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id,
+			Model model, HttpSession session) {
+		
+		// 로그인 여부 검사 - breakpoint
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 RestController - @PostMapping("/sign-in") 참고
+		Integer doctorNumber = (Integer) session.getAttribute("doctorId");
+		if(doctorNumber == null) {
+			return "redirect:/doctor/sign-in-view";
+		}
+		
+		
+		// DB SELECT - breakpoint
+		DoctorsReservings reservingsMap = doctorsReservingsBO.getReservingsByIdDoctorNumber(id, doctorNumber);
+		log.info("##### 불러온 데이터 : {} #####", reservingsMap);
+		log.info("##### 불러온 데이터 환자 이름 : {} #####", reservingsMap.getCustomerName());
+		
+		
+		// Model에 데이터 삽입
+		model.addAttribute("doctorReservings", reservingsMap);
+		
+		
 		return "doctor/patientStatus";
 	}
 	

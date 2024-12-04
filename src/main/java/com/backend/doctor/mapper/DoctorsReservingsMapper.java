@@ -36,4 +36,11 @@ public interface DoctorsReservingsMapper {
 			@Param("sort") String sort);
 	
 	
+	// input : int id, Integer doctorNumber
+	// output : DoctorsReservings or null(단건)
+	// @GetMapping("/patient-status-view")
+	public DoctorsReservings selectByIdAndDoctorNumber(
+			@Param("id") int id, 
+			@Param("doctorNumber") Integer doctorNumber);
+	
 }

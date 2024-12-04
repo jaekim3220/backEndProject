@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.backend.doctor.DoctorController;
 import com.backend.doctor.domain.DoctorsReservings;
@@ -78,6 +79,14 @@ public class DoctorsReservingsBO {
 	public boolean isNextLastPageByVisitDate(int doctorId, String nextVisitDate) {
 		String minVisitDate = doctorsReservingsMapper.selectReservingsdBydoctorNumberAsSort(doctorId, "DESC");
 		return minVisitDate.equals(nextVisitDate); // 같으면 true 반환
+	}
+	
+	
+	// input : int id, Integer doctorNumber
+	// output : DoctorsReservings or null(단건)
+	// @GetMapping("/patient-status-view")
+	public DoctorsReservings getReservingsByIdDoctorNumber(int id, Integer doctorNumber) {
+		return doctorsReservingsMapper.selectByIdAndDoctorNumber(id, doctorNumber);
 	}
 	
 }

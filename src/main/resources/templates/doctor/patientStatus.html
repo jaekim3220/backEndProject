@@ -6,39 +6,40 @@
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
 	
-	<div class="w-50 patientStatus-box p-4 d-flex flex-column bg-light">
+	<div class="w-50 patientStatus-box p-4 d-flex flex-column bg-light"  th:each="doctorReserves : ${doctorReservings}">
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">진료 현황 페이지</h2>
 			
 		<!-- 예약 환자 이름 영역 -->
 		<!-- 차후 th문법을 사용해 내용 대체 -->
-		<div class="bg-secondary mb-2">
-			<span class="font-weight-bold">예약 환자 이름</span>
+		<div class="bg-white border border-dark mb-2">
+			<span class="font-weight-bold" th:text="|예약 환자 이름 : ${doctorReserves.customerName}|">예약 환자 이름</span>
 		</div>
 		
 		<!-- 환자 예약 제목 영역 -->
 		<!-- 차후 th문법을 사용해 내용 대체 -->
-		<div class="bg-secondary mb-2">
-			<span class="font-weight-bold">예약 제목</span>
+		<div class="bg-white border border-dark mb-2">
+			<span class="font-weight-bold" th:text="|예약 제목 : ${doctorReserves.title}|">예약 제목</span>
 		</div>
 		
 		<!-- 환자 예약 내용 영역 -->
 		<!-- 차후 th문법을 사용해 내용 대체 -->
-		<div class="bg-secondary mb-2">
-			<span class="font-weight-bold">예약 내용</span>
+		<div class="bg-white border border-dark  mb-2">
+			<span class="font-weight-bold" th:text="|예약 내용 : ${doctorReserves.description}|">예약 내용</span>
 		</div>
 		
 		<!-- 환자 방문 날짜 영역 -->
 		<!-- 차후 th문법을 사용해 내용 대체 -->
-		<div class="bg-secondary mb-2">
-			<span class="font-weight-bold">방문 내용</span>
+		<div class="bg-white border border-dark mb-2">
+			<span class="font-weight-bold" th:text="|방문 날짜 : ${doctorReserves.visitDate}|">방문 내용</span>
 		</div>
 		
 		<!-- 환자 업로드 파일 영역 
 		차후 해당 영역을 의사가 업데이트 할 수 있도록 고려 -->
 		<!-- 차후 th문법을 사용해 내용 대체 -->
-		<div class="bg-secondary mb-2">
-			<span class="font-weight-bold">업로드 파일 내용</span>
+		<!-- 이미지 영역 : 이미지가 있을 경우에만 -->
+		<div class="my-3 text-center" th:if="${doctorReserves.imagePath != null}">
+			<img th:src="${doctorReserves.imagePath}" alt="본문 이미지" width="250">
 		</div>
 		
 		

@@ -65,5 +65,24 @@
 			`visitDate` ${sort}
 		LIMIT 1
 	</select>
+	
+	
+	<!-- @GetMapping("/patient-status-view") - 의사 진료 현황 화면 -->
+	<select id="selectByIdAndDoctorNumber" resultType="com.backend.doctor.domain.DoctorsReservings" parameterType="map">
+		SELECT
+			`doctorNumber`, 
+			`customerId`,
+			`customerName`,
+			`title`,
+			`description`,
+			`visitDate`,
+			`imagePath`,
+			`status`
+		FROM
+			`reservings`
+		WHERE
+			`id` = #{id} AND
+			`doctorNumber` = #{doctorNumber}
+	</select>
 
 </mapper>
