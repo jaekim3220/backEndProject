@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.common.EncryptUtils;
 import com.backend.doctor.bo.DoctorsBO;
-import com.backend.doctor.domain.Doctors;
-import com.backend.doctor.mapper.DoctorsMapper;
+import com.backend.doctor.bo.PatientReserversBO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
@@ -32,6 +32,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 */
 
+@Slf4j
 @RestController
 @RequestMapping("/doctor")
 @RequiredArgsConstructor
@@ -40,6 +41,7 @@ public class DoctorRestController {
 	
 	// 생성자를 사용한 의존성 주입
 	private final DoctorsBO doctorsBO;
+	private final PatientReserversBO patientReserversBO;	
 	
     // 아이디 중복 확인
 	@GetMapping("/is-duplicate-id")
@@ -167,13 +169,13 @@ public class DoctorRestController {
 			@RequestParam("id") int id,
 			@RequestParam("customerId") int customerId,
 			@RequestParam("status") String status,
-			@RequestParam("treatment") int treatment,
-			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
-			@RequestParam(value = "memo", required = false) String memo,
+			@RequestParam("treatment") String treatment,
+			@RequestParam("memo") String memo,
 			Model model, HttpSession session) {
 		
 		// 로그인 여부 검사 - breakpoint
 		Integer doctorId = (Integer) session.getAttribute("doctorId");
+		log.info("##### doctorId : {} #####", doctorId);
 		
 		Map<String, Object> result = new HashMap<>();
 		if(doctorId == null) {
@@ -185,6 +187,7 @@ public class DoctorRestController {
 		
 		// DB Update - breakpoint
 		// 의사의 `reservings`, 환자의 `reservers` 모두 업데이트
+		patientReserversBO.updateReserversByCustomerIdDoctorId(id, customerId, doctorId, status);
 		
 		
 		// Response(응답)
