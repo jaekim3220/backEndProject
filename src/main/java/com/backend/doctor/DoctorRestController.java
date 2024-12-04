@@ -3,6 +3,7 @@ package com.backend.doctor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -159,11 +160,39 @@ public class DoctorRestController {
 	}
 	
 	
-	// SELECT 후 의사 id(doctors.id)와 일치하는 데이터 행 목록(List)를 나열
-//	@PostMapping("/load-out")
-//	public Map<String, Object> doctorScheduleLoad() {
-//		
-//	}
+	// 환자 영역 `reservsers`, 의사 영역`reservings` update
+	@PostMapping("/statusUpdate")
+	public Map<String, Object> statusUpdate(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id,
+			@RequestParam("customerId") int customerId,
+			@RequestParam("status") String status,
+			@RequestParam("treatment") int treatment,
+			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
+			@RequestParam(value = "memo", required = false) String memo,
+			Model model, HttpSession session) {
+		
+		// 로그인 여부 검사 - breakpoint
+		Integer doctorId = (Integer) session.getAttribute("doctorId");
+		
+		Map<String, Object> result = new HashMap<>();
+		if(doctorId == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용이 가능합니다.");
+			return result;
+		}
+		
+		
+		// DB Update - breakpoint
+		// 의사의 `reservings`, 환자의 `reservers` 모두 업데이트
+		
+		
+		// Response(응답)
+		result.put("code", 200);
+		result.put("result", "예약 현황 업데이트 성공");
+		
+		return result;
+	}
 	
 	
 }

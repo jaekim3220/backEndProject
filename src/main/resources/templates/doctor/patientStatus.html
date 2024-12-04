@@ -47,10 +47,10 @@
 		<!-- 환자 예약 상태 선택 영역 -->
 		<div>
 			<span class="patient-reserve-status">환자 예약 상태</span>
-			<select class="depart-select m-3">
-				<option value="reserveWait">예약대기</option>
-				<option value="reserveApprove">예약확정</option>
-				<option value="reserveReject">예약불가</option>
+			<select id="reserveStatus" class="depart-select m-3">
+				<option value="예약대기">예약대기</option>
+				<option value="예약확정">예약확정</option>
+				<option value="예약불가">예약불가</option>
 			</select>
 		</div>
 		
@@ -60,17 +60,19 @@
 		<!-- 환자 진료 상태 영역 -->
 		<div>
 			<span class="patient-treatment-status">환자 진료 상태</span>
-			<select class="depart-select m-3">
-				<option value="reserveWait">진료대기</option>
-				<option value="reserveApprove">예약확정</option>
-				<option value="reserveReject">예약불가</option>
+			<select id="treatmentStatus" class="depart-select m-3">
+				<option value="진료대기">진료대기</option>
+				<option value="진료중">진료중</option>
+				<option value="진료완료">진료완료</option>
 			</select>
 		</div>
 		
+		<input type="hidden" id="customerId" th:value="${doctorReserves.customerId}">
+		
 		<!-- 버튼 영역 -->
 		<div class="d-flex w-100 justify-content-around">
-			<a id="changeCancelBtn" href="/doctor/today-plan-view" class="btn btn-warning w-45 text-white">취소하기</a> <!-- 예약 현황(금일 예약 목록) 페이지 -->
-			<a id="patientStatusSaveBtn" href="#" class="btn btn-warning w-45 text-white">저장하기</a>
+			<a id="changeCancelBtn" href="javascript:history.back()"  class="btn btn-warning w-45 text-white">취소하기</a> <!-- 예약 현황(금일 예약 목록) 페이지 -->
+			<a id="patientStatusSaveBtn" href="#" class="btn btn-warning w-45 text-white" th:data-reserves-id="${doctorReserves.id}">저장하기</a>
 		</div>
 		
 	</div>
@@ -79,5 +81,94 @@
 
 <th:block layout:fragment="script">
     <script>
+    	
+    	$(document).ready(function(e) {
+    		
+    		// `저장하기` 버튼
+    		$("#patientStatusSaveBtn").on("click", function(e) {
+    			e.preventDefault();
+    			
+    			// alert("저장하기");
+    			
+    			
+    			// validation(parameter)
+    			
+    			// 저장하기 버튼의 id 값 추출
+    			let id = $(this).data("reserves-id"); // reservings.id
+    			// console.log(id);
+    			
+    			// 예약 상태
+    			let status = $("#reserveStatus").val().trim();
+    			
+    			// 환자 상태/특이 사항
+    			let memo = $("#patientStatus").val().trim(); 
+    			
+    			// 진료 상태
+    			let treatment = $("#treatmentStatus").val().trim();
+    			
+    			// 환자 고유 번호
+    			let customerId = $("#customerId").val().trim(); // reservings.customerId
+    			
+    			// console.log(status);
+    			// console.log(memo);
+    			// console.log(customerId);
+                
+    			
+    			// 차후 이미지 파일을 다룰 수도 있으므로 form 형식 사용
+    			// form을 JS에서 생성 후 AJAX에서 구현 가능
+    			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+    			let formData = new FormData();
+    			
+    			formData.append("id", id);
+    			formData.append("customerId", customerId);
+    			formData.append("status", status);
+    			formData.append("memo", memo);
+    			formData.append("treatment", treatment);
+    			
+                // 데이터 확인
+    			/* formData.forEach((value, key) => {
+    				console.log(`${key} : ${value}`);
+    			}); */
+    			
+    			
+    			// AJAX 요청
+    			// form데이터 사용
+    			$.ajax({
+    				// request
+    				type:"POST", // type 생략 시 자동 GET
+    				url:"/doctor/status",
+    				data:formData, // json, key-value, formData
+    				processData:false, // 파일 업로드 필수 설정(form)
+    				contentType:false, // 파일 업로드 필수 설정(form)
+    				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩
+    				
+    				// response
+    				success:function(data) {
+    					// 성공일 때 저장 후 `예약 현황 화면`으로 이동
+    					if(data.code == 200) { // Dictionary 형태
+    						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+    						// => Dictionary 형식으로 변경
+    						// "{"code" : 200, "result" : "진료 상황 변경 성공"}"
+    						alert("예약현황/진료상황 변경 성공");
+    						location.href="/doctor/today-plan-view";
+    					} else if (data.code == 403) {
+    						alert(data.error_message);
+    						location.href="/doctor/sign-in-view";
+    					}
+    					else {
+    						alert(data.error_message);
+    					}
+    				},
+    				error:function(e) {
+    					alert("환자의 예약현황/진료상황 변경에 실패했습니다.");
+    				}
+    				
+    			}); // AJAX 요청 종료
+    			
+    			
+    		}) // `저장하기` 버튼 종료
+    		
+    	});
+    	
     </script>
 </th:block>
