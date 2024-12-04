@@ -93,9 +93,9 @@ public class DoctorsReservingsBO {
 	// output : int
 	// @PostMapping("/statusUpdate")
 	public int updateReservingsByIdDoctorNumberDoctorId(
-			int id, int doctorNumber, int customerId, String memo, String status, String treatment) {
-		
-		return doctorsReservingsMapper.updateReservingsByIdDoctorNumberDoctorId(id, doctorNumber, customerId, memo, status, treatment);
+			int id, int doctorId, int customerId, String memo, String status, String treatment) {
+        log.info("##### id={}, doctorNumber={}, customerId={}, memo={}, status={}, treatment={} #####", id, doctorId, customerId, memo, status, treatment);
+		return doctorsReservingsMapper.updateReservingsByIdDoctorNumberDoctorId(id, doctorId, customerId, memo, status, treatment);
 	}
 	
 }

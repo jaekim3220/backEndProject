@@ -49,7 +49,7 @@ public interface DoctorsReservingsMapper {
 	// output : int
 	// @PostMapping("/statusUpdate")
 	public int updateReservingsByIdDoctorNumberDoctorId(
-			@Param("id") int id, @Param("doctorNumber") int doctorNumber,
+			@Param("id") int id, @Param("doctorId") int doctorId,
 			@Param("customerId") int customerId, @Param("memo") String memo,
 			@Param("status") String status, @Param("treatment") String treatment);
 	

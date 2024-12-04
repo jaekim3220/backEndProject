@@ -88,7 +88,7 @@
 	
 	
 	<!-- @PostMapping("/statusUpdate") -->
-	<update id="updateReservingsByIdDoctorNumberDoctorId" parameterType="int">
+	<update id="updateReservingsByIdDoctorNumberDoctorId" parameterType="map">
 		UPDATE 
 			`reservings`
 		SET 
