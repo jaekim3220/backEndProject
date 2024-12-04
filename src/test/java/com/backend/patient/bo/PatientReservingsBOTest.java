@@ -1,12 +1,12 @@
 package com.backend.patient.bo;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
+import org.apache.ibatis.annotations.Param;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
+import com.backend.doctor.bo.PatientReserversBO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +32,21 @@ class PatientReservingsBOTest {
 			String description, String visitDate, MultipartFile file)*/
 	void 환자영역입력() {
 		int a = reserversBO.addPatientReserve(1, "bbbbbb", 3, "제목", "내용", "2024-11-08", null);
+		log.info("!!! {} !!!", a);
+	}
+	
+	@Autowired
+	PatientReserversBO patientReserversBO;
+	@Transactional
+	@Test
+	/*
+	public int updateReserversByCustomerIdDoctorId(
+			@Param("customerId") int customerId,@Param("doctorId") int doctorId) {
+		
+		return patientReserversMapper.updateReserversByCustomerIdDoctorId(customerId, doctorId);
+	} */
+	void 환자영역업데이트() {
+		int a = patientReserversBO.updateReserversByCustomerIdDoctorId(1, 1, 1, "예약확정");
 		log.info("!!! {} !!!", a);
 	}
 
