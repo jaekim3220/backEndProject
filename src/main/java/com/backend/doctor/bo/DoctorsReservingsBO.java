@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import com.backend.doctor.DoctorController;
 import com.backend.doctor.domain.DoctorsReservings;
 import com.backend.doctor.mapper.DoctorsReservingsMapper;
 
@@ -87,6 +85,17 @@ public class DoctorsReservingsBO {
 	// @GetMapping("/patient-status-view")
 	public DoctorsReservings getReservingsByIdDoctorNumber(int id, Integer doctorNumber) {
 		return doctorsReservingsMapper.selectByIdAndDoctorNumber(id, doctorNumber);
+	}
+	
+	
+	// input : 
+	// int id, int doctorNumber, int customerId, String memo, String status, String treatment
+	// output : int
+	// @PostMapping("/statusUpdate")
+	public int updateReservingsByIdDoctorNumberDoctorId(
+			int id, int doctorNumber, int customerId, String memo, String status, String treatment) {
+		
+		return doctorsReservingsMapper.updateReservingsByIdDoctorNumberDoctorId(id, doctorNumber, customerId, memo, status, treatment);
 	}
 	
 }

@@ -43,4 +43,15 @@ public interface DoctorsReservingsMapper {
 			@Param("id") int id, 
 			@Param("doctorNumber") Integer doctorNumber);
 	
+	
+	// input : 
+	// int id, int doctorNumber, int customerId, String memo, String status, String treatment
+	// output : int
+	// @PostMapping("/statusUpdate")
+	public int updateReservingsByIdDoctorNumberDoctorId(
+			@Param("id") int id, @Param("doctorNumber") int doctorNumber,
+			@Param("customerId") int customerId, @Param("memo") String memo,
+			@Param("status") String status, @Param("treatment") String treatment);
+	
+	
 }

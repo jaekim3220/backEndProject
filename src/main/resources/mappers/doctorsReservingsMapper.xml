@@ -85,5 +85,21 @@
 			`id` = #{id} AND
 			`doctorNumber` = #{doctorNumber}
 	</select>
+	
+	
+	<!-- @PostMapping("/statusUpdate") -->
+	<update id="updateReservingsByIdDoctorNumberDoctorId" parameterType="int">
+		UPDATE 
+			`reservings`
+		SET 
+			`memo` = #{memo},
+			`status` = #{status},
+			`treatment` = #{treatment}
+		WHERE 
+			`id` = #{id} AND
+			`customerId` = #{customerId} AND
+			`doctorNumber` = #{doctorId}
+	</update>
+	
 
 </mapper>

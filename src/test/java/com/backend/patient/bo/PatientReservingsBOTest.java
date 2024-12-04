@@ -1,11 +1,11 @@
 package com.backend.patient.bo;
 
-import org.apache.ibatis.annotations.Param;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.backend.doctor.bo.DoctorsReservingsBO;
 import com.backend.doctor.bo.PatientReserversBO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +48,21 @@ class PatientReservingsBOTest {
 	void 환자영역업데이트() {
 		int a = patientReserversBO.updateReserversByCustomerIdDoctorId(1, 1, 1, "예약확정");
 		log.info("!!! {} !!!", a);
+	}
+	
+	
+	@Autowired
+	DoctorsReservingsBO doctorsReservingsBO;
+	@Transactional
+	@Test
+	void 의사영역업데이트() {
+		int a = doctorsReservingsBO.updateReservingsByIdDoctorNumberDoctorId(1, 2, 3, "메모", "예약상태", "진료상태");
+	    if (a > 0) {
+	        log.info("!!! 업데이트 성공 : {} 업데이트됨 !!!", a);
+	    } else {
+	        log.warn("!!! 업데이트 실패 !!!");
+	    }
+		
 	}
 
 }
