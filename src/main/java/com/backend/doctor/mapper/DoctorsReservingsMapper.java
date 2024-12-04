@@ -28,5 +28,12 @@ public interface DoctorsReservingsMapper {
 	        @Param("direction") String direction,
 	        @Param("limit") int limit);
 	
+	/* 페이징 버튼 말소 기능을 위한 visitDate(방문 날짜) 추출 메서드 */
+	// 로그인한 의사 번호와 동일한 데이터만 추출
+	// 데이터 정렬
+	public String selectReservingsdBydoctorNumberAsSort(
+			@Param("doctorId") int doctorId,
+			@Param("sort") String sort);
+	
 	
 }

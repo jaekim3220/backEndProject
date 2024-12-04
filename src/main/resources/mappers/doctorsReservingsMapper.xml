@@ -51,5 +51,19 @@
  		LIMIT ${limit}
  		
 	</select>
+	<!-- 페이징 버튼 말소 기능을 위한 visitDate(날짜) select
+	로그인한 의사 번호와 동일한 데이터만 추출
+	방문 날짜를 기준으로 정렬 후 1개 추출(마지막/첫 번째 판단) -->
+	<select id="selectReservingsdBydoctorNumberAsSort" resultType="String" parameterType="map">
+		SELECT
+			`visitDate`
+		FROM
+			`reservings`
+		WHERE
+			`doctorNumber` = #{doctorId}
+		ORDER BY
+			`visitDate` ${sort}
+		LIMIT 1
+	</select>
 
 </mapper>

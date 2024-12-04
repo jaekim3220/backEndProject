@@ -84,13 +84,20 @@ public class DoctorController {
 		
 		// 공백 처리 - breakpoint
 		if(!doctorsReservingsList.isEmpty()) { // postList가 비어있지 않을 때 페이징 정보 세팅
-			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 Id 값 할당
+			// 버튼을 클릭하면 이전/다음 버튼에 따라 서로 다른 visitDate 값 할당(화면에 보이는 첫 번째/마지막 번째 객체의 visitDate 값)
 			nextVisitDate = doctorsReservingsList.get(doctorsReservingsList.size() - 1).getVisitDate(); // List에 있는 가장 마지막 칸의 객체(행) 날짜 추출 => 해당 날짜의 다음 글을 추출하도록 유도
 			log.info("##### doctorsReservingsList : {} #####", doctorsReservingsList);
 			log.info("##### doctorsReservingsList.size() : {} #####", doctorsReservingsList.size());
-			log.info("##### nextId : {} #####", nextVisitDate);
+			log.info("##### nextVisitDate : {} #####", nextVisitDate);
 			prevVisitDate = doctorsReservingsList.get(0).getVisitDate(); // List에 있는 가장 첫 번째 칸의 객체(행) 날짜 추출 => 해당 날짜의 이전 글을 추출하도록 유도
-			log.info("##### prevId : {} #####", prevVisitDate);
+			log.info("##### prevVisitDate : {} #####", prevVisitDate);
+			
+			
+			// 더 이상 받아 올 이전 visitDate 데이터가 없다면 - breakpoint
+			// 유저가 쓴 글들 중 제일 큰 작은 날짜가 visitDate와 같을 때 더 이상 없음
+			if (doctorsReservingsBO.isPrevLastPageByVisitDate(doctorId, prevVisitDate)) {
+	            prevVisitDate = null; // 비활성화 조건
+	        }
 		}
 		
 		// Model에 객체 삽입
