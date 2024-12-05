@@ -6,9 +6,49 @@
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
 	
-	<div class="w-50 patientStatus-box p-4 d-flex flex-column bg-light">
+	<div class="w-75 patientStatus-box p-4 d-flex flex-column bg-light">
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">금주 일정표</h2>
+		
+		
+    <!-- Modal -->
+    <div class="modal hidden" id="scheduleModal">
+      <div class="modal-dialog" >
+        <div class="modal-content">
+        
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">일정 추가하기</h5>
+	        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">X</span>
+	        </button>
+          </div> <!-- modal-header 종료 -->
+          
+          <div class="modal-body">
+            일정이름 : <input type="text" id="title" class="my-1"/><br/>
+            시작날짜 : <input type="datetime-local" id="start" class="my-1"/><br/>
+            종료날짜 : <input type="datetime-local" id="end" class="my-1"/><br/>
+            배경색상 :
+            <select id="color" class="my-1">
+              <option value="red">빨강색</option>
+              <option value="yellow">노랑색</option>
+              <option value="green">초록색</option>
+            </select>
+          </div> <!-- modal-body 종료 -->
+          
+          <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+	          취소
+	        </button>
+            <button type="button" class="btn btn-primary" id="saveChanges">
+              추가
+            </button>
+          </div> <!-- modal-footer 종료 -->
+          
+        </div> <!-- modal-content 종료 -->
+      </div> <!-- modal-dialog 종료 -->
+    </div>
+    
+ 
 			
 		<!-- FullCalendar를 사용하기 위한
 		JS의 FullCalendar Individual Plugins -->
@@ -40,15 +80,31 @@
                   		},
                                 
 	    			],
+	    			customButtons: {
+	    				myCustonButton: {
+		    				text:"개인일정추가",
+    				      click: function() {
+    				    	// bootstrap Modal 활성화
+    				        $("#scheduleModal").modal("show");
+    				      }
+    				    },
+		    			mySaveButton: {
+		    				text:"추가하기"
+		    			},
+    				  },
 	    			eventOrder: 'sortIdx', // 이벤트 정렬 방식 (sortIdx 값을 기준으로 정렬)
 	    			headerToolbar: { // 달력 상단의 버튼과 툴바 설정
-	    				left: 'prev,next today',
+	    				left: 'prev next today myCustonButton mySaveButton',
 		            	center: '',
-		            	right: ''
+		            	right: 'dayGridDay,dayGridWeek,dayGridMonth' // 보기 전환 버튼
 	    			},
 	    			buttonText: { // 버튼의 텍스트 설정
 	    				today: `금일 : ${todayFormatted}`,
+	    				dayGridDay: '하루 단위', // 하루 보기
+	    				dayGridWeek: '일주일 단위', // 일주일 보기
+	    				dayGridMonth: '한 달 단위' // 한 달 보기
 	    			},
+	    			
 	    			eventDidMount: function(info) { // 이벤트가 화면에 표시될 때 추가 작업 정의
 	    				// 이벤트 날짜 가져오기
 	    				var eventDate = new Date(info.event.start); // 이벤트 시작 날짜
