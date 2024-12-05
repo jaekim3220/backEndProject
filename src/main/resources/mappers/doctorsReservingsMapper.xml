@@ -78,7 +78,9 @@
 			`description`,
 			`visitDate`,
 			`imagePath`,
-			`status`
+			`memo`,
+			`status`,
+			`treatment`
 		FROM
 			`reservings`
 		WHERE
@@ -94,7 +96,8 @@
 		SET 
 			`memo` = #{memo},
 			`status` = #{status},
-			`treatment` = #{treatment}
+			`treatment` = #{treatment},
+			`updatedAt` = NOW()
 		WHERE 
 			`id` = #{id} AND
 			`customerId` = #{customerId} AND

@@ -6,7 +6,8 @@
 	
 	<update id="updateReserversByIdCustomerIdDoctorId" parameterType="map">
 		UPDATE `reservers`
-		SET `status` = #{status}
+		SET `status` = #{status},
+			`updatedAt` = NOW()
 		WHERE 
 			`id` = #{id} AND
 			`customerId` = #{customerId} AND

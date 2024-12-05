@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.common.EncryptUtils;
+import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsBO;
+import com.backend.doctor.bo.DoctorsReservingsBO;
 import com.backend.doctor.bo.PatientReserversBO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +43,7 @@ public class DoctorRestController {
 	
 	// 생성자를 사용한 의존성 주입
 	private final DoctorsBO doctorsBO;
-	private final PatientReserversBO patientReserversBO;	
+	private final DoctorUpdateBO doctorUpdateBO;
 	
     // 아이디 중복 확인
 	@GetMapping("/is-duplicate-id")
@@ -186,13 +188,19 @@ public class DoctorRestController {
 		
 		
 		// DB Update - breakpoint
-		// 의사의 `reservings`, 환자의 `reservers` 모두 업데이트
-		patientReserversBO.updateReserversByCustomerIdDoctorId(id, customerId, doctorId, status);
+		// 의사의 `reservings` 테이블, 환자의 `reservers` 테이블 업데이트
+		// int id, int doctorId, int customerId, String memo, String status, String treatment
+		int output = doctorUpdateBO.doctorUpdateBO(id, doctorId, customerId, memo, status, treatment);
 		
 		
 		// Response(응답)
-		result.put("code", 200);
-		result.put("result", "예약 현황 업데이트 성공");
+		if(output > 0) {
+			result.put("code", 200);
+			result.put("result", "예약 현황 업데이트 성공");			
+		} else {
+			result.put("code", 500);
+			result.put("result", "예약 현황 업데이트 실패");						
+		}
 		
 		return result;
 	}

@@ -46,7 +46,8 @@
 		<!-- 의사 입력 영역 -->
 		<!-- 환자 예약 상태 선택 영역 -->
 		<div>
-			<span class="patient-reserve-status" th:text="|현재 환자 예약 상태 : ${doctorReserves.status}|"></span>
+			<span class="patient-reserve-status border border-dark d-inline-block p-1" 
+			th:text="|현재 환자 예약 상태 : ${doctorReserves.status}|"></span>
 			<select id="reserveStatus" class="depart-select m-3">
 				<option value="예약대기">예약대기</option>
 				<option value="예약확정">예약확정</option>
@@ -55,11 +56,15 @@
 		</div>
 		
 		<!-- 환자 상태/특이 사항 입력 영역 -->
-		<input type="text" id="patientStatus"  class="patientStatus form-control mb-2"  placeholder="환자 상태/특이 사항을 입력하세요">
+		<input type="text" id="patientStatus"  
+		class="patientStatus form-control mb-2"  
+		placeholder="환자 상태/특이 사항을 입력하세요"
+		th:value="|${doctorReserves.memo}|">
 		
 		<!-- 환자 진료 상태 영역 -->
 		<div>
-			<span class="patient-treatment-status">환자 진료 상태</span>
+			<span class="patient-treatment-status border border-dark d-inline-block p-1" 
+			th:text="|현재 환자 진료 상태 : ${doctorReserves.treatment}|">환자 진료 상태</span>
 			<select id="treatmentStatus" class="depart-select m-3">
 				<option value="진료대기">진료대기</option>
 				<option value="진료중">진료중</option>

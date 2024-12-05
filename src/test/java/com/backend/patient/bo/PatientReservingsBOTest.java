@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsReservingsBO;
 import com.backend.doctor.bo.PatientReserversBO;
 
@@ -57,6 +58,22 @@ class PatientReservingsBOTest {
 	@Test
 	void 의사영역업데이트() {
 		int a = doctorsReservingsBO.updateReservingsByIdDoctorNumberDoctorId(1, 2, 3, "메모", "예약상태", "진료상태");
+	    if (a > 0) {
+	        log.info("!!! 업데이트 성공 : {} 업데이트됨 !!!", a);
+	    } else {
+	        log.warn("!!! 업데이트 실패 !!!");
+	    }
+		
+	}
+	
+	
+	@Autowired
+	DoctorUpdateBO doctorUpdateBO;
+	@Transactional
+	@Test
+	void 의사환자동시업데이트() {
+		// int id, int doctorId, int customerId, String memo, String status, String treatment
+		int a = doctorUpdateBO.doctorUpdateBO(1, 2, 3, "memo", "status", "treatment");
 	    if (a > 0) {
 	        log.info("!!! 업데이트 성공 : {} 업데이트됨 !!!", a);
 	    } else {
