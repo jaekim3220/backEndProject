@@ -14,8 +14,14 @@
             <a th:if="${session.customerName == null and session.doctorName == null}" id="doctSignInBtn" 
             class="btn btn-link text-white" href="/doctor/sign-in-view">직원 로그인</a>
             
+            <a th:unless="${session.doctorName == null}" id="doctTodayListBtn" 
+            class="btn btn-link text-white" href="/doctor/today-plan-view">금일 예약 목록</a>
+            
             <a th:unless="${session.doctorName == null}" id="doctSignOutBtn" 
             class="btn btn-link text-white" href="/doctor/sign-out">직원 로그아웃</a>
+            
+            <a th:unless="${session.doctorName == null}" id="doctCalendartBtn" 
+            class="btn btn-link text-white" href="/doctor/calendar-plan-view">금주 일정표</a>
         </footer>
 	</th:block>
 
