@@ -15,8 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.EncryptUtils;
 import com.backend.patient.bo.CustomerBO;
-import com.backend.patient.bo.ReserversBO;
+import com.backend.patient.bo.PatientDeleteBO;
+import com.backend.patient.bo.PatientInsertBO;
 import com.backend.patient.bo.PatientReservingsBO;
+import com.backend.patient.bo.PatientUpdateBO;
+import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.entity.CustomerEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,6 +56,16 @@ public class PatientRestController {
 	
 	@Autowired
 	private PatientReservingsBO patientReservingsBO;
+	
+	@Autowired
+	private PatientUpdateBO patientUpdateBO;
+
+	@Autowired
+	private PatientInsertBO patientInsertBO;
+	
+	@Autowired
+	private PatientDeleteBO patientDeleteBO;
+	
 	
 	// 아이디 중복 확인
 	// 단순한 select문으로 JPA(Object Relational Mapping) 사용
@@ -186,17 +199,7 @@ public class PatientRestController {
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
 		// `reservings` 테이블
-		int rowCount1 = patientReservingsBO.addToReservings(doctorNum, customerId, customerName, title, description, visitDate, file, customerLoginId);
-		if(rowCount1 != 1) {
-	        Map<String, Object> result = new HashMap<>();
-	        result.put("code", 500);
-	        result.put("error_message", "예약 신청에 실패했습니다. 관리자에게 문의하세요.");
-	        return result; // 클라이언트로 실패 응답 전송
-		}
-		
-		// `reservers` 테이블
-		int rowCount = reserversBO.addPatientReserve(customerId, customerLoginId, doctorNum, title, description, visitDate, file);
-		log.info("!!!!! patientReservingsBO : {} !!!!!", patientReservingsBO);
+		int rowCount = patientInsertBO.patientInsertBO(customerId, customerLoginId, customerName, doctorNum, title, description, visitDate, file);
 		
 		
 		// Response(응답값) - breakpoint
@@ -246,14 +249,7 @@ public class PatientRestController {
 		
 		// DB Update + 파일 업로드(옵션) - breakpoint
 		// `reservings` 테이블
-		patientReservingsBO.updateToReservings(id, customerId, customerLoginId, customerName, doctorNum, title, description, visitDate, file);
-		if(patientReservingsBO == null) {
-			result.put("code", 500);
-			result.put("error_message", "예약 수정에 실패했습니다. 관리자에게 문의하세요.");
-		}
-		
-		// `reservers` 테이블
-		reserversBO.updateByIdcustomerId(id, customerId, customerLoginId, doctorNum, title, description, visitDate, file);		
+		patientUpdateBO.patientUpdateBO(id, customerId, customerLoginId, customerName, doctorNum, title, description, visitDate, file);
 		
 		
 		// Response(응답값) - breakpoint
@@ -286,11 +282,7 @@ public class PatientRestController {
 		
 		
 		// DB DELETE + 파일 업로드(삭제) - breakpoint
-		// `reservings` 테이블
-		patientReservingsBO.deleteReservingsByIdCustomerId(id, customerId);
-		
-		// `reservers` 테이블
-		reserversBO.deleteReserveByIdCustomerId(id, customerId);
+		patientDeleteBO.patientDeleteBO(id, customerId);
 		
 		
 		
