@@ -152,7 +152,14 @@ public class DoctorController {
 	// /doctor/{doctors.id}/week-plan-view
 	@GetMapping("/calendar-plan-view")
 	// localhost/doctor/calendar-plan-view
-	public String calendarPlanView(Model model) {
+	public String calendarPlanView(Model model, HttpSession session) {
+		
+		// 로그인 여부 검사 - breakpoint
+		// session에 담을 변수(parameter)가 기억나지 않을 경우 RestController - @PostMapping("/sign-in") 참고
+		Integer doctorNum = (Integer) session.getAttribute("doctorId");
+		if(doctorNum == null) {
+			return "redirect:/doctor/sign-in-view";
+		}
 		
 		// 달력에 금일, 최소/최대 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
