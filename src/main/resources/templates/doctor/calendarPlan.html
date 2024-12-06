@@ -161,16 +161,43 @@
     				alert("입력한 일정 날짜를 확인하세요.");
     				return;
     			}
+    		    
+     		    // AJAX 요청
+    		    $.ajax({
+    		    	// request
+    		    	type:"POST",
+    		    	url:"/doctor/calendar-plan-insert",
+    		    	data:{"title":title, "vacationStart":vacationStart, "vacationEnd":vacationEnd},
+    		    	
+    		    	//response
+    		    	success:function(data) {
+    		    		if(data.code == 200) { // Response(응답값) - breakpoint
+    		    			// Dictionary 형태
+    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+    		    			// => Dictionary 형식으로 변경
+    		    			// "{"code" : 200, "result" : "일정 신청 성공"}"    			
+			    		    
+    		    			// FullCalendar에 이벤트 추가
+			    		    calendar.addEvent({
+			    		        title: title,
+			    		        start: vacationStart,
+			    		        end: vacationEnd,
+			    		        backgroundColor: scheduleColor, // 설정한 색상
+			    		        borderColor: scheduleColor, // 테두리 색상
+			    		    });
+    		    			
+			    		    alert("일정이 추가되었습니다.");
+    		    		    location.reload(true);
+    		    		} else {
+    		    			alert(data.error_message);
+    		    		}
+    		    	}, // 성공일 경우
+    				error:function(e) {
+    					alert("일정 신청에 실패했습니다.");
+    				}
+    		    	
+    		    }); // AJAX 요청 종료
     			
-    		    // FullCalendar에 이벤트 추가
-    		    calendar.addEvent({
-    		        title: title,
-    		        start: vacationStart,
-    		        end: vacationEnd,
-    		        backgroundColor: scheduleColor, // 설정한 색상
-    		        borderColor: scheduleColor, // 테두리 색상
-    		    });
-
     		    
     		    // 모달 닫기
     		    $("#scheduleModal").modal("hide");
@@ -181,14 +208,8 @@
 				$("#vacationEnd").val($("#vacationEnd").data("default-value"));
 				// 색깔영역 초기화
 				$("#scheduleColor").val($("#scheduleColor option:first").val());
-
-    		    alert("일정이 추가되었습니다.");
-    		    
-    		    console.log(title);
-    		    console.log(vacationStart);
-    		    console.log(vacationEnd);
-    		    
-
+				
+				
     		}); // Schedule 저장 버튼 종료
 
     	});

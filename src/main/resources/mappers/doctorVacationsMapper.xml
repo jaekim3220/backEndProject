@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.backend.doctor.mapper.DoctorsVacationsMapper">
+
+	<!-- @PostMapping("/calendar-plan-insert") -->
+	<insert id="insertDoctorsVacations" parameterType="map">
+		INSERT INTO `doctors`
+		(
+			`doctorNum`,
+			`title`,
+			`vacationStart`,
+			`vacationEnd`,
+			`createdAt`,
+			`updatedAt`
+		)
+		VALUES
+		(
+			#{doctorNum},
+			#{title},
+			#{vacationStart},
+			#{vacationEnd},
+			NOW(),
+			NOW()
+		)
+	</insert>
+
+</mapper>

@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.common.EncryptUtils;
 import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsBO;
-import com.backend.doctor.bo.DoctorsReservingsBO;
-import com.backend.doctor.bo.PatientReserversBO;
+import com.backend.doctor.bo.DoctorsVacationsBO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -44,6 +43,7 @@ public class DoctorRestController {
 	// 생성자를 사용한 의존성 주입
 	private final DoctorsBO doctorsBO;
 	private final DoctorUpdateBO doctorUpdateBO;
+	private final DoctorsVacationsBO doctorsVacationsBO;
 	
     // 아이디 중복 확인
 	@GetMapping("/is-duplicate-id")
@@ -203,6 +203,50 @@ public class DoctorRestController {
 		}
 		
 		return result;
+	}
+	
+	
+	// 의사 일정 추가
+	@PostMapping("/calendar-plan-insert")
+	// http:localhost/doctor/calendar-plan-insert
+	public Map<String, Object> calandarPlanInsert(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("title") String title,
+			@RequestParam("vacationStart") String vacationStart, 
+			@RequestParam("vacationEnd") String vacationEnd,
+			HttpSession session) {
+		// 로그인 여부 검사 - breakpoint
+		Integer doctorNum = (Integer) session.getAttribute("doctorId");
+		log.info("##### doctorNum : {} #####", doctorNum);
+		
+		Map<String, Object> result = new HashMap<>();
+		if(doctorNum == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용이 가능합니다.");
+			return result;
+		}
+		
+		
+		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
+		// `vacations` 테이블
+		int rowCount = doctorsVacationsBO.addDoctorsVacations(doctorNum, title, vacationStart, vacationEnd);
+		
+		
+		// Response(응답값) - breakpoint
+		// Dictionary 형태
+		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+		// => Dictionary 형식으로 변경
+		// "{"code" : 200, "result" : "일정 신청 성공"}"
+		if(rowCount > 1) {
+			result.put("code", 200);
+			result.put("result", "일정 신청 성공");
+		} else {
+			result.put("code", 500);
+			result.put("result", "일정 신청 실패");
+		}
+		
+		return result;
+
 	}
 	
 	

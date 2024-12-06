@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsReservingsBO;
+import com.backend.doctor.bo.DoctorsVacationsBO;
 import com.backend.doctor.bo.PatientReserversBO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,22 @@ class PatientReservingsBOTest {
 	    } else {
 	        log.warn("!!! 업데이트 실패 !!!");
 	    }
+		
+	}
+
+	
+	@Autowired
+	DoctorsVacationsBO doctorsVacationsBO;
+	@Transactional
+	@Test
+	void 의사휴가페이지() {
+		// int doctorNum, String title, String vacationStart, String vacationEnd
+		int a = doctorsVacationsBO.addDoctorsVacations(1, "휴가", "2024-12-12", "2024-12-13");
+		if (a > 0) {
+			log.info("!!! 업데이트 성공 : {} 업데이트됨 !!!", a);
+		} else {
+			log.warn("!!! 업데이트 실패 !!!");
+		}
 		
 	}
 
