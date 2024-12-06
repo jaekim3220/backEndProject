@@ -34,6 +34,7 @@
               <option value="red">빨강색</option>
               <option value="yellow">노랑색</option>
               <option value="purple">보라색</option>
+              <option value="blue">파란색</option>
               <option value="green">초록색</option>
             </select>
           </div> <!-- modal-body 종료 -->
@@ -51,16 +52,27 @@
       </div> <!-- modal-dialog 종료 -->
     </div>
     
- 
-			
 		<!-- FullCalendar를 사용하기 위한
 		JS의 FullCalendar Individual Plugins -->
 	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js'></script>
 	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
-    
 
-	    <script>
-	    	document.addEventListener('DOMContentLoaded', function() {
+
+	    <!-- FullCalendar 화면에 불러오기 -->
+	    <div class="">
+			<div id='calendar'></div>
+	    </div>
+		
+	</div>
+	
+</section>
+
+<th:block layout:fragment="script">
+    <script>
+
+		var calendar;
+    	$(document).ready(function() {
+    		
 	    		var calendarEl = document.getElementById('calendar');
 	    		var today = new Date(); // 오늘 날짜 추출
 	    		var todayFormatted = today.toISOString().split('T')[0]; // 'yyyy-MM-dd' 형식으로 포맷팅
@@ -115,23 +127,6 @@
 	    			}
 		        });
 	        calendar.render(); // 설정한 달력을 화면에 렌더링(구현)
-	      });
-	    </script>
-	    
-	    <!-- FullCalendar 화면에 불러오기 -->
-	    <div class="">
-			<div id='calendar'></div>
-	    </div>
-		
-		
-	</div>
-	
-</section>
-
-<th:block layout:fragment="script">
-    <script>
-    	
-    	$(document).ready(function() {
     		
     		// Schedule 저장 버튼
     		$("#saveSchedule").on("click", function(e) {
