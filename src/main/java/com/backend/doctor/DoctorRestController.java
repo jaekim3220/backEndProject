@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.common.EncryptUtils;
@@ -208,12 +209,14 @@ public class DoctorRestController {
 	
 	// 의사 일정 추가
 	@PostMapping("/calendar-plan-insert")
+	@ResponseBody // JSON 응답을 보냄
 	// http:localhost/doctor/calendar-plan-insert
 	public Map<String, Object> calandarPlanInsert(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			@RequestParam("title") String title,
 			@RequestParam("vacationStart") String vacationStart, 
 			@RequestParam("vacationEnd") String vacationEnd,
+			@RequestParam("scheduleColor") String scheduleColor,			
 			HttpSession session) {
 		// 로그인 여부 검사 - breakpoint
 		Integer doctorNum = (Integer) session.getAttribute("doctorId");
@@ -229,7 +232,7 @@ public class DoctorRestController {
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
 		// `vacations` 테이블
-		int rowCount = doctorsVacationsBO.addDoctorsVacations(doctorNum, title, vacationStart, vacationEnd);
+		int rowCount = doctorsVacationsBO.addDoctorsVacations(doctorNum, title, vacationStart, vacationEnd, scheduleColor);
 		
 		
 		// Response(응답값) - breakpoint
@@ -237,7 +240,7 @@ public class DoctorRestController {
 		// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
 		// => Dictionary 형식으로 변경
 		// "{"code" : 200, "result" : "일정 신청 성공"}"
-		if(rowCount > 1) {
+		if(rowCount > 0) {
 			result.put("code", 200);
 			result.put("result", "일정 신청 성공");
 		} else {

@@ -6,12 +6,13 @@
 
 	<!-- @PostMapping("/calendar-plan-insert") -->
 	<insert id="insertDoctorsVacations" parameterType="map">
-		INSERT INTO `doctors`
+		INSERT INTO `vacations`
 		(
 			`doctorNum`,
 			`title`,
 			`vacationStart`,
 			`vacationEnd`,
+			`scheduleColor`,
 			`createdAt`,
 			`updatedAt`
 		)
@@ -21,6 +22,7 @@
 			#{title},
 			#{vacationStart},
 			#{vacationEnd},
+			#{scheduleColor},
 			NOW(),
 			NOW()
 		)

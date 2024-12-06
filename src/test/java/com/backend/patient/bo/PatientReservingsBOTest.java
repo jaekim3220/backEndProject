@@ -90,7 +90,7 @@ class PatientReservingsBOTest {
 	@Test
 	void 의사휴가페이지() {
 		// int doctorNum, String title, String vacationStart, String vacationEnd
-		int a = doctorsVacationsBO.addDoctorsVacations(1, "휴가", "2024-12-12", "2024-12-13");
+		int a = doctorsVacationsBO.addDoctorsVacations(1, "휴가", "2024-12-12", "2024-12-13", "red");
 		if (a > 0) {
 			log.info("!!! 업데이트 성공 : {} 업데이트됨 !!!", a);
 		} else {
