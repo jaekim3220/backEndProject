@@ -24,13 +24,16 @@
           </div> <!-- modal-header 종료 -->
           
           <div class="modal-body">
-            일정이름 : <input type="text" id="title" class="my-1"/><br/>
-            시작날짜 : <input type="datetime-local" id="start" class="my-1"/><br/>
-            종료날짜 : <input type="datetime-local" id="end" class="my-1"/><br/>
+            일정이름 : <input type="text" id="scheduleTitle" class="my-1"/><br/>
+            시작날짜 : <input type="date" class="form-control my-1" id="startDate"
+			th:value="${minDate}" th:min="${minDate}" th:max="${maxDate}"/>
+            종료날짜 : <input type="date" class="form-control my-1" id="schedulEend"
+			th:value="${minDate}" th:min="${minDate}" th:max="${maxDate}"/><br/>
             배경색상 :
-            <select id="color" class="my-1">
+            <select id="scheduleDolor" class="my-1">
               <option value="red">빨강색</option>
               <option value="yellow">노랑색</option>
+              <option value="purple">보라색</option>
               <option value="green">초록색</option>
             </select>
           </div> <!-- modal-body 종료 -->
@@ -88,13 +91,10 @@
     				        $("#scheduleModal").modal("show");
     				      }
     				    },
-		    			mySaveButton: {
-		    				text:"추가하기"
-		    			},
     				  },
 	    			eventOrder: 'sortIdx', // 이벤트 정렬 방식 (sortIdx 값을 기준으로 정렬)
 	    			headerToolbar: { // 달력 상단의 버튼과 툴바 설정
-	    				left: 'prev next today myCustonButton mySaveButton',
+	    				left: 'prev next today myCustonButton',
 		            	center: '',
 		            	right: 'dayGridDay,dayGridWeek,dayGridMonth' // 보기 전환 버튼
 	    			},

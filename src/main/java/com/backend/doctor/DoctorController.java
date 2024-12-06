@@ -1,5 +1,8 @@
 package com.backend.doctor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -149,7 +152,19 @@ public class DoctorController {
 	// /doctor/{doctors.id}/week-plan-view
 	@GetMapping("/calendar-plan-view")
 	// localhost/doctor/calendar-plan-view
-	public String calendarPlanView() {
+	public String calendarPlanView(Model model) {
+		
+		// 달력에 금일, 최소/최대 날짜 설정을 
+		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
+	    LocalDate now = LocalDate.now();
+	    LocalDate tomorrow = now.plusDays(7);
+	    LocalDate nextYear = now.plusYears(1);
+	    
+	    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    
+	    model.addAttribute("minDate", tomorrow.format(dateFormatter)); // 내일 날짜
+	    model.addAttribute("maxDate", nextYear.format(dateFormatter)); // 1년 뒤 날짜
+		
 		return "doctor/calendarPlan";
 	}
 	
