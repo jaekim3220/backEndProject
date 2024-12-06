@@ -25,12 +25,12 @@
           
           <div class="modal-body">
             일정이름 : <input type="text" id="scheduleTitle" class="my-1"/><br/>
-            시작날짜 : <input type="date" class="form-control my-1" id="startDate"
+            시작날짜 : <input type="date" class="form-control my-1" id="vacationStart"
 			th:value="${minDate}" th:min="${minDate}" th:max="${maxDate}"/>
-            종료날짜 : <input type="date" class="form-control my-1" id="schedulEend"
+            종료날짜 : <input type="date" class="form-control my-1" id="vacationEnd"
 			th:value="${minDate}" th:min="${minDate}" th:max="${maxDate}"/><br/>
             배경색상 :
-            <select id="scheduleDolor" class="my-1">
+            <select id="scheduleColor" class="my-1">
               <option value="red">빨강색</option>
               <option value="yellow">노랑색</option>
               <option value="purple">보라색</option>
@@ -42,8 +42,8 @@
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
 	          취소
 	        </button>
-            <button type="button" class="btn btn-primary" id="saveChanges">
-              추가
+            <button type="button" class="btn btn-primary" id="saveSchedule">
+              저장
             </button>
           </div> <!-- modal-footer 종료 -->
           
@@ -130,5 +130,63 @@
 
 <th:block layout:fragment="script">
     <script>
+    	
+    	$(document).ready(function() {
+    		
+    		// Schedule 저장 버튼
+    		$("#saveSchedule").on("click", function(e) {
+    			e.preventDefault();
+    			// alert("저장버튼");
+    			
+    			
+    			// valication(FullCalender용 parameter 추출)
+    			let title = $("#scheduleTitle").val().trim();
+    			let vacationStart = $("#vacationStart").val().trim();
+    			let vacationEnd = $("#vacationEnd").val().trim();
+    			let scheduleColor = $("#scheduleColor").val().trim();
+    			
+    			// console.log(scheduleColor);
+    			
+    			// 공백 처리
+    			if (title == "") {
+    				alert("일정 제목을 입력하세요.");
+    				return;
+    			}
+    			if (!vacationStart) {
+    				alert("일정 시작 날짜를 입력하세요.");
+    				return;
+    			}
+    			if (!vacationEnd) {
+    				alert("일정 종료 날짜를 입력하세요");
+    				return;
+    			}
+    			if(vacationStart == vacationEnd) {
+    				alert("입력한 일정 날짜를 확인하세요.");
+    				return;
+    			}
+    			
+    		    // FullCalendar에 이벤트 추가
+    		    calendar.addEvent({
+    		        title: title,
+    		        start: vacationStart,
+    		        end: vacationEnd,
+    		        backgroundColor: scheduleColor, // 설정한 색상
+    		        borderColor: scheduleColor, // 테두리 색상
+    		    });
+
+    		    // 모달 닫기 및 초기화
+    		    $("#scheduleModal").modal("hide");
+    		    $("#scheduleTitle").val("");
+    		    $("#vacationStart").val("");
+    		    $("#vacationEnd").val("");
+    		    $("#scheduleColor").val("");
+
+    		    alert("일정이 추가되었습니다.");
+    			
+    			
+    		}); // Schedule 저장 버튼 종료
+    		
+    	});
+    	
     </script>
 </th:block>
