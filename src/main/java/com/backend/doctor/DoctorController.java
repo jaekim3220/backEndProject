@@ -3,6 +3,7 @@ package com.backend.doctor;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -151,9 +152,9 @@ public class DoctorController {
 	
 	
 	// 의사 `일정표 화면`
-	// /doctor/{doctors.id}/week-plan-view
-	@PostMapping("/calendar-plan-view")
+	@GetMapping("/calendar-plan-view")
 	// GET 방식은 URL이 너무 길어지기 때문에 POST 방식으로 변경
+	// Post로 하면 URL 접속 불가 405
 	// localhost/doctor/calendar-plan-view
 	public String calendarPlanView(Model model, HttpSession session) {
 		
@@ -165,8 +166,16 @@ public class DoctorController {
 		}
 		
 		// DB SELECT - breakpoint
-		doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
-		log.info("##### SELECT `vacations` 결과 : {}", doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum));
+		List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
+		log.info("##### SELECT `vacations` 결과 : {}", vacations);
+	    
+		// 중복 제거(필요 시 적용)
+	    List<Map<String, Object>> uniqueVacations = vacations.stream().distinct().toList();
+	    log.info("##### SELECT `vacations` 결과 : {}", uniqueVacations);
+		
+		
+		// Model에 데이터 추가
+		model.addAttribute("uniqueVacations", uniqueVacations); // FullCalendar 데이터
 		
 		
 		// 달력에 금일, 최소/최대 날짜 설정을 
