@@ -170,8 +170,9 @@ public class DoctorController {
 		log.info("##### SELECT `vacations` 결과 : {}", vacations);
 	    
 		// 중복 제거(필요 시 적용)
-	    List<Map<String, Object>> uniqueVacations = vacations.stream().distinct().toList();
+		List<Map<String, Object>> uniqueVacations = vacations.stream().distinct().toList();
 	    log.info("##### SELECT `vacations` 결과 : {}", uniqueVacations);
+	    
 		
 		
 		// Model에 데이터 추가

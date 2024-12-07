@@ -83,20 +83,30 @@
 	    			locale: 'ko', // 한국어 설정
 	    			initialDate: today, // 달력의 시작 날짜 설정(시작 날짜를 오늘로 설정)
 	    			// 이벤트 데이터 (달력에 표시할 일정들)
-	    			events: [ // 달력에 표시할 내용
-	    				// 달력에 표시할 내용 형식
-	    				{
-                      		title: '메모제목', // 제목
-                      		start: '2024-11-29', // 날짜
-                      		sortIdx: 0, // 순서
-                  		},
-                  		{
-                      		title: '메모제목3', // 제목
-                      		start: '2024-11-24', // 날짜
-                      		sortIdx: 1, // 순서
-                  		},
-                                
-	    			],
+	                events: function(fetchInfo, successCallback, failureCallback) { // 달력에 표시할 내용,
+	                    // 서버에서 데이터 동적으로 가져오기
+	                    $.ajax({
+	                        url: '/doctor/calendar-plan-views', // 데이터를 가져오는 컨트롤러의 URL
+	                        type: 'GET',
+	                        dataType: 'json',
+	                        success: function(response) {
+	                            // 서버 응답에서 데이터를 변환
+	                            var events = response.map(function(event) {
+	                                return {
+	                                    title: event.title,
+	                                    start: event.vacationStart,
+	                                    end: event.vacationEnd,
+	                                    backgroundColor: event.scheduleColor
+	                                };
+	                            });
+	                            successCallback(events); // FullCalendar에 데이터 전달
+	                        },
+	                        error: function() {
+	                            alert("일정을 가져오는데 실패했습니다.");
+	                            failureCallback();
+	                        }
+	                    });
+	                },
 	    			customButtons: {
 	    				myCustonButton: {
 		    				text:"개인일정추가",
