@@ -86,7 +86,7 @@
 	                events: function(fetchInfo, successCallback, failureCallback) { // 달력에 표시할 내용,
 	                    // 서버에서 데이터 동적으로 가져오기
 	                    $.ajax({
-	                        url: '/doctor/calendar-plan-views', // 데이터를 가져오는 컨트롤러의 URL
+	                        url: '/doctor/calendar-plan-view', // 데이터를 가져오는 컨트롤러의 URL
 	                        type: 'GET',
 	                        dataType: 'json',
 	                        success: function(response) {
