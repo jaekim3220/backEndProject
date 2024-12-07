@@ -1,5 +1,8 @@
 package com.backend.patient.bo;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -96,6 +99,18 @@ class PatientReservingsBOTest {
 		} else {
 			log.warn("!!! 업데이트 실패 !!!");
 		}
+		
+	}
+	
+	
+	@Autowired
+	DoctorsVacationsBO doctorsVacationsBO1;
+	@Transactional
+	@Test
+	void 의사휴가페이지데이터조회() {
+		// int doctorNum, String title, String vacationStart, String vacationEnd
+		List<Map<String, Object>> a = (List<Map<String, Object>>) doctorsVacationsBO1.getDoctorVacationsByDoctorNum(3);
+		log.info("!!! ROW 데이터 조회 성공 : {} !!!", a);
 		
 	}
 

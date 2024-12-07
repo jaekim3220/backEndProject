@@ -27,5 +27,21 @@
 			NOW()
 		)
 	</insert>
+	
+	
+	<!-- @PostMapping("/calendar-plan-view") -->
+	<select id="selectDoctorVacationsByDoctorNum" resultType="com.backend.doctor.domain.DoctorsVacations">
+		SELECT
+			`id`,
+			`doctorNum`,
+			`title`,
+			`vacationStart`,
+			`vacationEnd`,
+			`scheduleColor`
+		FROM
+			`vacations`
+		WHERE
+			`doctorNum` = #{doctorNum}
+	</select>
 
 </mapper>

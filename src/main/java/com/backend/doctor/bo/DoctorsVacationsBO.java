@@ -1,9 +1,11 @@
 package com.backend.doctor.bo;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.backend.doctor.mapper.DoctorsVacationsMapper;
 
@@ -41,6 +43,14 @@ public class DoctorsVacationsBO {
 		log.info("##### doctorNum : {}, title : {}, "
 				+ "vacationStart : {}, vacationEnd : {} #####", doctorNum, title, vacationStart, vacationEnd);
 		return doctorsVacationsMapper.insertDoctorsVacations(doctorNum, title, vacationStart, vacationEnd, scheduleColor);
+	}
+	
+	
+	// input : int doctorNum
+	// output : List<Map<String, Object>
+	// @PostMapping("/calendar-plan-view")
+	public List<Map<String, Object>> getDoctorVacationsByDoctorNum(int doctorNum) {
+		return doctorsVacationsMapper.selectDoctorVacationsByDoctorNum(doctorNum);
 	}
 
 }

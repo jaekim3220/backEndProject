@@ -1,5 +1,6 @@
 package com.backend.doctor.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -21,6 +22,12 @@ public interface DoctorsVacationsMapper {
 	public int insertDoctorsVacations(@Param("doctorNum") int doctorNum, 
 			@Param("title") String title, @Param("vacationStart") String vacationStart, 
 			@Param("vacationEnd") String vacationEnd, @Param("scheduleColor") String scheduleColor);
+	
+
+	// input : int doctorNum
+	// output : List<Map<String, Object>
+	// @PostMapping("/calendar-plan-view")
+	public List<Map<String, Object>> selectDoctorVacationsByDoctorNum(@Param("doctorNum") int doctorNum);
 	
 	
 }

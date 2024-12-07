@@ -1,17 +1,18 @@
 package com.backend.doctor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.backend.doctor.bo.DoctorsReservingsBO;
+import com.backend.doctor.bo.DoctorsVacationsBO;
 import com.backend.doctor.domain.DoctorsReservings;
 
 import jakarta.servlet.http.HttpSession;
@@ -40,6 +41,7 @@ public class DoctorController {
 	
 	// 생성자를 사용한 의존성 주입(DI)
 	private final DoctorsReservingsBO doctorsReservingsBO;
+	private final DoctorsVacationsBO doctorsVacationsBO;
 	
 	
 	// 의사 회원가입 화면
@@ -150,7 +152,8 @@ public class DoctorController {
 	
 	// 의사 `일정표 화면`
 	// /doctor/{doctors.id}/week-plan-view
-	@GetMapping("/calendar-plan-view")
+	@PostMapping("/calendar-plan-view")
+	// GET 방식은 URL이 너무 길어지기 때문에 POST 방식으로 변경
 	// localhost/doctor/calendar-plan-view
 	public String calendarPlanView(Model model, HttpSession session) {
 		
@@ -160,6 +163,11 @@ public class DoctorController {
 		if(doctorNum == null) {
 			return "redirect:/doctor/sign-in-view";
 		}
+		
+		// DB SELECT - breakpoint
+		doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
+		log.info("##### SELECT `vacations` 결과 : {}", doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum));
+		
 		
 		// 달력에 금일, 최소/최대 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
