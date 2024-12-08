@@ -165,20 +165,6 @@ public class DoctorController {
 			return "redirect:/doctor/sign-in-view";
 		}
 		
-		// DB SELECT - breakpoint
-		List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
-		log.info("##### SELECT `vacations` 결과 : {}", vacations);
-	    
-		// 중복 제거(필요 시 적용)
-		List<Map<String, Object>> uniqueVacations = vacations.stream().distinct().toList();
-	    log.info("##### SELECT `vacations` 결과 : {}", uniqueVacations);
-	    
-		
-		
-		// Model에 데이터 추가
-		model.addAttribute("uniqueVacations", uniqueVacations); // FullCalendar 데이터
-		
-		
 		// 달력에 금일, 최소/최대 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
 	    LocalDate now = LocalDate.now();

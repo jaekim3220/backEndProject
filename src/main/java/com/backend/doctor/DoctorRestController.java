@@ -1,6 +1,7 @@
 package com.backend.doctor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.ui.Model;
@@ -251,6 +252,13 @@ public class DoctorRestController {
 		return result;
 
 	}
+	
+	
+    @PostMapping("/events")
+    public List<Map<String, Object>> makeEvents(HttpSession session) {
+    	
+    }
+
 	
 	
 }
