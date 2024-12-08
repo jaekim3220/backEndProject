@@ -216,8 +216,7 @@ public class DoctorRestController {
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			@RequestParam("title") String title,
 			@RequestParam("vacationStart") String vacationStart, 
-			@RequestParam("vacationEnd") String vacationEnd,
-			@RequestParam("scheduleColor") String scheduleColor,			
+			@RequestParam("vacationEnd") String vacationEnd,			
 			HttpSession session) {
 		// 로그인 여부 검사 - breakpoint
 		Integer doctorNum = (Integer) session.getAttribute("doctorId");
@@ -233,7 +232,7 @@ public class DoctorRestController {
 		
 		// DB INSERT (Entity 사용), 성공한 행 수 - breakpoint
 		// `vacations` 테이블
-		int rowCount = doctorsVacationsBO.addDoctorsVacations(doctorNum, title, vacationStart, vacationEnd, scheduleColor);
+		int rowCount = doctorsVacationsBO.addDoctorsVacations(doctorNum, title, vacationStart, vacationEnd);
 		
 		
 		// Response(응답값) - breakpoint
@@ -261,7 +260,6 @@ public class DoctorRestController {
 			@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "vacationStart", required = false) String vacationStart, 
 			@RequestParam(value = "vacationEnd", required = false) String vacationEnd,
-			@RequestParam(value = "scheduleColor", required = false) String scheduleColor,
 			HttpSession session) {
 		// 로그인 여부 검사 - breakpoint
         Integer doctorNum = (Integer) session.getAttribute("doctorId");
@@ -283,7 +281,6 @@ public class DoctorRestController {
             event.put("title", vacation.get("title")); // 일정 제목
             event.put("start", vacation.get("vacationStart")); // 시작 날짜
             event.put("end", vacation.get("vacationEnd")); // 종료 날짜
-            event.put("backgroundColor", vacation.get("scheduleColor")); // 배경 색상
             
             return event; // 위에서 변경한 event 데이터 반환
         }).toList(); // 위에서 변경한 event 데이터를 리스트로 반환

@@ -39,10 +39,10 @@ public class DoctorsVacationsBO {
 	// output : X
 	// @PostMapping("/calendar-plan-insert")
 	public int addDoctorsVacations(int doctorNum, String title, 
-			String vacationStart, String vacationEnd, String scheduleColor) {
+			String vacationStart, String vacationEnd) {
 		log.info("##### doctorNum : {}, title : {}, "
 				+ "vacationStart : {}, vacationEnd : {} #####", doctorNum, title, vacationStart, vacationEnd);
-		return doctorsVacationsMapper.insertDoctorsVacations(doctorNum, title, vacationStart, vacationEnd, scheduleColor);
+		return doctorsVacationsMapper.insertDoctorsVacations(doctorNum, title, vacationStart, vacationEnd);
 	}
 	
 	

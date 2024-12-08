@@ -12,7 +12,6 @@
 			`title`,
 			`vacationStart`,
 			`vacationEnd`,
-			`scheduleColor`,
 			`createdAt`,
 			`updatedAt`
 		)
@@ -22,7 +21,6 @@
 			#{title},
 			#{vacationStart},
 			#{vacationEnd},
-			#{scheduleColor},
 			NOW(),
 			NOW()
 		)
@@ -36,8 +34,7 @@
 			`doctorNum`,
 			`title`,
 			`vacationStart`,
-			`vacationEnd`,
-			`scheduleColor`
+			`vacationEnd`
 		FROM
 			`vacations`
 		WHERE

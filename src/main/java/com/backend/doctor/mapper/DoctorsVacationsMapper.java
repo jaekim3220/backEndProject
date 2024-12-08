@@ -21,7 +21,7 @@ public interface DoctorsVacationsMapper {
 	// @PostMapping("/calendar-plan-insert")
 	public int insertDoctorsVacations(@Param("doctorNum") int doctorNum, 
 			@Param("title") String title, @Param("vacationStart") String vacationStart, 
-			@Param("vacationEnd") String vacationEnd, @Param("scheduleColor") String scheduleColor);
+			@Param("vacationEnd") String vacationEnd);
 	
 
 	// input : int doctorNum
