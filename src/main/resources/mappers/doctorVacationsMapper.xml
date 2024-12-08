@@ -30,7 +30,7 @@
 	
 	
 	<!-- @PostMapping("/calendar-plan-view") -->
-	<select id="selectDoctorVacationsByDoctorNum" resultType="com.backend.doctor.domain.DoctorsVacations">
+	<select id="selectDoctorVacationsByDoctorNum" resultType="map">
 		SELECT
 			`id`,
 			`doctorNum`,
