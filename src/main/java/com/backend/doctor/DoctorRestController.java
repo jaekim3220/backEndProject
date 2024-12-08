@@ -254,9 +254,38 @@ public class DoctorRestController {
 	}
 	
 	
-    @PostMapping("/events")
-    public List<Map<String, Object>> makeEvents(HttpSession session) {
-    	
+    @PostMapping("/doctorsEvents")
+    public List<Map<String, Object>> makeEvents(
+    		// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
+			@RequestParam(value = "title", required = false) String title,
+			@RequestParam(value = "vacationStart", required = false) String vacationStart, 
+			@RequestParam(value = "vacationEnd", required = false) String vacationEnd,
+			@RequestParam(value = "scheduleColor", required = false) String scheduleColor,
+			HttpSession session) {
+		// 로그인 여부 검사 - breakpoint
+        Integer doctorNum = (Integer) session.getAttribute("doctorId");
+        if (doctorNum == null) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+		// DB SELECT - breakpoint
+		List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
+		log.info("##### SELECT `vacations` 결과 : {}", vacations);
+	    
+		
+	    // event 변환 과정: 일정 데이터를 FullCalendar 형식으로 변환(중복제거)
+        return vacations.stream()
+        		.distinct() // 중복 제거
+        		.map(vacation -> { // vacations = {"title":title, "vacationStart":vacationStart...} 형식으로 데이터가 있음
+            Map<String, Object> event = new HashMap<>(); 
+            event.put("title", vacation.get("title")); // 일정 제목
+            event.put("start", vacation.get("vacationStart")); // 시작 날짜
+            event.put("end", vacation.get("vacationEnd")); // 종료 날짜
+            event.put("backgroundColor", vacation.get("scheduleColor")); // 배경 색상
+            
+            return event; // 위에서 변경한 event 데이터 반환
+        }).toList(); // 위에서 변경한 event 데이터를 리스트로 반환
+        
     }
 
 	
