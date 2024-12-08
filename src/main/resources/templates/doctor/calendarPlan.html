@@ -31,14 +31,6 @@
             종료날짜 : <input type="date" class="form-control my-1" id="vacationEnd"
 			th:value="${minDate}" th:min="${minDate}" th:max="${maxDate}"
 			th:data-default-value="${minDate}" /><br/>
-            배경색상 :
-            <select id="scheduleColor" class="my-1">
-              <option value="red">빨강색</option>
-              <option value="yellow">노랑색</option>
-              <option value="purple">보라색</option>
-              <option value="blue">파란색</option>
-              <option value="green">초록색</option>
-            </select>
           </div> <!-- modal-body 종료 -->
           
           <div class="modal-footer">
@@ -53,6 +45,41 @@
         </div> <!-- modal-content 종료 -->
       </div> <!-- modal-dialog 종료 -->
     </div>
+    
+    
+    <!-- 일정 수정용 Modal -->
+         <div class="modal hidden" id="scheduleUpdateModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">일정 수정하기</h5>
+                        <button type="button" class="btn" data-dismiss="modal">
+                            <span>X</span>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        일정이름 : <input type="text" id="scheduleUpdateTitle" class="my-1"/><br/>
+                        시작날짜 : <input type="date" class="form-control my-1" id="vacationUpdateStart"
+                        th:min="${minDate}" th:max="${maxDate}"
+                        th:data-default-value="${minDate}" />
+                        종료날짜 : <input type="date" class="form-control my-1" id="vacationUpdateEnd"
+                        th:max="${maxDate}"/><br/>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            취소
+                        </button>
+                        <button type="button" class="btn btn-primary" id="saveUpdatedSchedule">
+                            수정 저장
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
     
 		<!-- FullCalendar를 사용하기 위한
 		JS의 FullCalendar Individual Plugins -->
@@ -86,17 +113,17 @@
 	    			events: function(info, successCallback, failureCallback) {
 	    			    // 서버로 데이터 요청
 	    			    $.ajax({
-	    			        url: '/doctor/doctorsEvents', // 이벤트 데이터를 가져오는 컨트롤러 URL
+	    			        url: '/doctor/calendar-plan-show', // 이벤트 데이터를 가져오는 컨트롤러 URL
 	    			        type: 'POST', // HTTP 메서드
 	    			        dataType: 'json', // 응답 데이터 형식(json, key-value, formData)
 	    			        success: function(response) {
 	    			            // 서버 응답 데이터를 FullCalendar 형식으로 변환
 	    			            var events = response.map(function(event) {
 	    			                return {
+	    			                	id: event.id, // 일정 id
 	    			                    title: event.title, // 일정 제목
 	    			                    start: event.start, // 시작 날짜 (response에서 start로 전달)
 	    			                    end: event.end, // 종료 날짜
-	    			                    backgroundColor: event.backgroundColor // 배경 색상
 	    			                };
 	    			            });
 	    			            successCallback(events); // 변환된 데이터를 FullCalendar에 전달
@@ -128,13 +155,41 @@
 	    				dayGridWeek: '일주일 단위', // 일주일 보기
 	    				dayGridMonth: '한 달 단위' // 한 달 보기
 	    			},
-	    			
+	                
+	                eventClick: function(info) { // 수정할 일정(event)를 클릭
+	                    // 클릭된 이벤트 정보를 수정 모달에 표시
+
+	                    $("#scheduleUpdateTitle").val(info.event.title); // 일정 제목을 modal에 표시
+	                    $("#vacationUpdateStart").val(info.event.startStr.substring(0, 10)); // 시작 날짜를 modal에 표시
+	                    if (info.event.end) {
+	                        $("#vacationUpdateEnd").val(info.event.endStr.substring(0, 10)); // 종료 날짜
+	                    } else {
+	                    	// 종료 날짜가 없으면 시작 날짜로 설정(시작/종료 날짜가 동일)
+	                    	// 시작/종료 날짜가 동일할 경우에만 종료 날짜를 가져오지 못해서 내린 판단
+	                        $("#vacationUpdateEnd").val(info.event.startStr.substring(0, 10));
+	                    }
+	                    
+	                    // 클릭된 이벤트 ID를 hidden 필드로 설정
+	                    $("#scheduleUpdateModal").data('event-id', info.event.id); // 이벤트 ID를 modal에 저장
+	                    
+	                    // 수정 모달 표시
+	                    $("#scheduleUpdateModal").modal("show");
+	                    
+	                    
+	                    // TODO : 수정하기 버튼 id="saveUpdatedSchedule" 클릭 후 해당 데이터를 보내는 logic 구현
+	                    
+	                },
+	                
 	    			eventDidMount: function(info) { // 이벤트가 화면에 표시될 때 추가 작업 정의
 	    				// 이벤트 날짜 가져오기
 	    				var eventDate = new Date(info.event.start); // 이벤트 시작 날짜
 	    				eventDate.setHours(0, 0, 0, 0); // 시간을 00:00:00으로 초기화하여 날짜 비교
 	    				if (eventDate < today) { // 오늘 이전 날짜인지 확인
 	                        info.el.classList.add('bg-danger'); // 오늘 이전 날짜의 이벤트 배경 색상 변경
+	    				} else if (eventDate > today) {
+	    					info.el.classList.add('bg-info'); // 오늘 이후 날짜의 이벤트 배경 색상 변경
+	    				} else {
+	    					info.el.classList.add('bg-success'); // 금일 날짜의 이벤트 배경 색상 변경
 	    				}
 	    			}
 		        });
@@ -150,7 +205,6 @@
     			let title = $("#scheduleTitle").val().trim();
     			let vacationStart = $("#vacationStart").val().trim();
     			let vacationEnd = $("#vacationEnd").val().trim();
-    			let scheduleColor = $("#scheduleColor").val().trim();
     			
     			// console.log(scheduleColor);
     			
@@ -167,7 +221,7 @@
     				alert("일정 종료 날짜를 입력하세요");
     				return;
     			}
-    			if(vacationStart >= vacationEnd) {
+    			if(vacationStart > vacationEnd) {
     				alert("입력한 일정 날짜를 확인하세요.");
     				return;
     			}
@@ -177,7 +231,7 @@
     		    	// request
     		    	type:"POST",
     		    	url:"/doctor/calendar-plan-insert",
-    		    	data:{"title":title, "vacationStart":vacationStart, "vacationEnd":vacationEnd, "scheduleColor":scheduleColor},
+    		    	data:{"title":title, "vacationStart":vacationStart, "vacationEnd":vacationEnd},
     		    	
     		    	//response
     		    	success:function(data) {
@@ -192,7 +246,6 @@
 			    		        title: title,
 			    		        start: vacationStart,
 			    		        end: vacationEnd,
-			    		        backgroundColor: scheduleColor, // 설정한 색상
 			    		    });
     		    			
 			    		    alert("일정이 추가되었습니다.");
@@ -215,8 +268,6 @@
     		    // 날짜 영역 초기화
 				$("#vacationStart").val($("#vacationStart").data("default-value"));
 				$("#vacationEnd").val($("#vacationEnd").data("default-value"));
-				// 색깔영역 초기화
-				$("#scheduleColor").val($("#scheduleColor option:first").val());
 				
 				
     		}); // Schedule 저장 버튼 종료

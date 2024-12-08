@@ -254,9 +254,10 @@ public class DoctorRestController {
 	}
 	
 	
-    @PostMapping("/doctorsEvents")
+    @PostMapping("/calendar-plan-show")
     public List<Map<String, Object>> makeEvents(
     		// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
+    		@RequestParam(value = "id", required = false) String id,
 			@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "vacationStart", required = false) String vacationStart, 
 			@RequestParam(value = "vacationEnd", required = false) String vacationEnd,
@@ -278,6 +279,7 @@ public class DoctorRestController {
         		.distinct() // 중복 제거
         		.map(vacation -> { // vacations = {"title":title, "vacationStart":vacationStart...} 형식으로 데이터가 있음
             Map<String, Object> event = new HashMap<>(); 
+            event.put("id", vacation.get("id")); // 일정 id
             event.put("title", vacation.get("title")); // 일정 제목
             event.put("start", vacation.get("vacationStart")); // 시작 날짜
             event.put("end", vacation.get("vacationEnd")); // 종료 날짜
@@ -288,6 +290,37 @@ public class DoctorRestController {
         
     }
 
+    
+	// 의사 일정 수정(업데이트)
+//	@PostMapping("/calendar-plan-update")
+//	public Map<String, Object> calandarPlanUpdate(
+//			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+//			@RequestParam("title") String title,
+//			@RequestParam("vacationStart") String vacationStart, 
+//			@RequestParam("vacationEnd") String vacationEnd,		
+//			HttpSession session) {
+//		
+//		// doctorNum 추출
+//		Integer doctorNum = (Integer) session.getAttribute("doctorId");
+//		log.info("##### doctorNum : {} #####", doctorNum);
+//
+//		Map<String, Object> result = new HashMap<>();
+//		if(doctorNum == null) {
+//			result.put("code", 403);
+//			result.put("error_message", "로그인 후 사용이 가능합니다.");
+//			return result;
+//		}
+//		
+//		
+//		// DB Update - breakpoint
+//		
+//		
+//		// Response - breakpoint
+//		
+//		
+//		return result;
+//		
+//	}
 	
 	
 }
