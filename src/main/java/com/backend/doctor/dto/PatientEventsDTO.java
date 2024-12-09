@@ -25,6 +25,7 @@ public class PatientEventsDTO {
                     patientEvent.put("title", customerEvent.getTitle()); // 예약 제목
                     patientEvent.put("visitDate", customerEvent.getVisitDate()); // 내원 날짜
                     patientEvent.put("status", customerEvent.getStatus()); // 예약 상태
+                    patientEvent.put("description", customerEvent.getDescription()); // 현재 상태
                     return patientEvent;
                 }).collect(Collectors.toList()); // 변환한 데이터를 List로 반환
 	}

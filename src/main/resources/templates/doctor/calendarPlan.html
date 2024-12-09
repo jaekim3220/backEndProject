@@ -83,6 +83,37 @@
                 </div>
             </div>
         </div>
+        
+        
+    <!-- 환자 예약 Modal -->
+         <div class="modal hidden" id="patientEventModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="patientEventData">예약 데이터</h5>
+                        <button type="button" class="btn" data-dismiss="modal">
+                            <span>X</span>
+                        </button>
+                    </div>
+                    
+                    <div class="modal-body d-flex flex-column ">
+                        예약제목 : <textarea rows="1" id="patientEventTitle" class="my-1"></textarea>
+                        현재상태 : <textarea rows="1" id="patientEventDescription" class="my-1"></textarea>
+                        내원날짜 : <textarea rows="1" id="patientEventDate" class="my-1"></textarea>
+                        예약현황 : <textarea rows="1" id="patientEventStatus" class="my-1"></textarea>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            닫기
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
     
 		<!-- FullCalendar를 사용하기 위한
 		JS의 FullCalendar Individual Plugins -->
@@ -134,7 +165,10 @@
                                         id: patientEvent.id, // 일정 id
                                         title: patientEvent.title, // 일정 제목
                                         start: patientEvent.visitDate, // 시작 날짜 (response에서 start로 전달)
-                                    	status: patientEvent.status,
+                                    	extendedProps: {
+                                            status: patientEvent.status, // extendedProps에 예약 상태 추가
+                                            description: patientEvent.description, // extendedProps에 상태 설명 추가
+                                        }
                                     };
                                 });
 	    			            var allEvents = doctorEvent.concat(patientEvent); // 모든 event를 하나로 결합
@@ -171,121 +205,147 @@
 	                eventClick: function(info) { // 수정할 일정(event)를 클릭
 	                    // 클릭된 이벤트 정보를 수정 모달에 표시
 
-	                    $("#scheduleUpdateTitle").val(info.event.title); // 일정 제목을 modal에 표시
-	                    $("#vacationUpdateStart").val(info.event.startStr.substring(0, 10)); // 시작 날짜를 modal에 표시
-	                    if (info.event.end) {
-	                        $("#vacationUpdateEnd").val(info.event.endStr.substring(0, 10)); // 종료 날짜
-	                    } else {
-	                    	// 종료 날짜가 없으면 시작 날짜로 설정(시작/종료 날짜가 동일)
-	                    	// 시작/종료 날짜가 동일할 경우에만 종료 날짜를 가져오지 못해서 내린 판단
-	                        $("#vacationUpdateEnd").val(info.event.startStr.substring(0, 10));
-	                    }
-	                    
-	                    // 클릭된 이벤트 ID를 hidden 필드로 설정
-	                    $("#scheduleUpdateModal").data('event-id', info.event.id); // 이벤트 ID를 modal에 저장
-	                    
-	                    // 수정 모달 표시
-	                    $("#scheduleUpdateModal").modal("show");
-	                    
-	                    
-	                    // `수정 저장` 버튼 
-	                    $("#saveUpdatedSchedule").on("click", function(e) {
-	                    	e.preventDefault();
-	                    	// alert("수정저장");
-	                    	
-	                    	
-			                let title = $("#scheduleUpdateTitle").val().trim(); // 수정할 일정 제목
-			                let vacationStart = $("#vacationUpdateStart").val().trim(); // 수정할 일정 시작 날짜
-			                let vacationEnd = $("#vacationUpdateEnd").val().trim(); // 수정할 일정 종료 날짜
-			                let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
-			                
-			                // console.log(title);
-			                // console.log(vacationStart);
-			                // console.log(vacationEnd);
-			                // console.log(eventId);
-			                
-			                if(!title) {
-			                	alert("일정 제목을 확인하세요.");
-			                	return;
-			                }
-			                if(!vacationStart || !vacationEnd || vacationStart > vacationEnd) {
-			                	alert("수정할 일정의 날짜를 확인하세요.");
-			                	return;
-			                }
-			                
-			                
-			                // AJAX 요청
-			                $.ajax({
-			                	// request
-			                	type:"POST",
-			                	url:"/doctor/calendar-plan-update",
-			                	data:{"id":vacationsId, "title":title,
-			                		"vacationStart":vacationStart, "vacationEnd":vacationEnd},
-			                	
-			                	// response
-			                	success:function(data) {
-			                		if(data.code == 200) {// Response(응답값) - breakpoint
-			    		    			// Dictionary 형태
-			    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
-			    		    			// => Dictionary 형식으로 변경
-			    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
-			    		    			alert("일정 변경 성공");
-			    		    		    location.reload(true);
-			                		} else if(data.code == 403) {
-			                			location.href = "/doctor/sign-in-view";
-			                		} else {
-			                			alert(data.error_message);
-			                		}
-			                	},
-			                	error:function(e) {
-			    					alert("일정 변경에 실패했습니다.");
-			    				}
-			                	
-			                }); // AJAX 요청 종료
-	                    	
-	                    	
-	                    }); // `수정 저장` 버튼 종료
-	                    
-	                    
-	                    // 일정 삭제 버튼
-	                    $("#deleteSchedule").on("click", function(e) {
-	                    	e.preventDefault();
-	                    	// alert("삭제하기");
-	                    	
-	                    	let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
-	                    	// console.log(vacationsId);
-	                    	
-	                    	
-	                    	// AJAX 요청
-	                    	$.ajax({
-	                    		// request
-			                	type:"POST",
-			                	url:"/doctor/calendar-plan-delete",
-			                	data:{"id":vacationsId},
-			                	
-			                	// response
-			                	success:function(data) {
-			                		if(data.code == 200) {// Response(응답값) - breakpoint
-			    		    			// Dictionary 형태
-			    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
-			    		    			// => Dictionary 형식으로 변경
-			    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
-			    		    			alert("일정 삭제 성공");
-			    		    		    location.reload(true);
-			                		} else if(data.code == 403) {
-			                			location.href = "/doctor/sign-in-view";
-			                		} else {
-			                			alert(data.error_message);
-			                		}
-			                	},
-			                	error:function(e) {
-			    					alert("일정 삭제에 실패했습니다. 파라미터를 확인하세요.");
-			    				}
-			                	
-	                    	}); // AJAX 요청 종료
-	                    	
-	                    	
-	                    }); // 일정 삭제 버튼 종료
+	                    // 클릭된 이벤트 정보 추출
+					    const eventId = info.event.id;
+					    const eventTitle = info.event.title;
+					    const eventStart = info.event.startStr;
+					    const eventEnd = info.event.end ? info.event.endStr : eventStart;
+
+				        const eventStatus = info.event.extendedProps.status;
+				        const eventDescription = info.event.extendedProps.description;
+				        
+					    
+					    // 환자 예약 이벤트인지 확인 (이벤트에 `status`가 포함되어 있는 경우)
+					    if (info.event.extendedProps.status) {
+					    	// 환자 예약 이벤트일 경우 환자 예약 Modal 표시
+					    	$("#patientEventTitle").val(eventTitle); // 예약 제목 설정
+					    	$("#patientEventDate").val(eventStart); // 내원 날짜 설정
+					    	$("#patientEventStatus").val(eventStatus); // 예약상태 설정
+					    	$("#patientEventDescription").val(eventDescription); // 현재 상태 설정
+					    	
+					        
+					    	// `#patientEventModal` 모달 표시
+					        $("#patientEventModal").modal("show");
+					    } else {
+					    	
+					    	$("#scheduleUpdateTitle").val(info.event.title); // 일정 제목을 modal에 표시
+		                    $("#vacationUpdateStart").val(info.event.startStr.substring(0, 10)); // 시작 날짜를 modal에 표시
+		                    if (info.event.end) {
+		                        $("#vacationUpdateEnd").val(info.event.endStr.substring(0, 10)); // 종료 날짜
+		                    } else {
+		                    	// 종료 날짜가 없으면 시작 날짜로 설정(시작/종료 날짜가 동일)
+		                    	// 시작/종료 날짜가 동일할 경우에만 종료 날짜를 가져오지 못해서 내린 판단
+		                        $("#vacationUpdateEnd").val(info.event.startStr.substring(0, 10));
+		                    }
+		                    
+		                    // 클릭된 이벤트 ID를 hidden 필드로 설정
+		                    $("#scheduleUpdateModal").data('event-id', info.event.id); // 이벤트 ID를 modal에 저장
+		                    
+		                    // 수정 모달 표시
+		                    $("#scheduleUpdateModal").modal("show");
+		                    
+		                    
+		                    // `수정 저장` 버튼 
+		                    $("#saveUpdatedSchedule").on("click", function(e) {
+		                    	e.preventDefault();
+		                    	// alert("수정저장");
+		                    	
+		                    	
+				                let title = $("#scheduleUpdateTitle").val().trim(); // 수정할 일정 제목
+				                let vacationStart = $("#vacationUpdateStart").val().trim(); // 수정할 일정 시작 날짜
+				                let vacationEnd = $("#vacationUpdateEnd").val().trim(); // 수정할 일정 종료 날짜
+				                let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
+				                
+				                // console.log(title);
+				                // console.log(vacationStart);
+				                // console.log(vacationEnd);
+				                // console.log(eventId);
+				                
+				                if(!title) {
+				                	alert("일정 제목을 확인하세요.");
+				                	return;
+				                }
+				                if(!vacationStart || !vacationEnd || vacationStart > vacationEnd) {
+				                	alert("수정할 일정의 날짜를 확인하세요.");
+				                	return;
+				                }
+				                
+				                
+				                // AJAX 요청
+				                $.ajax({
+				                	// request
+				                	type:"POST",
+				                	url:"/doctor/calendar-plan-update",
+				                	data:{"id":vacationsId, "title":title,
+				                		"vacationStart":vacationStart, "vacationEnd":vacationEnd},
+				                	
+				                	// response
+				                	success:function(data) {
+				                		if(data.code == 200) {// Response(응답값) - breakpoint
+				    		    			// Dictionary 형태
+				    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+				    		    			// => Dictionary 형식으로 변경
+				    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
+				    		    			alert("일정 변경 성공");
+				    		    		    location.reload(true);
+				                		} else if(data.code == 403) {
+				                			location.href = "/doctor/sign-in-view";
+				                		} else {
+				                			alert(data.error_message);
+				                		}
+				                	},
+				                	error:function(e) {
+				    					alert("일정 변경에 실패했습니다.");
+				    				}
+				                	
+				                }); // AJAX 요청 종료
+		                    	
+		                    	
+		                    }); // `수정 저장` 버튼 종료
+		                    
+		                    
+		                    // 일정 삭제 버튼
+		                    $("#deleteSchedule").on("click", function(e) {
+		                    	e.preventDefault();
+		                    	// alert("삭제하기");
+		                    	
+		                    	let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
+		                    	// console.log(vacationsId);
+		                    	
+		                    	
+		                    	// AJAX 요청
+		                    	$.ajax({
+		                    		// request
+				                	type:"POST",
+				                	url:"/doctor/calendar-plan-delete",
+				                	data:{"id":vacationsId},
+				                	
+				                	// response
+				                	success:function(data) {
+				                		if(data.code == 200) {// Response(응답값) - breakpoint
+				    		    			// Dictionary 형태
+				    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+				    		    			// => Dictionary 형식으로 변경
+				    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
+				    		    			alert("일정 삭제 성공");
+				    		    		    location.reload(true);
+				                		} else if(data.code == 403) {
+				                			location.href = "/doctor/sign-in-view";
+				                		} else {
+				                			alert(data.error_message);
+				                		}
+				                	},
+				                	error:function(e) {
+				    					alert("일정 삭제에 실패했습니다. 파라미터를 확인하세요.");
+				    				}
+				                	
+		                    	}); // AJAX 요청 종료
+		                    	
+		                    	
+		                    }); // 일정 삭제 버튼 종료
+					    
+					    }
+					    
 	                    
 	                },
 	                

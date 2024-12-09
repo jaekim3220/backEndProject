@@ -269,6 +269,8 @@ public class DoctorRestController {
 			@RequestParam(value = "title", required = false) String title,
 			@RequestParam(value = "vacationStart", required = false) String vacationStart, 
 			@RequestParam(value = "vacationEnd", required = false) String vacationEnd,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "description", required = false) String description,
 			HttpSession session) {
 		// 로그인 여부 검사 - breakpoint
         Integer doctorNum = (Integer) session.getAttribute("doctorId");
