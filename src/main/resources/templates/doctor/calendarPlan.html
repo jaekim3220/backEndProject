@@ -75,6 +75,9 @@
                         <button type="button" class="btn btn-primary" id="saveUpdatedSchedule">
                             수정 저장
                         </button>
+                        <button type="button" class="btn btn-danger" id="deleteSchedule">
+                            일정 삭제
+                        </button>
                     </div>
                     
                 </div>
@@ -233,6 +236,47 @@
 	                    	
 	                    	
 	                    }); // `수정 저장` 버튼 종료
+	                    
+	                    
+	                    // 일정 삭제 버튼
+	                    $("#deleteSchedule").on("click", function(e) {
+	                    	e.preventDefault();
+	                    	// alert("삭제하기");
+	                    	
+	                    	let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
+	                    	// console.log(vacationsId);
+	                    	
+	                    	
+	                    	// AJAX 요청
+	                    	$.ajax({
+	                    		// request
+			                	type:"POST",
+			                	url:"/doctor/calendar-plan-delete",
+			                	data:{"id":vacationsId},
+			                	
+			                	// response
+			                	success:function(data) {
+			                		if(data.code == 200) {// Response(응답값) - breakpoint
+			    		    			// Dictionary 형태
+			    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+			    		    			// => Dictionary 형식으로 변경
+			    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
+			    		    			alert("일정 삭제 성공");
+			    		    		    location.reload(true);
+			                		} else if(data.code == 403) {
+			                			location.href = "/doctor/sign-in-view";
+			                		} else {
+			                			alert(data.error_message);
+			                		}
+			                	},
+			                	error:function(e) {
+			    					alert("일정 삭제에 실패했습니다. 파라미터를 확인하세요.");
+			    				}
+			                	
+	                    	}); // AJAX 요청 종료
+	                    	
+	                    	
+	                    }); // 일정 삭제 버튼 종료
 	                    
 	                },
 	                

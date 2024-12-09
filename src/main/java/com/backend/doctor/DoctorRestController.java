@@ -329,4 +329,42 @@ public class DoctorRestController {
 	}
 	
 	
+	// 의사 일정 삭제(DELETE)
+	@PostMapping("/calendar-plan-delete")
+	public Map<String, Object> calandarPlanDelete(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id,		
+			HttpSession session) {
+		
+		// doctorNum 추출
+		Integer doctorNum = (Integer) session.getAttribute("doctorId");
+		log.info("##### doctorNum : {} #####", doctorNum);
+
+		Map<String, Object> result = new HashMap<>();
+		if(doctorNum == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용이 가능합니다.");
+			return result;
+		}
+		
+		
+		// DB DELETE - breakpoint
+		int rowCount = doctorsVacationsBO.removeDoctorsVacations(id, doctorNum);
+		
+		
+		// Response - breakpoint
+		if(rowCount > 0) {
+			result.put("code", 200);
+			result.put("result", "일정 변경에 성공했습니다.");
+		} else {
+			result.put("code", 500);
+			result.put("error_message", "일정 변경에 실패했습니다. 관리자한테 문의해주세요.");			
+		}
+		
+		
+		return result;
+		
+	}
+	
+	
 }

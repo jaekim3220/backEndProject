@@ -38,4 +38,10 @@ public interface DoctorsVacationsMapper {
 			@Param("title") String title, @Param("vacationStart") String vacationStart,
 			@Param("vacationEnd") String vacationEnd);
 	
+	
+	// input : int id, int doctorNum
+	// output : X
+	// @PostMapping("/calendar-plan-delete")
+	public int deleteDoctorsVacations(@Param("id") int id, @Param("doctorNum") int doctorNum);
+	
 }

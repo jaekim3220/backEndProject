@@ -67,5 +67,14 @@ public class DoctorsVacationsBO {
 			throw e;
 		}
 	}
+	
+
+	// input : int id, int doctorNum
+	// output : X
+	// @PostMapping("/calendar-plan-delete")
+	public int removeDoctorsVacations(int id, int doctorNum) {
+		doctorsVacationsMapper.deleteDoctorsVacations(id, doctorNum);
+		return 1;
+	}
 
 }

@@ -55,5 +55,15 @@
 			`id` = #{id} AND
 			`doctorNum` = #{doctorNum}
 	</update>
+	
+	
+	<!-- @PostMapping("/calendar-plan-delete") -->
+	<delete id="deleteDoctorsVacations" parameterType="map">
+		DELETE FROM
+			`vacations`
+		WHERE
+			`id` = #{id} AND
+			`doctorNum` = #{doctorNum}
+	</delete>
 
 </mapper>
