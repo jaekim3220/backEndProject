@@ -129,15 +129,15 @@
 	    			                    end: doctorEvent.end, // 종료 날짜
 	    			                };
 	    			            });
-	    			            var patientEvent = response.map(function(patientEvent) {
-	    			                return {
-	    			                	id: patientEvent.id, // 일정 id
-	    			                    title: patientEvent.title, // 일정 제목
-	    			                    start: patientEvent.visitDate, // 시작 날짜 (response에서 start로 전달)
-	    			                };
-	    			            });
-	    			            successCallback(patientEvent); // 변환된 데이터를 FullCalendar에 전달
-	    			            successCallback(doctorEvent); // 변환된 데이터를 FullCalendar에 전달
+                                var patientEvent = response.map(function(patientEvent) {
+                                    return {
+                                        id: patientEvent.id, // 일정 id
+                                        title: patientEvent.title, // 일정 제목
+                                        start: patientEvent.visitDate, // 시작 날짜 (response에서 start로 전달)
+                                    };
+                                });
+	    			            var allEvents = doctorEvent.concat(patientEvent); // 모든 event를 하나로 결합
+	    			            successCallback(allEvents); // 변환된 데이터를 FullCalendar에 전달
 	    			        },
 	    			        error: function() {
 	    			            alert("일정을 가져오는데 실패했습니다."); // 에러 발생 시 사용자에게 알림
