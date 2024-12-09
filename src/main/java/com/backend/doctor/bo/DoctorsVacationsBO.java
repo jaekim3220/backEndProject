@@ -52,5 +52,20 @@ public class DoctorsVacationsBO {
 	public List<Map<String, Object>> getDoctorVacationsByDoctorNum(int doctorNum) {
 		return doctorsVacationsMapper.selectDoctorVacationsByDoctorNum(doctorNum);
 	}
+	
+	
+	// input : int id, int doctorNum, String title, String vacationStart, String vacationEnd
+	// output : X
+	// @PostMapping("/calendar-plan-update")
+	public int updateDoctorsVacations(int id, int doctorNum, String title, 
+			String vacationStart, String vacationEnd) {
+		try {
+			doctorsVacationsMapper.updateDoctorsVacations(id, doctorNum, title, vacationStart, vacationEnd);
+			return 1;
+		} catch (Exception e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
 
 }

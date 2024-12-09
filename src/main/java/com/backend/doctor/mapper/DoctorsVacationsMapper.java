@@ -30,4 +30,12 @@ public interface DoctorsVacationsMapper {
 	public List<Map<String, Object>> selectDoctorVacationsByDoctorNum(@Param("doctorNum") int doctorNum);
 	
 	
+	// input : int id, int doctorNum, String title, String vacationStart, String vacationEnd
+	// output : X
+	// @PostMapping("/calendar-plan-update")
+	public int updateDoctorsVacations(
+			@Param("id") int id, @Param("doctorNum") int doctorNum,
+			@Param("title") String title, @Param("vacationStart") String vacationStart,
+			@Param("vacationEnd") String vacationEnd);
+	
 }

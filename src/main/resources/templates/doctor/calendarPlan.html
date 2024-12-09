@@ -206,7 +206,7 @@
 			                $.ajax({
 			                	// request
 			                	type:"POST",
-			                	url:"doctor/calendar-plan-update",
+			                	url:"/doctor/calendar-plan-update",
 			                	data:{"vacationsId":vacationsId, "title":title,
 			                		"vacationStart":vacationStart, "vacationEnd":vacationEnd},
 			                	
@@ -221,6 +221,8 @@
 			    		    		    location.reload(true);
 			                		} else if(data.code == 403) {
 			                			location.href = "/doctor/sign-in-view";
+			                		} else {
+			                			alert(data.error_message);
 			                		}
 			                	},
 			                	error:function(e) {

@@ -40,5 +40,20 @@
 		WHERE
 			`doctorNum` = #{doctorNum}
 	</select>
+	
+	
+	<!-- @PostMapping("/calendar-plan-update") -->
+	<update id="updateDoctorsVacations" parameterType="map">
+		UPDATE 
+			`vacations`
+		SET 
+			`title` = #{title},
+			`vacationStart` = #{vacationStart},
+			`vacationEnd` = #{vacationEnd},
+			`updatedAt` = NOW()
+		WHERE 
+			`id` = #{id} AND
+			`doctorNum` = #{doctorNum}
+	</update>
 
 </mapper>
