@@ -116,8 +116,11 @@ public class PatientRestController {
 		// 2. 비밀번호 해싱
 		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
 		
+		// 3. Salt + HashedPassword 결합
+		String combinedPassword = salt + hashedPassword;
+		
 		// DB INSERT - breakPoint
-		CustomerEntity customer = customerBO.addCustomer(customerId, hashedPassword, salt, name, birthDate, email);
+		CustomerEntity customer = customerBO.addCustomer(customerId, combinedPassword, name, birthDate, email);
 		
 		
 		// Response(JSON String) - breakPoint

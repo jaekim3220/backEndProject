@@ -11,6 +11,7 @@ import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper, XML) <--> DB영역 
@@ -18,6 +19,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 
 // Service(BO)영역
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerBO {
@@ -39,14 +41,13 @@ public class CustomerBO {
 	// input : 5개 + salt
 	// output : CustomerEntity
 	// @PostMapping("/sign-up")
-	public CustomerEntity addCustomer(String customerId, String password, String salt,
+	public CustomerEntity addCustomer(String customerId, String combinedPassword,
 			String name, String birthDate, String email) {
 		
 		return customerRepository.save(
 				CustomerEntity.builder()
 				.customerId(customerId)
-				.password(password)
-				.salt(salt)
+				.password(combinedPassword)
 				.name(name)
 				.birthDate(birthDate)
 				.email(email)
@@ -71,13 +72,27 @@ public class CustomerBO {
 	    if (customer == null) {
 	        return null; // 일치하는 아이디, 비밀번호가 없으면 null 반환
 	    }
+	    
+	    // 저장된 combinedPassword(Salt + HashedPassword) 가져오기
+	    String combinedPassword = customer.getPassword();
+	    log.info("combinedPassword : {}", combinedPassword);
+	    
+	    // Salt와 HashedPassword 분리
+	    String salt = combinedPassword.substring(0, 24); // Salt 길이 (Base64 기준 16bytes)
+	    log.info("salt : {}", salt);
+	    String installedHashedPassword = combinedPassword.substring(24);
+	    log.info("hashedPassword : {}", installedHashedPassword);
+	    
+	    // 입력된 비밀번호와 Salt로 해싱
+	    String inputHashedPassword = EncryptUtils.hashingSHA2(password, salt);
+	    
 		
-	    // 저장된 Salt를 사용해 비밀번호 Hashing
-	    String salt = customer.getSalt();
-	    String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
-		
-	    // 해싱된 비밀번호로 사용자 조회
-	    return customerRepository.findByCustomerIdAndPassword(customerId, hashedPassword);
+	    // 해싱된 비밀번호 비교
+	    if (installedHashedPassword.equals(inputHashedPassword)) {
+	        return customer; // 비밀번호가 일치하면 CustomerEntity 반환
+	    } else {
+	        return null; // 비밀번호가 일치하지 않으면 null 반환
+	    }
 	}
 	
 }

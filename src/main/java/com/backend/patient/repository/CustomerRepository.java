@@ -19,5 +19,5 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Intege
 	
 	
 	// @PostMapping("/sign-in")
-	public CustomerEntity findByCustomerIdAndPassword(String customerId, String password); // Correct method name
+	public CustomerEntity findByCustomerIdAndPassword(String customerId, String hashedPassword); // Correct method name
 }
