@@ -16,6 +16,11 @@ import com.backend.common.EncryptUtils;
 import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.bo.DoctorsVacationsBO;
+import com.backend.doctor.bo.FullCalendarShowBO;
+import com.backend.doctor.dto.DoctorsVacationsDTO;
+import com.backend.doctor.dto.PatientEventsDTO;
+import com.backend.patient.bo.ReserversBO;
+import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -46,6 +51,10 @@ public class DoctorRestController {
 	private final DoctorsBO doctorsBO;
 	private final DoctorUpdateBO doctorUpdateBO;
 	private final DoctorsVacationsBO doctorsVacationsBO;
+	private final DoctorsVacationsDTO doctorsVacationsDTO;
+	private final FullCalendarShowBO fullCalendarShowBO;
+	private final ReserversBO reserversBO;
+	private final PatientEventsDTO patientEventsDTO;
 	
     // 아이디 중복 확인
 	@GetMapping("/is-duplicate-id")
@@ -267,23 +276,12 @@ public class DoctorRestController {
             throw new RuntimeException("Unauthorized access");
         }
 
-		// DB SELECT - breakpoint
-		List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
-		log.info("##### SELECT `vacations` 결과 : {}", vacations);
-	    
+        
+        // DB SELECT도 FullCalendarShowBO에서 진행
+        
 		
-	    // event 변환 과정: 일정 데이터를 FullCalendar 형식으로 변환(중복제거)
-        return vacations.stream()
-        		.distinct() // 중복 제거
-        		.map(vacation -> { // vacations = {"title":title, "vacationStart":vacationStart...} 형식으로 데이터가 있음
-            Map<String, Object> event = new HashMap<>(); 
-            event.put("id", vacation.get("id")); // 일정 id
-            event.put("title", vacation.get("title")); // 일정 제목
-            event.put("start", vacation.get("vacationStart")); // 시작 날짜
-            event.put("end", vacation.get("vacationEnd")); // 종료 날짜
-            
-            return event; // 위에서 변경한 event 데이터 반환
-        }).toList(); // 위에서 변경한 event 데이터를 리스트로 반환
+		// DTO를 사용해 변환한 `vacations` 데이터 load
+        return fullCalendarShowBO.doctorsAndPatientsSchedule(doctorNum);
         
     }
 

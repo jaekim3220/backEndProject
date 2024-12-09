@@ -121,15 +121,23 @@
 	    			        dataType: 'json', // 응답 데이터 형식(json, key-value, formData)
 	    			        success: function(response) {
 	    			            // 서버 응답 데이터를 FullCalendar 형식으로 변환
-	    			            var events = response.map(function(event) {
+	    			            var doctorEvent = response.map(function(doctorEvent) {
 	    			                return {
-	    			                	id: event.id, // 일정 id
-	    			                    title: event.title, // 일정 제목
-	    			                    start: event.start, // 시작 날짜 (response에서 start로 전달)
-	    			                    end: event.end, // 종료 날짜
+	    			                	id: doctorEvent.id, // 일정 id
+	    			                    title: doctorEvent.title, // 일정 제목
+	    			                    start: doctorEvent.start, // 시작 날짜 (response에서 start로 전달)
+	    			                    end: doctorEvent.end, // 종료 날짜
 	    			                };
 	    			            });
-	    			            successCallback(events); // 변환된 데이터를 FullCalendar에 전달
+	    			            var patientEvent = response.map(function(patientEvent) {
+	    			                return {
+	    			                	id: patientEvent.id, // 일정 id
+	    			                    title: patientEvent.title, // 일정 제목
+	    			                    start: patientEvent.visitDate, // 시작 날짜 (response에서 start로 전달)
+	    			                };
+	    			            });
+	    			            successCallback(patientEvent); // 변환된 데이터를 FullCalendar에 전달
+	    			            successCallback(doctorEvent); // 변환된 데이터를 FullCalendar에 전달
 	    			        },
 	    			        error: function() {
 	    			            alert("일정을 가져오는데 실패했습니다."); // 에러 발생 시 사용자에게 알림
