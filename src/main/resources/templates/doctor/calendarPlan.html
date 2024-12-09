@@ -134,6 +134,7 @@
                                         id: patientEvent.id, // 일정 id
                                         title: patientEvent.title, // 일정 제목
                                         start: patientEvent.visitDate, // 시작 날짜 (response에서 start로 전달)
+                                    	status: patientEvent.status,
                                     };
                                 });
 	    			            var allEvents = doctorEvent.concat(patientEvent); // 모든 event를 하나로 결합
@@ -299,6 +300,17 @@
 	    				} else {
 	    					info.el.classList.add('bg-success'); // 금일 날짜의 이벤트 배경 색상 변경
 	    				}
+	    				
+	    				// 환자 예약 상태
+	    			    var eventStatus = info.event.extendedProps.status; // Access the status from extendedProps
+	    			    // Apply color based on the status
+	    			    if (eventStatus === "예약대기") {
+	    			        info.el.classList.add('bg-warning'); // Yellow color for "예약대기"
+	    			    } else if (eventStatus === "예약확정") {
+	    			        info.el.classList.add('bg-success'); // Green color for "예약확정"
+	    			    } else if (eventStatus === "예약불가") {
+	    			        info.el.classList.add('bg-danger'); // Red color for "예약불가"
+	    			    }
 	    			}
 		        });
 	        calendar.render(); // 설정한 달력을 화면에 렌더링(구현)
