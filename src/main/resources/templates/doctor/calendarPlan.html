@@ -176,7 +176,61 @@
 	                    $("#scheduleUpdateModal").modal("show");
 	                    
 	                    
-	                    // TODO : 수정하기 버튼 id="saveUpdatedSchedule" 클릭 후 해당 데이터를 보내는 logic 구현
+	                    // `수정 저장` 버튼 
+	                    $("#saveUpdatedSchedule").on("click", function(e) {
+	                    	e.preventDefault();
+	                    	// alert("수정저장");
+	                    	
+	                    	
+			                let title = $("#scheduleUpdateTitle").val().trim(); // 수정할 일정 제목
+			                let vacationStart = $("#vacationUpdateStart").val().trim(); // 수정할 일정 시작 날짜
+			                let vacationEnd = $("#vacationUpdateEnd").val().trim(); // 수정할 일정 종료 날짜
+			                let vacationsId = $("#scheduleUpdateModal").data('event-id');  // 수정할 일정 ID
+			                
+			                // console.log(title);
+			                // console.log(vacationStart);
+			                // console.log(vacationEnd);
+			                // console.log(eventId);
+			                
+			                if(!title) {
+			                	alert("일정 제목을 확인하세요.");
+			                	return;
+			                }
+			                if(!vacationStart || !vacationEnd || vacationStart > vacationEnd) {
+			                	alert("수정할 일정의 날짜를 확인하세요.");
+			                	return;
+			                }
+			                
+			                
+			                // AJAX 요청
+			                $.ajax({
+			                	// request
+			                	type:"POST",
+			                	url:"doctor/calendar-plan-update",
+			                	data:{"vacationsId":vacationsId, "title":title,
+			                		"vacationStart":vacationStart, "vacationEnd":vacationEnd},
+			                	
+			                	// response
+			                	success:function(data) {
+			                		if(data.code == 200) {// Response(응답값) - breakpoint
+			    		    			// Dictionary 형태
+			    		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+			    		    			// => Dictionary 형식으로 변경
+			    		    			// "{"code" : 200, "result" : "일정 변경 성공"}"
+			    		    			alert("일정 변경 성공");
+			    		    		    location.reload(true);
+			                		} else if(data.code == 403) {
+			                			location.href = "/doctor/sign-in-view";
+			                		}
+			                	},
+			                	error:function(e) {
+			    					alert("일정 변경에 실패했습니다.");
+			    				}
+			                	
+			                }); // AJAX 요청 종료
+	                    	
+	                    	
+	                    }); // `수정 저장` 버튼 종료
 	                    
 	                },
 	                
