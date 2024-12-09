@@ -45,35 +45,31 @@ public class FullCalendarShowBO {
 	// 하나라도 load 실패 시 rollback
 	public List<Map<String, Object>> doctorsAndPatientsSchedule(int doctorNum) {
 		
-        try {
-            // `vacations` DB SELECT - breakpoint
-        	List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
-            if (vacations == null || vacations.isEmpty()) {
-                throw new IllegalStateException("의사 일정 데이터 로드 실패");
-            }
-            log.info("의사 일정 데이터 로드 성공: {}", vacations);
+		
+		// `vacations` DB SELECT - breakpoint
+    	List<Map<String, Object>> vacations = doctorsVacationsBO.getDoctorVacationsByDoctorNum(doctorNum);
+        log.info("의사 일정 데이터 로드 성공: {}", vacations);
 
-            
-            // `reservers` DB SELECT - breakpoint
-            List<ReserversEntity> patientEvents = reserversBO.getReservationsByDoctorNum(doctorNum);
-            if (patientEvents == null || patientEvents.isEmpty()) {
-                throw new IllegalStateException("환자 예약 데이터 로드 실패");
-            }
-            log.info("환자 예약 데이터 로드 성공: {}", patientEvents);
-
-            // 데이터 가공
+        // `reservers` DB SELECT - breakpoint
+        List<ReserversEntity> patientEvents = reserversBO.getReservationsByDoctorNum(doctorNum);
+        log.info("환자 예약 데이터 로드 성공: {}", patientEvents);
+        
+        try { // 둘 중 하나라도 데이터 가공에 실패 시 rollback
+        	
+        	// 데이터 가공
             List<Map<String, Object>> formattedVacations = doctorsVacationsDTO.vacationsToFullCalendarFormat(vacations);
             List<Map<String, Object>> formattedPatientEvents = patientEventsDTO.patientsToFullCalendarFormat(patientEvents);
-
+            
             // 두 리스트 합치기
             formattedVacations.addAll(formattedPatientEvents);
-
+            
             return formattedVacations;
-
-        } catch (Exception e) {
+			
+		} catch (Exception e) {
             log.error("일정 처리 중 오류 발생", e);
             throw e; // 롤백을 위해 예외 재발생
-        }
+		}
+        
     }
 	
 }
