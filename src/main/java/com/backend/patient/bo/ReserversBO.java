@@ -214,4 +214,22 @@ public class ReserversBO {
     }
     
     
+    // input : int doctorNum
+    // output : List<ReserversEntity> or null
+    // DoctorRestController - @PostMapping("/calendar-plan-show")
+    // 예약한 의사의 고유 번화와 일치하는 row를 날짜를 기준으로 오름차순 정렬
+    public List<ReserversEntity> getReservationsByDoctorNum(int doctorNum) {
+        // DB SELECT
+        List<ReserversEntity> customerEvents = reserversRepository.findByDoctorNumOrderByVisitDateAsc(doctorNum);
+
+        // 로그 출력
+        if (customerEvents.isEmpty()) {
+            log.info("doctorNum: {}에 대한 예약 데이터가 없습니다.", doctorNum);
+        } else {
+            log.info("doctorNum: {}에 대한 예약 데이터 {}개를 가져왔습니다.", doctorNum, customerEvents.size());
+        }
+        
+        return customerEvents;
+    }
+    
 }

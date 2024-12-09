@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.backend.patient.entity.ReserversEntity;
 
@@ -33,5 +34,12 @@ public interface ReserversRepository extends JpaRepository<ReserversEntity, Inte
 	// output : ReserversEntity(단건) or Null
 	// @GetMapping("/reserve-detail-view")
     ReserversEntity findByIdAndCustomerId(int id, int customerId);
+
+    
+    // input : int doctorNum
+    // output : List<ReserversEntity> or null
+    // DoctorRestController - @PostMapping("/calendar-plan-show")
+    // 예약한 의사의 고유 번화와 일치하는 row를 날짜를 기준으로 오름차순 정렬
+    List<ReserversEntity> findByDoctorNumOrderByVisitDateAsc(int doctorNum);
 
 }
