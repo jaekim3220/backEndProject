@@ -119,6 +119,7 @@
 		JS의 FullCalendar Individual Plugins -->
 	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js'></script>
 	    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
+	    <script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
 
 
 	    <!-- FullCalendar 화면에 불러오기 -->
@@ -157,7 +158,10 @@
 	    			                	id: doctorEvent.id, // 일정 id
 	    			                    title: doctorEvent.title, // 일정 제목
 	    			                    start: doctorEvent.start, // 시작 날짜 (response에서 start로 전달)
-	    			                    end: doctorEvent.end, // 종료 날짜
+	    			                 	// FullCalendar에 보여주기 위해 하루 추가된 종료 날짜
+	    			                 	// FullCalendar에서는 end의 하루 전까지만 화면에 표시(당일치기는 상관 없음)
+	    			                    end: moment(doctorEvent.end).add(1, 'days').format('YYYY-MM-DD'),
+	    			                    allDay: true // allDay 속성 추가
 	    			                };
 	    			            });
                                 var patientEvent = response.map(function(patientEvent) {
@@ -192,7 +196,7 @@
 	    			eventOrder: 'sortIdx', // 이벤트 정렬 방식 (sortIdx 값을 기준으로 정렬)
 	    			headerToolbar: { // 달력 상단의 버튼과 툴바 설정
 	    				left: 'prev next today myCustonButton',
-		            	center: '',
+		            	center: 'title',
 		            	right: 'dayGridDay,dayGridWeek,dayGridMonth' // 보기 전환 버튼
 	    			},
 	    			buttonText: { // 버튼의 텍스트 설정
