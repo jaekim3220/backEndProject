@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.backend.common.EncryptUtils;
+import com.backend.common.SeparateSaltPassword;
 import com.backend.doctor.domain.Doctors;
 import com.backend.doctor.mapper.DoctorsMapper;
 import com.backend.patient.PatientRestController;
@@ -30,6 +31,7 @@ public class DoctorsBO {
 
 	// 생성자를 사용한 의존성 주입
 	private final DoctorsMapper doctorsMapper;
+	private final SeparateSaltPassword separateSaltPassword;
 	
 	
 	// input : doctorId
@@ -83,16 +85,11 @@ public class DoctorsBO {
 	    String combinedPassword = (String) doctors.get("password");
 	    log.info("##### 로그인 combinedPassword : {} #####", combinedPassword);
 	    
-	    // Salt와 HashedPassword 분리
-	    String salt = combinedPassword.substring(0, 24); // Salt 길이 (Base64 기준 16bytes)
-	    log.info("##### 로그인 salt : {} #####", salt);
-	    String installedHashedPassword = combinedPassword.substring(24);
-	    log.info("##### 로그인 hashedPassword : {} #####", installedHashedPassword);
 	    
-	    // 입력된 비밀번호와 Salt로 해싱
-	    String inputHashedPassword = EncryptUtils.hashingSHA2(password, salt);
-	    log.info("##### 로그인 inputHashedPassword : {} #####", inputHashedPassword);
-
+	    Map<String, Object> passwordMaps = separateSaltPassword.saparateSaltPassword(password, combinedPassword);
+	    
+	    String installedHashedPassword = (String) passwordMaps.get("installedHashedPassword");
+	    String inputHashedPassword = (String) passwordMaps.get("inputHashedPassword");
 	    
 	    // 해싱된 비밀번호 비교
 	    if (installedHashedPassword.equals(inputHashedPassword)) {
