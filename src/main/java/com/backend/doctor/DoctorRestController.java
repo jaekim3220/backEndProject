@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.common.EncryptUtils;
+import com.backend.common.HashingSaltPassword;
 import com.backend.doctor.bo.DoctorUpdateBO;
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.bo.DoctorsVacationsBO;
@@ -55,6 +56,7 @@ public class DoctorRestController {
 	private final FullCalendarShowBO fullCalendarShowBO;
 	private final ReserversBO reserversBO;
 	private final PatientEventsDTO patientEventsDTO;
+	private final HashingSaltPassword hashingSaltPassword;
 	
     // 아이디 중복 확인
 	@GetMapping("/is-duplicate-id")
@@ -100,18 +102,8 @@ public class DoctorRestController {
 		
 		// parameter(password) 암호화 - breakPoint
 		// SHA-2, Salt(난수) 알고리즘 결합
-		
-		// 1. Salt(난수) 생성
-		String salt = EncryptUtils.generateSalt();
-		log.info("##### 회원가입 salt : {} #####", salt);
-		
-		// 2. 비밀번호 해싱
-		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
-		log.info("##### 회원가입 비밀번호 : {} #####", hashedPassword);
-		
-		// 3. Salt + HashedPassword 결합
-		String combinedPassword = salt + hashedPassword;
-		log.info("##### 회원가입 combinedPassword : {} #####", combinedPassword);
+		String combinedPassword = hashingSaltPassword.hashingSaltPassword(password);
+		log.info("@@@ 생성된 combinedPassword : {} @@@", combinedPassword);
 		
 		
 		// DB INSERT - breakPoint

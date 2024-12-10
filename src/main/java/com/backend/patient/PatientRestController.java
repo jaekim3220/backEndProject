@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.backend.common.EncryptUtils;
+import com.backend.common.HashingSaltPassword;
 import com.backend.patient.bo.CustomerBO;
 import com.backend.patient.bo.PatientDeleteBO;
 import com.backend.patient.bo.PatientInsertBO;
@@ -24,6 +25,7 @@ import com.backend.patient.entity.CustomerEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -45,6 +47,7 @@ Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 @Slf4j
 @RestController
 @RequestMapping("/patient")
+@RequiredArgsConstructor
 public class PatientRestController {
 
 	// 어노테이션(Annotation)
@@ -54,17 +57,13 @@ public class PatientRestController {
 	@Autowired
 	private ReserversBO reserversBO;
 	
-	@Autowired
-	private PatientReservingsBO patientReservingsBO;
 	
-	@Autowired
-	private PatientUpdateBO patientUpdateBO;
-
-	@Autowired
-	private PatientInsertBO patientInsertBO;
-	
-	@Autowired
-	private PatientDeleteBO patientDeleteBO;
+	// 생성자를 사용한 의존성 주입
+	private final PatientReservingsBO patientReservingsBO;
+	private final PatientUpdateBO patientUpdateBO;
+	private final PatientInsertBO patientInsertBO;
+	private final PatientDeleteBO patientDeleteBO;
+	private final HashingSaltPassword hashingSaltPassword;
 	
 	
 	// 아이디 중복 확인
@@ -109,15 +108,8 @@ public class PatientRestController {
 		
 		
 		// parameter(비밀번호) 암호화 - breakPoint
-		
-		// 1. Salt(난수) 생성
-		String salt = EncryptUtils.generateSalt();
-		
-		// 2. 비밀번호 해싱
-		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
-		
-		// 3. Salt + HashedPassword 결합
-		String combinedPassword = salt + hashedPassword;
+		String combinedPassword = hashingSaltPassword.hashingSaltPassword(password);
+		log.info("@@@ 생성된 combinedPassword : {} @@@", combinedPassword);
 		
 		// DB INSERT - breakPoint
 		CustomerEntity customer = customerBO.addCustomer(customerId, combinedPassword, name, birthDate, email);
