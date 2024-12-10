@@ -1,5 +1,7 @@
 package com.backend.patient.bo;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.backend.common.EncryptUtils;
+import com.backend.common.SeparateSaltPassword;
 import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.repository.CustomerRepository;
 
@@ -28,6 +31,9 @@ public class CustomerBO {
 	// 어노테이션(Annotation)
 	@Autowired // DI(Dependency Injection) : 필드를 사용한 의존성 주입
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private SeparateSaltPassword separateSaltPassword;
 	
 	
 	// input : customerId
@@ -78,13 +84,11 @@ public class CustomerBO {
 	    log.info("combinedPassword : {}", combinedPassword);
 	    
 	    // Salt와 HashedPassword 분리
-	    String salt = combinedPassword.substring(0, 24); // Salt 길이 (Base64 기준 16bytes)
-	    log.info("salt : {}", salt);
-	    String installedHashedPassword = combinedPassword.substring(24);
-	    log.info("hashedPassword : {}", installedHashedPassword);
-	    
-	    // 입력된 비밀번호와 Salt로 해싱
-	    String inputHashedPassword = EncryptUtils.hashingSHA2(password, salt);
+	    Map<String , Object> passwordMaps = separateSaltPassword.saparateSaltPassword(password, combinedPassword);
+	    String installedHashedPassword = (String) passwordMaps.get("installedHashedPassword");
+	    log.info("@@@@@ installedHashedPassword : {} @@@@@", installedHashedPassword);
+	    String inputHashedPassword = (String) passwordMaps.get("inputHashedPassword");
+	    log.info("@@@@@ inputHashedPassword : {} @@@@@", inputHashedPassword);
 	    
 		
 	    // 해싱된 비밀번호 비교
