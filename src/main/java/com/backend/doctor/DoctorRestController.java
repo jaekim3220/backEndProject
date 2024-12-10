@@ -103,15 +103,20 @@ public class DoctorRestController {
 		
 		// 1. Salt(난수) 생성
 		String salt = EncryptUtils.generateSalt();
+		log.info("##### 회원가입 salt : {} #####", salt);
 		
-		// 2. 비밀번호 해싱(Hashing)
-		// 해싱된 번호와 Salt 난수 결합
+		// 2. 비밀번호 해싱
 		String hashedPassword = EncryptUtils.hashingSHA2(password, salt);
+		log.info("##### 회원가입 비밀번호 : {} #####", hashedPassword);
+		
+		// 3. Salt + HashedPassword 결합
+		String combinedPassword = salt + hashedPassword;
+		log.info("##### 회원가입 combinedPassword : {} #####", combinedPassword);
 		
 		
 		// DB INSERT - breakPoint
 		// DoctorsBO에서 DB INSERT 성공 시 1(영향을 받은 행 수) 반환 => true 반환함
-		boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, hashedPassword, salt, name, birthDate, email, department); 
+		boolean isExist = doctorsBO.addDoctorsSignUp(doctorId, combinedPassword, name, birthDate, email, department); 
 		
 		
 		// Response(JSON String) - breakPoint

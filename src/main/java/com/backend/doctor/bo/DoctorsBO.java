@@ -6,12 +6,15 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.backend.common.EncryptUtils;
 import com.backend.doctor.domain.Doctors;
 import com.backend.doctor.mapper.DoctorsMapper;
+import com.backend.patient.PatientRestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /*
 DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> Repository영역(Mapper) <--> DB영역 
@@ -19,6 +22,7 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 
 // Service(BO)영역
 
+@Slf4j
 @Service // Spring Bean 등록
 @RequiredArgsConstructor
 public class DoctorsBO {
@@ -43,12 +47,11 @@ public class DoctorsBO {
 	// input : 7 parameters
 	// output : Doctors 객체
 	// @PostMapping("/sign-up") - 회원가입
-	public boolean addDoctorsSignUp(String doctorId, String password,
-			String salt, String name, String birthDate,
-			String email, Integer department) {
+	public boolean addDoctorsSignUp(String doctorId, String combinedPassword,String name, 
+			String birthDate, String email, Integer department) {
 		
 		// DB INSERT 성공 시 1(영향을 받은 행 수) 반환
-		int isExist = doctorsMapper.insertDoctorsSignUp(doctorId, password, salt, name, birthDate, email, department);
+		int isExist = doctorsMapper.insertDoctorsSignUp(doctorId, combinedPassword, name, birthDate, email, department);
 		
 		// DB INSERT 성공 시 1 => true
 		return isExist > 0 ? true : false;
@@ -58,7 +61,7 @@ public class DoctorsBO {
 	
 	// input : doctorId, password
 	// output : Doctors(Map 형식) or null (단건)
-	// @PostMapping("/sign-up") - 회원가입
+	// @PostMapping("/sign-in") - 로그인
 	public Map<String, Object> getDoctorsByDoctorIdAndPassword(String doctorId, String password) {
 		
 		/*
@@ -76,12 +79,27 @@ public class DoctorsBO {
             return null;
         }
         
-        // 저장된 Salt를 사용해 비밀번호 Hashing - breakpoint
-        String salt = (String) doctors.get("salt");
-        String hashedPassword = EncryptUtils.hashingSHA2(password, salt); 
+	    // 저장된 combinedPassword(Salt + HashedPassword) 가져오기 - breakpoint 
+	    String combinedPassword = (String) doctors.get("password");
+	    log.info("##### 로그인 combinedPassword : {} #####", combinedPassword);
+	    
+	    // Salt와 HashedPassword 분리
+	    String salt = combinedPassword.substring(0, 24); // Salt 길이 (Base64 기준 16bytes)
+	    log.info("##### 로그인 salt : {} #####", salt);
+	    String installedHashedPassword = combinedPassword.substring(24);
+	    log.info("##### 로그인 hashedPassword : {} #####", installedHashedPassword);
+	    
+	    // 입력된 비밀번호와 Salt로 해싱
+	    String inputHashedPassword = EncryptUtils.hashingSHA2(password, salt);
+	    log.info("##### 로그인 inputHashedPassword : {} #####", inputHashedPassword);
 
-        // 해싱된 비밀번호로 사용자 조회
-        return doctorsMapper.selectDoctorsByDoctorIdAndPassword(doctorId, hashedPassword);
+	    
+	    // 해싱된 비밀번호 비교
+	    if (installedHashedPassword.equals(inputHashedPassword)) {
+	        return doctors; // 비밀번호가 일치하면 CustomerEntity 반환
+	    } else {
+	        return null; // 비밀번호가 일치하지 않으면 null 반환
+	    }
 		
 	}
 	

@@ -31,8 +31,7 @@ public interface DoctorsMapper {
 	// @PostMapping("/sign-up") - 회원가입
 	public int insertDoctorsSignUp(
 			@Param("doctorId") String doctorId,
-			@Param("password") String password,
-			@Param("salt") String salt,
+			@Param("combinedPassword") String combinedPassword,
 			@Param("name") String name,
 			@Param("birthDate") String birthDate,
 			@Param("email") String email,
