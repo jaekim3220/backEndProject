@@ -10,7 +10,6 @@
 			`id`,
 			`doctorId`,
 			`password`,
-			`salt`,
 			`name`,
 			`birthDate`,
 			`email`,
@@ -28,7 +27,6 @@
 		(
 			`doctorId`,
 			`password`,
-			`salt`,
 			`name`,
 			`birthDate`,
 			`email`,
@@ -39,8 +37,7 @@
 		VALUES
 		(
 			#{doctorId},
-			#{password},
-			#{salt},
+			#{combinedPassword},
 			#{name},
 			#{birthDate},
 			#{email},
@@ -57,7 +54,6 @@
 			`id`,
 			`doctorId`,
 			`password`,
-			`salt`,
 			`name`,
 			`birthDate`,
 			`email`,
