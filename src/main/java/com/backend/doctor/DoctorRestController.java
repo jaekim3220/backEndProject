@@ -364,4 +364,42 @@ public class DoctorRestController {
 	}
 	
 	
+	// 달력에서 환자 데이터 업데이트
+	@PostMapping("/calendar-patient-update")
+	public Map<String, Object> calandarPatientUpdate(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("id") int id, 
+			@RequestParam("status") String status,		
+			HttpSession session) {
+		
+		// doctorNum 추출
+		Integer doctorNum = (Integer) session.getAttribute("doctorId");
+		log.info("##### doctorNum : {} #####", doctorNum);
+
+		Map<String, Object> result = new HashMap<>();
+		if(doctorNum == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용이 가능합니다.");
+			return result;
+		}
+		
+		
+		// DB Update - breakpoint
+		int rowCount = doctorUpdateBO.updatePatientCalendar(id, status);
+		
+		
+		// Response - breakpoint
+		if(rowCount > 0) {
+			result.put("code", 200);
+			result.put("result", "환자 예약 상태 변경.");
+		} else {
+			result.put("code", 500);
+			result.put("error_message", "환자 예약 상태 변경에 실패했습니다. 관리자한테 문의해주세요.");			
+		}
+		
+		
+		return result;
+		
+	}
+	
 }

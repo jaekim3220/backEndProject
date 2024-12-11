@@ -98,4 +98,12 @@ public class DoctorsReservingsBO {
 		return doctorsReservingsMapper.updateReservingsByIdDoctorNumberDoctorId(id, doctorId, customerId, memo, status, treatment);
 	}
 	
+	
+	// input : int id, String status
+	// output : X
+	// @PostMapping("/calendar-patient-update")
+	public int updateReservingsByIdStatus(int id, String status) {
+		return doctorsReservingsMapper.updateReservingsByIdAndStatus(id, status);
+	}
+	
 }

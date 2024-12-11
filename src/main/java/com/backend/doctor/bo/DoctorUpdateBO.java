@@ -4,6 +4,7 @@ import javax.management.RuntimeErrorException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,8 @@ public class DoctorUpdateBO {
 	
 	// 두 개의 업데이트 작업을 트랜잭션으로 처리
 	// 메서드 실행 중에 하나라도 예외가 발생하면 트랜잭션 전체가 롤백
+	// 일정 List에서 환자/의사 데이터 업데이트
+	// @PostMapping("/statusUpdate")
 	@Transactional
 	public int doctorUpdateBO(int id, int doctorId, int customerId, 
 			String memo, String status, String treatment) {
@@ -60,5 +63,33 @@ public class DoctorUpdateBO {
 		
 	}
 	
+	
+	// 달력에서 환자/의사 데이터 변경
+	// input : int id, String status
+	// output : X
+	// 	@PostMapping("/calendar-patient-update")
+	@Transactional
+	public int updatePatientCalendar(int id, String status) {
+		try {
+			// 업데이트 1 : 환자의 예약 상태(reservers)
+			int patientUpdateResult = patientReserversBO.updateReserversByIdStatus(id, status);
+			log.info("##### patient reservers update result : {} #####", patientUpdateResult);
+			if(patientUpdateResult == 0) {
+				throw new RuntimeException("@@@@@달력에서 `reservers` 데이터 업데이트 실패@@@@@");
+			}
+			
+			// 업데이트 2 : 의사의 예약 상태(reservings)
+			int doctorUpdateResult = doctorsReservingsBO.updateReservingsByIdStatus(id, status);
+			log.info("##### doctor reservings update result : {} #####", doctorUpdateResult);
+			if(doctorUpdateResult == 0) {
+				throw new RuntimeException("@@@@@달력에서 `reservings` 데이터 업데이트 실패@@@@@");
+			}
+			
+			return 1;
+		} catch (Exception e) {
+			log.error("Transaction 실패 : {}", e.getMessage());
+			throw e; // 트랜잭션 롤백을 위해 예외 다시 던짐
+		}
+	}
 	
 }
