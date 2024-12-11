@@ -21,4 +21,9 @@ public interface PatientReserversMapper {
 			@Param("doctorId") int doctorId, @Param("status") String status);
 	
 	
+	// input : int id, String status
+	// output : X
+	// @PostMapping("/calendar-patient-update")
+	public int updateReserversByIdAndStatus(@Param("id") int id, @Param("status") String status);
+	
 }

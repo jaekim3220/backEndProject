@@ -104,5 +104,16 @@
 			`doctorNumber` = #{doctorId}
 	</update>
 	
+	
+	<!-- @PostMapping("/calendar-patient-update") -->
+	<update id="updateReservingsByIdAndStatus" parameterType="map">
+		UPDATE 
+			`reservings`
+		SET 
+			`status` = #{status},
+			`updatedAt` = NOW()
+		WHERE 
+			`id` = #{id}
+	</update>
 
 </mapper>

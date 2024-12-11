@@ -31,6 +31,16 @@ public class PatientReserversBO {
 		log.info("##### id={}, customerId={}, doctorId={}, status={} #####", id, customerId, doctorId, status);
 		return patientReserversMapper.updateReserversByIdCustomerIdDoctorId(id, customerId, doctorId, status);
 	}
+
+	
+	// input : int id, String status
+	// output : X
+	// @PostMapping("/calendar-patient-update")
+	public int updateReserversByIdStatus(
+			int id, String status) {
+		log.info("##### id={}, status={} #####", id, status);
+		return patientReserversMapper.updateReserversByIdAndStatus(id, status);
+	}
 	
 	
 }
