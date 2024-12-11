@@ -1,6 +1,8 @@
 server:
   port: 80
 spring:
+  config:
+    import: "classpath:api.yml"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/medinfo_241121?characterEncoding=UTF-8
