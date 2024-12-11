@@ -61,8 +61,14 @@ public class DoctorController {
 	}
 		
 	
-	// 의사 `예약 현황 화면`
-	// /doctor/{doctors.id}/today-plan-view
+	/**
+	 * 의사의 예약 목록 보기 화면
+	 * @param prevVisitDateParam
+	 * @param nextVisitDateParam
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@GetMapping("/today-plan-view")
 	// localhost/doctor/today-plan-view
 	public String todayPlanView(
@@ -121,7 +127,13 @@ public class DoctorController {
 	}
 	
 	
-	// 의사 `진료 현황 화면`
+	/**
+	 * 환자의 진료 현황, 예약 상태를 변경할 수 있는 화면
+	 * @param id
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@GetMapping("/patient-status-view")
 	// localhost/doctor/patient-status-view/{reservings.id}
 	public String patientStatusView(
@@ -151,7 +163,12 @@ public class DoctorController {
 	}
 	
 	
-	// 의사 `일정표 화면`
+	/**
+	 * FullCalendar에 의사와 환자 일정을 보여주는 화면
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@GetMapping("/calendar-plan-view")
 	// GET 방식은 URL이 너무 길어지기 때문에 POST 방식으로 변경
 	// Post로 하면 URL 접속 불가 405

@@ -67,7 +67,12 @@ public class PatientController {
 	}
 	
 	
-	// 예약 페이지 화면
+	/**
+	 * 예약 생성 화면
+	 * @param id
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/{id}/reserve-view")
 	// http:localhost/patient/{doctors.id}/reserve-view
 	// URL 중간에 parameter가 삽입되어 @RequestParam 대신 @PathVariable 사용
@@ -95,7 +100,15 @@ public class PatientController {
 	}
 	
 	
-	// 예약 목록 페이지 화면
+	/**
+	 * 예약 목록 보기 화면
+	 * @param model
+	 * @param session
+	 * @param page
+	 * @param size
+	 * @param request
+	 * @return
+	 */
 	@GetMapping("/reserve-list-view")
 	// localhost/patient/reserve-list-view
 	public String reserveListView(Model model, HttpSession session,

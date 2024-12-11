@@ -172,7 +172,18 @@ public class DoctorRestController {
 	}
 	
 	
-	// 환자 영역 `reservsers`, 의사 영역`reservings` update
+	/**
+	 * 환자 예약 상태를 update
+	 * 환자 `reservsers`, 의사 `reservings` update
+	 * @param id
+	 * @param customerId
+	 * @param status
+	 * @param treatment
+	 * @param memo
+	 * @param model
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/statusUpdate")
 	public Map<String, Object> statusUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
@@ -214,7 +225,14 @@ public class DoctorRestController {
 	}
 	
 	
-	// 의사 일정 추가
+	/**
+	 * FullCalendar에 의사 일정 추가
+	 * @param title
+	 * @param vacationStart
+	 * @param vacationEnd
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/calendar-plan-insert")
 	@ResponseBody // JSON 응답을 보냄
 	// http:localhost/doctor/calendar-plan-insert
@@ -259,6 +277,18 @@ public class DoctorRestController {
 	}
 	
 	
+	/**
+	 * DB에서 데이터 SELECT 후 FullCalender에 
+	 * 해당 데이터를 입력한 날짜에 맞게 보여주는 화면
+	 * @param id
+	 * @param title
+	 * @param vacationStart
+	 * @param vacationEnd
+	 * @param status
+	 * @param description
+	 * @param session
+	 * @return
+	 */
     @PostMapping("/calendar-plan-show")
     public List<Map<String, Object>> makeEvents(
     		// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천) - URL에서 추출
@@ -285,7 +315,15 @@ public class DoctorRestController {
     }
 
     
-	// 의사 일정 수정(업데이트)
+	/**
+	 * FullCalendar에서 의사 일정 변경 기능
+	 * @param id
+	 * @param title
+	 * @param vacationStart
+	 * @param vacationEnd
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/calendar-plan-update")
 	public Map<String, Object> calandarPlanUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
@@ -326,7 +364,12 @@ public class DoctorRestController {
 	}
 	
 	
-	// 의사 일정 삭제(DELETE)
+	/**
+	 * FullCalendar에서 의사 일정 삭제 기능
+	 * @param id
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/calendar-plan-delete")
 	public Map<String, Object> calandarPlanDelete(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
@@ -364,7 +407,13 @@ public class DoctorRestController {
 	}
 	
 	
-	// 달력에서 환자 데이터 업데이트
+	/**
+	 * FullCalendar에서 환자 데이터 업데이트 기능
+	 * @param id
+	 * @param status
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/calendar-patient-update")
 	public Map<String, Object> calandarPatientUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column

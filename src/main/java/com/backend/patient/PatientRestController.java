@@ -171,7 +171,16 @@ public class PatientRestController {
 	}
 	
 	
-	// 환자 예약
+	/**
+	 * 예약하기 기능
+	 * @param doctorNum
+	 * @param title
+	 * @param description
+	 * @param visitDate
+	 * @param file
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/reserving")
 	public Map<String, Object> patientCreateReserve(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
@@ -215,7 +224,17 @@ public class PatientRestController {
 	}
 	
 	
-	// 예약 수정하기 API
+	/**
+	 * 예약 수정
+	 * @param id
+	 * @param doctorNum
+	 * @param title
+	 * @param description
+	 * @param visitDate
+	 * @param file
+	 * @param session
+	 * @return
+	 */
 	@PutMapping("/update")
 	public Map<String, Object> reservesUpdate(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
@@ -259,7 +278,12 @@ public class PatientRestController {
 	}
 	
 	
-	// 예약 목록 삭제 API
+	/**
+	 * 예약 목록 삭제
+	 * @param id
+	 * @param session
+	 * @return
+	 */
 	@DeleteMapping("/delete")
 	public Map<String, Object> reservesDelete(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
