@@ -13,13 +13,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.backend.common.HashingSaltPassword;
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
+import com.backend.patient.bo.CustomerBO;
+import com.backend.patient.bo.PatientDeleteBO;
+import com.backend.patient.bo.PatientInsertBO;
+import com.backend.patient.bo.PatientReservingsBO;
+import com.backend.patient.bo.PatientUpdateBO;
 import com.backend.patient.bo.ReserversBO;
+import com.backend.patient.bo.ReserversPayBO;
+import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.entity.ReserversEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /*
@@ -38,6 +47,7 @@ Model은 HTML일 경우 사용(@ResponseBody일 경우 Model 사용 불가)
 @Slf4j
 @Controller
 @RequestMapping("/patient")
+@RequiredArgsConstructor
 public class PatientController {
 	
 	// 어노테이션(Annotation)
@@ -46,6 +56,9 @@ public class PatientController {
 	
 	@Autowired
 	private ReserversBO reserversBO;
+	
+	private final ReserversPayBO reserversPayBO;
+	private final CustomerBO customerBO;
 
 	
 	/**
@@ -76,13 +89,21 @@ public class PatientController {
 	@GetMapping("/{id}/reserve-view")
 	// http:localhost/patient/{doctors.id}/reserve-view
 	// URL 중간에 parameter가 삽입되어 @RequestParam 대신 @PathVariable 사용
-	public String reserveCreateView(@PathVariable("id") int id, Model model) {
+	public String reserveCreateView(@PathVariable("id") int id, Model model, HttpSession session) {
 
 		// 특정 의사 데이터 추출
 		Doctors doctor = doctorsBO.getDoctorsById(id);
-		
 		// Model에 데이터 삽입
 		model.addAttribute("doctorId", doctor.getId());
+		
+		// session에서 환자 로그인 아이디 추출
+        String customerLoginId = (String) session.getAttribute("customerLoginId");
+        // 로그인 아이디와 일치하는 환자 ROW 추출
+        CustomerEntity patient = customerBO.getCustomerEntityByCustomerId(customerLoginId);
+		// Model에 데이터 삽입
+        model.addAttribute("patientLoginId", customerLoginId);
+        model.addAttribute("patientName", patient.getName());
+		model.addAttribute("patientEmail", patient.getEmail());
 		
 		// 달력에 금일, 최소/최대 예약 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
@@ -95,6 +116,11 @@ public class PatientController {
         model.addAttribute("currentDate", now.format(dateformat)); // 오늘 날짜 00:00
         model.addAttribute("minDate", tomorrow.format(dateformat)); // 내일 날짜 00:00
         model.addAttribute("maxDate", nextMonth.format(dateformat)); // 한 달 뒤 날짜 23:59
+        
+        // 결제를 위한 PortOne REST API의 impKey
+        model.addAttribute("impKey", reserversPayBO.getImpKey());
+        log.info("reserversPayBO.getImpKey() : {}", reserversPayBO.getImpKey());
+        
 		
 		return "patient/reserveCreate";
 	}

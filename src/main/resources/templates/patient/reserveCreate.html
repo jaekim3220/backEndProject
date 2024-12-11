@@ -5,6 +5,8 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
+
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 	
 	<div class="w-50 reserveCreate-box p-4 d-flex flex-column">
 		<!-- 페이지 설명 -->
@@ -31,12 +33,24 @@
 			<input type="file" id="file" accept=".jpg, .png, .gif">
 		</div>
 		
+		<!-- 결제버튼 -->
+		<div class="d-flex mb-4">
+			<button type="button" 
+			class="btn btn-secondary" 
+			id="reservePay" 
+			th:data-imp-key="${impKey}">예약금 결제</button>
+		</div>
+		
+		
 		<div class="d-flex w-100 justify-content-around">
 			<a id="cancelReserveBtn" href="javascript:history.back()" class="btn btn-warning w-45 text-white">취소하기</a>
 			<a id="confirmReserveBtn" href="/patient/reserving" class="btn btn-warning w-45 text-white">예약 하기</a>
 		</div>
 		
 		<input type="hidden" id="doctorId" th:value="${doctorId}">
+		<input type="hidden" id="patientName" th:value="${patientName}">
+		<input type="hidden" id="patientEmail" th:value="${patientEmail}">
+		<input type="hidden" id="patientLoginId" th:value="${patientLoginId}">
 		
 	</div>
 	
@@ -44,8 +58,43 @@
 
 <th:block layout:fragment="script">
     <script>
-    	
     	$(document).ready(function() {
+    		
+    		// 예약금 결제 버튼
+    		$("#reservePay").on("click",function() {
+    			// alert("예약금");
+    			
+    			// let impKey = $("#reservePay").data("imp-key");
+    	        // console.log(impKey);
+    	        
+    	        let patientName = $("#patientName").val().trim();
+    	        let patientEmail = $("#patientEmail").val().trim();
+    	        let patientLoginId = $("#patientLoginId").val().trim();
+    	        // console.log(patientName);
+    	        // console.log(patientEmail);
+    	        
+    	        
+    			// 결제 API
+    	        const IMP = window.IMP; 
+    			IMP.init($("#reservePay").data("imp-key"));
+    			IMP.request_pay({
+    				pg:"html5_inicis",
+    				pay_method: "card",
+    				channelKey: "{channel-key-5de6f000-7349-4d54-b32b-cac4fd50eee8}",
+    				name: "예약금", // 결제 이름
+    				amount: 100, // 금액
+    				patient_email: patientEmail, //
+    				patient_name: patientName,
+    				patient_id: patientLoginId,
+    			},
+    			function (rsp) {
+    			    // 결제 종료 시 호출되는 콜백 함수
+    			    // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
+    			    // 결제 결과를 처리하는 로직을 작성합니다.
+    			  });
+
+
+    		}); // 예약금 결제 버튼 종료
     		
     		// 예약하기 버튼
     		$("#confirmReserveBtn").on("click", function(e) {
