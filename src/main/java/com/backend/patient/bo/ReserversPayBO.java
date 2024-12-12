@@ -46,4 +46,36 @@ public class ReserversPayBO {
 	};
 	
 	
+    /**
+     * 예약 생성 화면 데이터 전송을 위한 DTO 클래스
+     */
+	@Getter
+	@Setter
+    @RequiredArgsConstructor
+	// @GetMapping("/{id}/reserve-view")
+    public class ReserveViewData {
+        private final Doctors doctor;
+        private final CustomerEntity patient;
+    }
+    /**
+     * 의사 및 환자 정보를 포함한 예약 화면 데이터를 조회
+     */
+	// input : int doctorId, String customerLoginId
+	// @GetMapping("/{id}/reserve-view")
+	public ReserveViewData patientAndDoctor(int doctorId, String customerLoginId) {
+		
+		// 특정 의사(환자가 예약할 의사) 데이터 추출
+        Doctors doctor = doctorsBO.getDoctorsById(doctorId);
+        
+        // 환자 데이터 추출
+        CustomerEntity patient = customerBO.getCustomerEntityByCustomerId(customerLoginId);
+        
+        if (doctor == null || patient == null) {
+            throw new IllegalArgumentException("데이터 불러오기 실패. doctorId 또는 customerLoginId를 확인.");
+        }
+        
+        // 결과 데이터 객체 생성 및 반환
+        return new ReserveViewData(doctor, patient);
+	}
+	
 }

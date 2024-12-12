@@ -23,6 +23,7 @@ import com.backend.patient.bo.PatientReservingsBO;
 import com.backend.patient.bo.PatientUpdateBO;
 import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.bo.ReserversPayBO;
+import com.backend.patient.bo.ReserversPayBO.ReserveViewData;
 import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.entity.ReserversEntity;
 
@@ -91,20 +92,19 @@ public class PatientController {
 	// URL 중간에 parameter가 삽입되어 @RequestParam 대신 @PathVariable 사용
 	public String reserveCreateView(@PathVariable("id") int id, Model model, HttpSession session) {
 
-		// 특정 의사 데이터 추출
-		Doctors doctor = doctorsBO.getDoctorsById(id);
-		// Model에 데이터 삽입
-		model.addAttribute("doctorId", doctor.getId());
-		
 		// session에서 환자 로그인 아이디 추출
         String customerLoginId = (String) session.getAttribute("customerLoginId");
-        // 로그인 아이디와 일치하는 환자 ROW 추출
-        CustomerEntity patient = customerBO.getCustomerEntityByCustomerId(customerLoginId);
-		// Model에 데이터 삽입
+        // 환자와 환자가 예약한 의사 데이터 추출
+        ReserveViewData reserveViewData = reserversPayBO.patientAndDoctor(id, customerLoginId);
+        // Model에 삽입
+        // 의사 데이터
+        model.addAttribute("doctorId", reserveViewData.getDoctor().getId());
+        // 환자 데이터
         model.addAttribute("patientLoginId", customerLoginId);
-        model.addAttribute("patientName", patient.getName());
-		model.addAttribute("patientEmail", patient.getEmail());
-		
+        model.addAttribute("patientName", reserveViewData.getPatient().getName());
+        model.addAttribute("patientEmail", reserveViewData.getPatient().getEmail());
+        
+        
 		// 달력에 금일, 최소/최대 예약 날짜 설정을 
 		// Thymeleaf 문법으로 구현하기 위해 Model에 값을 할당 
 	    LocalDateTime now = LocalDateTime.now();
