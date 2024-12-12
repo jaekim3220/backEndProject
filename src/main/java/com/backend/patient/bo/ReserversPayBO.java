@@ -1,5 +1,9 @@
 package com.backend.patient.bo;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,6 +80,21 @@ public class ReserversPayBO {
         
         // 결과 데이터 객체 생성 및 반환
         return new ReserveViewData(doctor, patient);
+	}
+	
+	
+	/**
+     * UUID ver4 기반 merchant_uid 생성 메서드
+     */
+	public String generateUUIDV4() {
+		// version 4 UUID 생성
+		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		UUID uuid = UUID.randomUUID();
+		String uuidString = uuid.toString().replace("-", "");
+		String uuid4 = date + "-" + uuidString;
+		log.info("생성한 uudi : {}", uuid4);
+		
+		return uuid4;
 	}
 	
 }

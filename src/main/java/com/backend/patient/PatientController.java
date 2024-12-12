@@ -3,6 +3,7 @@ package com.backend.patient;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -103,6 +104,11 @@ public class PatientController {
         model.addAttribute("patientLoginId", customerLoginId);
         model.addAttribute("patientName", reserveViewData.getPatient().getName());
         model.addAttribute("patientEmail", reserveViewData.getPatient().getEmail());
+        
+        
+        // version4 기반 UUID로 merchant_uid 생성
+        String uuid4 = reserversPayBO.generateUUIDV4();
+        model.addAttribute("uuid4", uuid4);
         
         
 		// 달력에 금일, 최소/최대 예약 날짜 설정을 
