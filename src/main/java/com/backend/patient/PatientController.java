@@ -101,6 +101,7 @@ public class PatientController {
         // 의사 데이터
         model.addAttribute("doctorId", reserveViewData.getDoctor().getId());
         // 환자 데이터
+        model.addAttribute("patientId", reserveViewData.getPatient().getId());
         model.addAttribute("patientLoginId", customerLoginId);
         model.addAttribute("patientName", reserveViewData.getPatient().getName());
         model.addAttribute("patientEmail", reserveViewData.getPatient().getEmail());

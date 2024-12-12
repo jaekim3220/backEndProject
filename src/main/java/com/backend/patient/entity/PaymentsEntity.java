@@ -38,8 +38,11 @@ public class PaymentsEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // insert 이후 방금 들어간 id(PK) 값을 가져옴
 	private int id;
 
-	@Column(name = "buyerNum") // 카멜 케이스 설정
-	private int buyerNum;
+	@Column(name = "doctorNum") // 카멜 케이스 설정
+	private int doctorNum;
+
+	@Column(name = "customerId") // 카멜 케이스 설정
+	private int customerId;
 	
 	private int amount;
 
@@ -49,14 +52,14 @@ public class PaymentsEntity {
 	@Column(name = "impUid") // 카멜 케이스 설정
 	private String impUid;
 
-	@Column(name = "buyerName") // 카멜 케이스 설정
-	private String buyerName;
+	@Column(name = "customerName") // 카멜 케이스 설정
+	private String customerName;
 
-	@Column(name = "buyerEmail") // 카멜 케이스 설정
-	private String buyerEmail;
+	@Column(name = "customerEmail") // 카멜 케이스 설정
+	private String customerEmail;
 
-	@Column(name = "buyerPostcode") // 카멜 케이스 설정
-	private String buyerPostcode;
+	@Column(name = "customerPostcode") // 카멜 케이스 설정
+	private String customerPostcode;
 	
 	@CreationTimestamp // 값이 null 이어도 insert 되는 시간으로 설정
 	@Column(name = "createdAt") // 카멜 케이스 설정
@@ -65,6 +68,5 @@ public class PaymentsEntity {
 	@UpdateTimestamp // insert, update 일 경우 해당 시간으로 설정
 	@Column(name = "updatedAt") // 카멜 케이스 설정
 	private LocalDateTime updatedAt;
-	
-	
+		
 }

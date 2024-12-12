@@ -121,9 +121,10 @@ class PatientReservingsBOTest {
 	@Test
 	void 결제내역데이터저장() {
 		// input : 
-		// Integer buyerNum, int amount, String merchantUid, String impUid,
-		// String buyerName, String buyerEmail, String buyerPostcode,
-		int a = paymentsBO.addPaymentsEntity(1, 1000, "merchantUid", "impUid", "name", "email", "postCode");
+		// int doctorNum, int customerId, int amount,
+		// String merchantUid, String impUid, String customerName, 
+		// String customerEmail, String customerPostcode
+		int a = paymentsBO.addPaymentsEntity(1, 2, 3, "merchantUid", "impUid", "customerName", "customerEmail", "customerPostcode");
 		log.info("%%%%% ROW 데이터 INSERT 결과 :  {} %%%%%", a);
 	}
 

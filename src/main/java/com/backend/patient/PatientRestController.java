@@ -324,12 +324,14 @@ public class PatientRestController {
 	@PostMapping("/reserve-payment")
 	public Map<String, Object> reservePayment(
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("doctorNum") int doctorNum,
+			@RequestParam("customerId") int customerId,
 			@RequestParam("amount") int amount,
 			@RequestParam("merchantUid") String merchantUid,
 			@RequestParam("impUid") String impUid,
-			@RequestParam("buyerName") String buyerName,
-			@RequestParam("buyerEmail") String buyerEmail,
-			@RequestParam("buyerPostcode") String buyerPostcode,
+			@RequestParam("customerName") String customerName,
+			@RequestParam("customerEmail") String customerEmail,
+			@RequestParam("customerPostcode") String customerPostcode,
 			HttpSession session) {
 		
 		// session을 사용해 환자 고유 번호 추출 - breakpoint
@@ -337,7 +339,7 @@ public class PatientRestController {
 		
 		
 		// DB INSERT - breakpoint
-		int rowCount = paymentsBO.addPaymentsEntity(buyerNum, amount, merchantUid, impUid, buyerName, buyerEmail, buyerPostcode);
+		int rowCount = paymentsBO.addPaymentsEntity(doctorNum, customerId, amount, merchantUid, impUid, customerName, customerEmail, customerPostcode);
 		
 		Map<String, Object> result = new HashMap<>();
 		if(rowCount > 0) {

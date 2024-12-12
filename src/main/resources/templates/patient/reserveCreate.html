@@ -53,6 +53,7 @@
 		<input type="hidden" id="patientName" th:value="${patientName}">
 		<input type="hidden" id="patientEmail" th:value="${patientEmail}">
 		<input type="hidden" id="patientLoginId" th:value="${patientLoginId}">
+		<input type="hidden" id="patientId" th:value="${patientId}">
 		
 	</div>
 	
@@ -74,8 +75,12 @@
     	        let patientEmail = $("#patientEmail").val().trim();
     	        let patientLoginId = $("#patientLoginId").val().trim();
     	        let uuid4 = $("#reservePay").data("uuid-value")
-    	        console.log(uuid4);
-    	        
+    	        // console.log(uuid4);
+    			let doctorNum = $("#doctorId").val().trim();
+    			let customerId = $("#patientId").val().trim();
+    			
+    			// console.log(doctorNum);
+    			// console.log(customerId);
     	        
     			// 결제 API
     	        const IMP = window.IMP; 
@@ -99,13 +104,18 @@
     			    // console.log(rsp);
     			    // console.log(rsp.imp_uid);
     			    
+    			    // rsp에서 변수를 지정 후 AJAX에 사용하는 것도 방법
+    			    // let buyer_name = patientName;
+    			    // let buyer_email = patientEmail;
+    			    
     			    // AJAX 요청으로 DB에 결제 데이터 INSERT
     			    $.ajax({
     			    	// request
     			    	type:"POST",
     			    	url:"/patient/reserve-payment",
-    			    	data:{"name":patientName, "email":patientEmail, "postcode":patientLoginId,
-    			    		"amount":100, "merchantUid":uuid4, "impUid":rsp.imp_uid},
+    			    	data:{"doctorNum":doctorNum, "customerId":customerId, "amount":100, 
+    			    		"merchantUid":uuid4, "impUid":rsp.imp_uid, "customerName":patientName, 
+    			    		"customerEmail":patientEmail, "customerPostcode":patientLoginId},
     			    	
     			    	// response
     			    	success:function(data) {

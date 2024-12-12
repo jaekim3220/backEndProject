@@ -27,23 +27,27 @@ public class PaymentsBO {
 	private final PaymentsRepository paymentsRepository;
 	
 	// input : 
-	// Integer buyerNum, int amount, String merchantUid, String impUid,
-	// String buyerName, String buyerEmail, String buyerPostcode,
+	// int doctorNum, int customerId, int amount,
+	// String merchantUid, String impUid, String customerName,
+	// String customerEmail, String customerPostcode,
 	// output : PaymentsEntity
 	// @PostMapping("/reserve-payment")
-	public int addPaymentsEntity(int buyerNum, int amount, 
-			String merchantUid, String impUid, String buyerName, String buyerEmail, String buyerPostcode) {
+	public int addPaymentsEntity(int doctorNum, int customerId, int amount,
+			String merchantUid, String impUid, String customerName, 
+			String customerEmail, String customerPostcode) {
 		
 		PaymentsEntity paymentsEntity = 
 				PaymentsEntity.builder()
-				.buyerNum(buyerNum)
+				.doctorNum(doctorNum)
+				.customerId(customerId)
 				.amount(amount)
 				.merchantUid(merchantUid)
 				.impUid(impUid)
-				.buyerName(buyerName)
-				.buyerEmail(buyerEmail)
-				.buyerPostcode(buyerPostcode)
+				.customerName(customerName)
+				.customerEmail(customerEmail)
+				.customerPostcode(customerPostcode)
 				.build();
+				
 		log.info("##### paymentsEntity : {} #####", paymentsEntity);
 		
 		PaymentsEntity savedPaymentsEntity = paymentsRepository.save(paymentsEntity);
