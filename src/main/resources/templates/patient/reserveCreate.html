@@ -38,7 +38,9 @@
 			<button type="button" 
 			class="btn btn-secondary" 
 			id="reservePay" 
-			th:data-imp-key="${impKey}">예약금 결제</button>
+			th:data-imp-key="${impKey}"
+			th:data-uuid-value="${uuid4}">
+			예약금 결제</button>
 		</div>
 		
 		
@@ -70,8 +72,8 @@
     	        let patientName = $("#patientName").val().trim();
     	        let patientEmail = $("#patientEmail").val().trim();
     	        let patientLoginId = $("#patientLoginId").val().trim();
-    	        // console.log(patientName);
-    	        // console.log(patientEmail);
+    	        let uuid4 = $("#reservePay").data("uuid-value")
+    	        console.log(uuid4);
     	        
     	        
     			// 결제 API
@@ -83,14 +85,37 @@
     				channelKey: "{channel-key-5de6f000-7349-4d54-b32b-cac4fd50eee8}",
     				name: "예약금", // 결제 이름
     				amount: 100, // 금액
-    				patient_email: patientEmail, //
-    				patient_name: patientName,
-    				patient_id: patientLoginId,
+    				merchant_uid: uuid4, // merchant_uid(가맹점 고유 주문번호)
+    				buyer_name: patientName,
+    				buyer_email: patientEmail, //
+    				buyer_postcode: patientLoginId,
     			},
     			function (rsp) {
     			    // 결제 종료 시 호출되는 콜백 함수
     			    // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
     			    // 결제 결과를 처리하는 로직을 작성합니다.
+    			    
+    			    // console.log(rsp);
+    			    // console.log(rsp.imp_uid);
+    			    
+    			    // AJAX 요청으로 DB에 결제 데이터 INSERT
+    			    $.ajax({
+    			    	// request
+    			    	type:"POST",
+    			    	url:"",
+    			    	data:{"name":buyer_name, "email":buyer_email, "postcode":buyer_postcode,
+    			    		"amount":amount, "merchantUid":merchant_uid, "impUid":imp_uid},
+    			    	
+    			    	// response
+    			    	success:function(data) {
+    			    		
+    			    	},
+    			    	error:function(e) {
+        					alert("결제 내역을 DB에 저장하는데 실패했습니다.");
+        				}
+    			    	
+    			    }); // AJAX 요청 종료
+    			    
     			  });
 
 
@@ -205,6 +230,7 @@
     				}, // 성공일 경우
     				error:function(e) {
     					alert("원하시는 날짜에 예약을 실패했습니다.");
+    					throw e;
     				}
     				
     			}); // AJAX 요청 종료
