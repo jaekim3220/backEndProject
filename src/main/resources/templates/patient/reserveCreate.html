@@ -104,8 +104,8 @@
     			    	// request
     			    	type:"POST",
     			    	url:"/patient/reserve-payment",
-    			    	data:{"name":buyer_name, "email":buyer_email, "postcode":buyer_postcode,
-    			    		"amount":amount, "merchantUid":merchant_uid, "impUid":imp_uid},
+    			    	data:{"name":patientName, "email":patientEmail, "postcode":patientLoginId,
+    			    		"amount":100, "merchantUid":uuid4, "impUid":rsp.imp_uid},
     			    	
     			    	// response
     			    	success:function(data) {
