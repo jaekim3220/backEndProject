@@ -345,7 +345,7 @@ public class PatientRestController {
 			result.put("result", "결제 내역을 DB에 성공적으로 저장했습니다.");			
 		} else {
 			result.put("code", 500);
-			result.put("result", "결제 내역을 DB에 저장하지 못 했습니다.");
+			result.put("error_message", "결제 내역을 DB에 저장하지 못 했습니다.");
 		}
 		
 		return result;

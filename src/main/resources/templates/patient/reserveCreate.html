@@ -46,7 +46,7 @@
 		
 		<div class="d-flex w-100 justify-content-around">
 			<a id="cancelReserveBtn" href="javascript:history.back()" class="btn btn-warning w-45 text-white">취소하기</a>
-			<a id="confirmReserveBtn" href="/patient/reserving" class="btn btn-warning w-45 text-white">예약 하기</a>
+			<a id="confirmReserveBtn" href="/patient/reserving" class="btn btn-warning w-45 text-white disabled" aria-disabled="true">예약 하기</a>
 		</div>
 		
 		<input type="hidden" id="doctorId" th:value="${doctorId}">
@@ -61,6 +61,7 @@
 <th:block layout:fragment="script">
     <script>
     	$(document).ready(function() {
+    		let isPaymentCompleted = false; // 결제 완료 상태를 저장하는 변수
     		
     		// 예약금 결제 버튼
     		$("#reservePay").on("click",function() {
@@ -102,13 +103,22 @@
     			    $.ajax({
     			    	// request
     			    	type:"POST",
-    			    	url:"",
+    			    	url:"/patient/reserve-payment",
     			    	data:{"name":buyer_name, "email":buyer_email, "postcode":buyer_postcode,
     			    		"amount":amount, "merchantUid":merchant_uid, "impUid":imp_uid},
     			    	
     			    	// response
     			    	success:function(data) {
-    			    		
+    			    		if(data.code == 200) { // Dictionary 형태
+        						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+        						// => Dictionary 형식으로 변경
+        						// "{"code" : 200, "result" : "결제 내역 저장 성공"}"
+    			    			alert("결제 내역 저장 성공");
+    			    			isPaymentCompleted = true; // 결제 완료 상태 업데이트
+                                $("#confirmReserveBtn").removeClass("disabled").removeAttr("aria-disabled");
+    			    		} else {
+    			    			alert(data.error_message);
+    			    		}
     			    	},
     			    	error:function(e) {
         					alert("결제 내역을 DB에 저장하는데 실패했습니다.");
@@ -127,113 +137,118 @@
     			e.preventDefault(); // submit 중단(페이지 이동 차단)
     			
     			// alert("예약하기버튼");
-    			
-    			
-    			// validation(parameter)
-    			let title = $("#inputTitle").val().trim();
-    			let description = $("#inputContent").val().trim();
-    			let visitDate = $("#visitDate").val().trim();
-    			let fileName = $("#file").val().trim();
-    			// 의사 아이디 `doctorNum` 추가
-    			let doctorNum = $("#doctorId").val().trim();
+    	        if (!isPaymentCompleted) {
+    	            alert("결제를 완료해야 예약이 가능합니다.");
+    	            e.preventDefault(); // 버튼 클릭 시 페이지 이동 차단
+    	        } else {
+    	        	// validation(parameter)
+        			let title = $("#inputTitle").val().trim();
+        			let description = $("#inputContent").val().trim();
+        			let visitDate = $("#visitDate").val().trim();
+        			let fileName = $("#file").val().trim();
+        			// 의사 아이디 `doctorNum` 추가
+        			let doctorNum = $("#doctorId").val().trim();
 
-    			// console.log(imagePath);
-    			// C:\fakepath\teddy-8783348_1280.jpg
+        			// console.log(imagePath);
+        			// C:\fakepath\teddy-8783348_1280.jpg
+        			
+        			
+        			// 공백 처리
+        			if(!title) {
+        				alert("제목을 입력해주세요.");
+        				return;
+        			}
+        			if(!description) {
+        				alert("상태와 증상을 입력해주세요.");
+        				return;
+        			}
+                    // visitDate가 오늘 날짜면 경고
+                    // 1. 오늘 날짜 추출
+                    let today = new Date().toISOString().slice(0, 10);  // "yyyy-mm-dd" 형식으로 변환
+                    // 2. visitDate에서 `날짜`만 추출
+                    let visitDateOnly = visitDate.split("T")[0];  // "yyyy-mm-dd" 형식으로 추출
+                    // console.log("visitDateOnly : ", visitDateOnly);
+                    // console.log("today : ", today);
+                    // 3. 경고문구 출력
+                    
+                    if (visitDateOnly == today) {
+                        alert("내원 날짜를 선택해주세요. 금일은 예약이 불가합니다.");
+                        return;
+                    }
+        			
+        			
+                    // 파일명이 있으면 확장자 체크
+        			if(fileName) {
+        				// alert("파일이 있다.");
+        				// C:\fakepath\teddy-8783348_1280.jpg
+        				
+        				// 확장자 추출
+        				let extension = fileName.split(".").pop().toLowerCase();
+        				// console.log(extension);
+        				
+        				// 이미지 형시이 아닌 파일 선택 시 alert 띄운 후 파일 drop
+        				if($.inArray(extension, ["jpg", "png", "gif"]) == -1) {
+        					alert("이미지 파일만 업로드 할 수 있습니다.");
+        					$("#file").val(""); // 파일 초기화
+        					return;
+        				}
+        			} // 파일 확장자 완료
+        			
+        			
+        			// 이미지 저장(이미지는 form 태그 필수 => JS에서 구현 가능)
+        			// form을 JS에서 생성 후 AJAX에서 구현 가능
+        			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
+        			let formData = new FormData(); // form 데이터 생성
+        			
+        			// 의사 고유 번호 데이터 삽입
+        			formData.append("doctorNum", doctorNum);
+        			// 제목 데이터 삽입
+        			formData.append("title", title ); // requestParameter 이름 + form 태그의 name
+        			// 내용 데이터 삽입
+        			formData.append("description", description);
+        			// 날짜 데이터 삽입
+        			formData.append("visitDate", visitDate);
+        			// 이미지 데이터 삽입
+        			formData.append("file", $("#file")[0].files[0]); // 다중 파일의 경우 배열 처리 후 진행
+        			
+        			/* formData.forEach((value, key) => {
+        			    console.log(`${key} : ${value}`);
+        			}); */
+        			
+        			
+        			// AJAX 요청
+        			// formData 사용
+        			$.ajax({
+        				// request
+        				type:"POST", // 용량이 큰 text, img 파일
+        				url:"/patient/reserving",
+        				data:formData, // json, key-value, formData
+        				processData:false, // 파일 업로드 필수 설정(form)
+        				contentType:false, // 파일 업로드 필수 설정(form)
+        				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩
+        				
+        				// response
+        				success:function(data) {
+        					// 성공일 때 alert 후 예약 목록 화면으로 이동
+        					if (data.code == 200) { // Dictionary 형태
+        						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+        						// => Dictionary 형식으로 변경
+        						// "{"code" : 200, "result" : "예약 신청 성공"}"
+        						alert("예약 신청이 완료되었습니다. 잠시만 기다려주세요.");
+        						location.href = "/patient/reserve-list-view";
+        					} else {
+        						alert(data.error_message);
+        					}
+        				}, // 성공일 경우
+        				error:function(e) {
+        					alert("원하시는 날짜에 예약을 실패했습니다.");
+        					throw e;
+        				}
+        				
+        			}); // AJAX 요청 종료
+    	        }
     			
     			
-    			// 공백 처리
-    			if(!title) {
-    				alert("제목을 입력해주세요.");
-    				return;
-    			}
-    			if(!description) {
-    				alert("상태와 증상을 입력해주세요.");
-    				return;
-    			}
-                // visitDate가 오늘 날짜면 경고
-                // 1. 오늘 날짜 추출
-                let today = new Date().toISOString().slice(0, 10);  // "yyyy-mm-dd" 형식으로 변환
-                // 2. visitDate에서 `날짜`만 추출
-                let visitDateOnly = visitDate.split("T")[0];  // "yyyy-mm-dd" 형식으로 추출
-                // console.log("visitDateOnly : ", visitDateOnly);
-                // console.log("today : ", today);
-                // 3. 경고문구 출력
-                
-                if (visitDateOnly == today) {
-                    alert("내원 날짜를 선택해주세요. 금일은 예약이 불가합니다.");
-                    return;
-                }
-    			
-    			
-                // 파일명이 있으면 확장자 체크
-    			if(fileName) {
-    				// alert("파일이 있다.");
-    				// C:\fakepath\teddy-8783348_1280.jpg
-    				
-    				// 확장자 추출
-    				let extension = fileName.split(".").pop().toLowerCase();
-    				// console.log(extension);
-    				
-    				// 이미지 형시이 아닌 파일 선택 시 alert 띄운 후 파일 drop
-    				if($.inArray(extension, ["jpg", "png", "gif"]) == -1) {
-    					alert("이미지 파일만 업로드 할 수 있습니다.");
-    					$("#file").val(""); // 파일 초기화
-    					return;
-    				}
-    			} // 파일 확장자 완료
-    			
-    			
-    			// 이미지 저장(이미지는 form 태그 필수 => JS에서 구현 가능)
-    			// form을 JS에서 생성 후 AJAX에서 구현 가능
-    			// form 태그 3종 세트 : form 태그(method), name 속성(parameter), submit 타입(parameter 전송)
-    			let formData = new FormData(); // form 데이터 생성
-    			
-    			// 의사 고유 번호 데이터 삽입
-    			formData.append("doctorNum", doctorNum);
-    			// 제목 데이터 삽입
-    			formData.append("title", title ); // requestParameter 이름 + form 태그의 name
-    			// 내용 데이터 삽입
-    			formData.append("description", description);
-    			// 날짜 데이터 삽입
-    			formData.append("visitDate", visitDate);
-    			// 이미지 데이터 삽입
-    			formData.append("file", $("#file")[0].files[0]); // 다중 파일의 경우 배열 처리 후 진행
-    			
-    			/* formData.forEach((value, key) => {
-    			    console.log(`${key} : ${value}`);
-    			}); */
-    			
-    			
-    			// AJAX 요청
-    			// formData 사용
-    			$.ajax({
-    				// request
-    				type:"POST", // 용량이 큰 text, img 파일
-    				url:"/patient/reserving",
-    				data:formData, // json, key-value, formData
-    				processData:false, // 파일 업로드 필수 설정(form)
-    				contentType:false, // 파일 업로드 필수 설정(form)
-    				enctype:"multipart/form-data", // 파일 업로드 필수 설정(form) - 이미지 인코딩
-    				
-    				// response
-    				success:function(data) {
-    					// 성공일 때 alert 후 예약 목록 화면으로 이동
-    					if (data.code == 200) { // Dictionary 형태
-    						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
-    						// => Dictionary 형식으로 변경
-    						// "{"code" : 200, "result" : "예약 신청 성공"}"
-    						alert("예약 신청이 완료되었습니다. 잠시만 기다려주세요.");
-    						location.href = "/patient/reserve-list-view";
-    					} else {
-    						alert(data.error_message);
-    					}
-    				}, // 성공일 경우
-    				error:function(e) {
-    					alert("원하시는 날짜에 예약을 실패했습니다.");
-    					throw e;
-    				}
-    				
-    			}); // AJAX 요청 종료
     			
     			
     		}); // 예약하기 버튼 종료
