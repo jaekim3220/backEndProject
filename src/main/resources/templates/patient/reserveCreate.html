@@ -107,34 +107,39 @@
     			    // rsp에서 변수를 지정 후 AJAX에 사용하는 것도 방법
     			    // let buyer_name = patientName;
     			    // let buyer_email = patientEmail;
+    			    if(rsp.success) { // 결제 성공 시 AJAX 요청
+    			    	// AJAX 요청으로 DB에 결제 데이터 INSERT
+        			    $.ajax({
+        			    	// request
+        			    	type:"POST",
+        			    	url:"/patient/reserve-payment",
+        			    	data:{"doctorNum":doctorNum, "customerId":customerId, "amount":100, 
+        			    		"merchantUid":uuid4, "impUid":rsp.imp_uid, "customerName":patientName, 
+        			    		"customerEmail":patientEmail, "customerPostcode":patientLoginId},
+        			    	
+        			    	// response
+        			    	success:function(data) {
+        			    		if(data.code == 200) { // Dictionary 형태
+            						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+            						// => Dictionary 형식으로 변경
+            						// "{"code" : 200, "result" : "결제 내역 저장 성공"}"
+        			    			alert("결제 내역 저장 성공");
+        			    			isPaymentCompleted = true; // 결제 완료 상태 업데이트
+                                    $("#confirmReserveBtn").removeClass("disabled").removeAttr("aria-disabled");
+        			    		} else {
+        			    			alert(data.error_message);
+        			    		}
+        			    	},
+        			    	error:function(e) {
+            					alert("결제 내역을 DB에 저장하는데 실패했습니다.");
+            				}
+        			    	
+        			    }); // AJAX 요청 종료
+    			    } else {
+    			    	alert(`결제에 실패했습니다. : ${rsp.error_msg}`);
+    			    }
     			    
-    			    // AJAX 요청으로 DB에 결제 데이터 INSERT
-    			    $.ajax({
-    			    	// request
-    			    	type:"POST",
-    			    	url:"/patient/reserve-payment",
-    			    	data:{"doctorNum":doctorNum, "customerId":customerId, "amount":100, 
-    			    		"merchantUid":uuid4, "impUid":rsp.imp_uid, "customerName":patientName, 
-    			    		"customerEmail":patientEmail, "customerPostcode":patientLoginId},
-    			    	
-    			    	// response
-    			    	success:function(data) {
-    			    		if(data.code == 200) { // Dictionary 형태
-        						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
-        						// => Dictionary 형식으로 변경
-        						// "{"code" : 200, "result" : "결제 내역 저장 성공"}"
-    			    			alert("결제 내역 저장 성공");
-    			    			isPaymentCompleted = true; // 결제 완료 상태 업데이트
-                                $("#confirmReserveBtn").removeClass("disabled").removeAttr("aria-disabled");
-    			    		} else {
-    			    			alert(data.error_message);
-    			    		}
-    			    	},
-    			    	error:function(e) {
-        					alert("결제 내역을 DB에 저장하는데 실패했습니다.");
-        				}
-    			    	
-    			    }); // AJAX 요청 종료
+    			    
     			    
     			  });
 
