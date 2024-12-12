@@ -20,6 +20,7 @@ import com.backend.patient.bo.PatientDeleteBO;
 import com.backend.patient.bo.PatientInsertBO;
 import com.backend.patient.bo.PatientReservingsBO;
 import com.backend.patient.bo.PatientUpdateBO;
+import com.backend.patient.bo.PaymentsBO;
 import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.entity.CustomerEntity;
 
@@ -64,6 +65,7 @@ public class PatientRestController {
 	private final PatientInsertBO patientInsertBO;
 	private final PatientDeleteBO patientDeleteBO;
 	private final HashingSaltPassword hashingSaltPassword;
+	private final PaymentsBO paymentsBO;
 	
 	
 	// 아이디 중복 확인
@@ -315,6 +317,38 @@ public class PatientRestController {
 		
 		return result;
 		
+	}
+	
+	
+	// 결제 내역 DB INSERT
+	@PostMapping("/reserve-payment")
+	public Map<String, Object> reservePayment(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			@RequestParam("amount") int amount,
+			@RequestParam("merchantUid") String merchantUid,
+			@RequestParam("impUid") String impUid,
+			@RequestParam("buyerName") String buyerName,
+			@RequestParam("buyerEmail") String buyerEmail,
+			@RequestParam("buyerPostcode") String buyerPostcode,
+			HttpSession session) {
+		
+		// session을 사용해 환자 고유 번호 추출 - breakpoint
+		Integer buyerNum = (Integer) session.getAttribute("customerId");
+		
+		
+		// DB INSERT - breakpoint
+		int rowCount = paymentsBO.addPaymentsEntity(buyerNum, amount, merchantUid, impUid, buyerName, buyerEmail, buyerPostcode);
+		
+		Map<String, Object> result = new HashMap<>();
+		if(rowCount > 0) {
+			result.put("code", 200);
+			result.put("result", "결제 내역을 DB에 성공적으로 저장했습니다.");			
+		} else {
+			result.put("code", 500);
+			result.put("result", "결제 내역을 DB에 저장하지 못 했습니다.");
+		}
+		
+		return result;
 	}
 	
 	
