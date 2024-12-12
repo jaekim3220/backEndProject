@@ -113,5 +113,18 @@ class PatientReservingsBOTest {
 		log.info("!!! ROW 데이터 조회 성공 : {} !!!", a);
 		
 	}
+	
+	
+	@Autowired
+	PaymentsBO paymentsBO;
+	@Transactional
+	@Test
+	void 결제내역데이터저장() {
+		// input : 
+		// Integer buyerNum, int amount, String merchantUid, String impUid,
+		// String buyerName, String buyerEmail, String buyerPostcode,
+		int a = paymentsBO.addPaymentsEntity(1, 1000, "merchantUid", "impUid", "name", "email", "postCode");
+		log.info("%%%%% ROW 데이터 INSERT 결과 :  {} %%%%%", a);
+	}
 
 }
