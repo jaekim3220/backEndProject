@@ -50,10 +50,10 @@
 		</div>
 		
 		<input type="hidden" id="doctorId" th:value="${doctorId}">
-		<input type="hidden" id="patientName" th:value="${patientName}">
-		<input type="hidden" id="patientEmail" th:value="${patientEmail}">
-		<input type="hidden" id="patientLoginId" th:value="${patientLoginId}">
-		<input type="hidden" id="patientId" th:value="${patientId}">
+		<input type="hidden" id="patientName" th:value="${patientInfo.name}">
+		<input type="hidden" id="patientEmail" th:value="${patientInfo.email}">
+		<input type="hidden" id="patientLoginId" th:value="${patientInfo.customerId}">
+		<input type="hidden" id="patientId" th:value="${patientInfo.id}">
 		
 	</div>
 	
@@ -79,8 +79,10 @@
     			let doctorNum = $("#doctorId").val().trim();
     			let customerId = $("#patientId").val().trim();
     			
-    			// console.log(doctorNum);
-    			// console.log(customerId);
+    			// console.log("patientName:", patientName);
+    			// console.log("patientEmail:", patientEmail);
+    			// console.log("patientLoginId:", patientLoginId);
+    			// console.log("customerId:", customerId);
     	        
     			// 결제 API
     	        const IMP = window.IMP; 
@@ -138,10 +140,7 @@
     			    } else {
     			    	alert(`결제에 실패했습니다. : ${rsp.error_msg}`);
     			    }
-    			    
-    			    
-    			    
-    			  });
+    			  }); // 결제 API 종료
 
 
     		}); // 예약금 결제 버튼 종료
