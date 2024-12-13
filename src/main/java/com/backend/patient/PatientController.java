@@ -195,6 +195,8 @@ public class PatientController {
 		// Model에 추출한 데이터 삽입 => UPDATE 
 		
 		
+		// TODO : `reservers` 테이블, `payments` 테이블의 데이터를 둘 다 상위 BO(reserversPayBO)에서 가져오도록 수정
+		// => 현재를 기준으로 `reservers` 테이블, `payments` 테이블에 들어간 row의 번호가 안 맞기 때문
 		// DB SELECT(reservers.id, reservers.customerId - session - breakpoint
 		// id와 customerId가 일치하는 row 데이터 추출(PatientRestController의 session 참고)
 		int customerId = (int) session.getAttribute("customerId");

@@ -40,11 +40,19 @@
 		</div>
 		
 		<div class="d-flex w-100 justify-content-around">
+			<!-- 취소하기(뒤로가기 버튼) -->
 			<a id="changeCancelBtn" href="javascript:history.back()" class="btn btn-warning w-45 text-white">취소하기</a>
+			
 			<!-- <a id="changeBtn" href="/patient/update" class="btn btn-warning w-45 text-white">수정하기</a> -->
 			<button type="button" id="changeBtn" class="btn btn-warning w-45 text-white" th:data-reserves-id="${reserves.id}">수정하기</button>
+			
 			<!-- <a id="reserveDeleteBtn" href="#" class="btn btn-warning w-45 text-white">예약취소</a> -->
 			<button type="button" id="reserveDeleteBtn" class="btn btn-warning w-45 text-white" th:data-reserves-id="${reserves.id}">예약취소</button>
+			
+			<!-- 결제 취소 버튼 -->
+			<!-- reserves.id : 예약 목록 고유 번호 -->
+			<!-- payments.id : 결제 내역 고유 번호 -->
+			<button type="button" id="reservePayCancel" class="btn btn-danger w-45 text-white" th:data-reserves-id="${reserves.id}">결제취소</button>
 		</div>
 		
 	</div>
@@ -55,6 +63,15 @@
     <script>
     	
     	$(document).ready(function() {
+    		
+    		
+    		// 결제취소(PostOne API) 버튼
+    		$("#reservePayCancel").on("click", function(e) {
+    			e.preventDefault();
+    			
+    		}); // 결제취소(PostOne API) 버튼 종료
+    		
+    		
     		
     		// `수정하기` 버튼
     		$("#changeBtn").on("click", function(e) {
