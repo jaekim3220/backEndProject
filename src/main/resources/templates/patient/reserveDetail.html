@@ -52,7 +52,9 @@
 			<!-- 결제 취소 버튼 -->
 			<!-- reserves.id : 예약 목록 고유 번호 -->
 			<!-- payments.id : 결제 내역 고유 번호 -->
-			<button type="button" id="reservePayCancel" class="btn btn-danger w-45 text-white" th:data-reserves-id="${reserves.id}">결제취소</button>
+			<button type="button" id="reservePayCancel" 
+			class="btn btn-danger w-45 text-white" 
+			th:data-merchant-uid="${reserves.id}">결제취소</button>
 		</div>
 		
 	</div>
