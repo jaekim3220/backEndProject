@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.backend.doctor.bo.DoctorsBO;
 import com.backend.doctor.domain.Doctors;
+import com.backend.doctor.domain.DoctorsReservings;
 import com.backend.patient.entity.CustomerEntity;
+import com.backend.patient.entity.PaymentsEntity;
+import com.backend.patient.entity.ReserversEntity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +50,7 @@ public class ReserversPayBO {
 	
 	public String getImpKey() {
 		return this.impKey;
-	};
+	}
 	
 	
     /**
@@ -57,7 +60,7 @@ public class ReserversPayBO {
 	@Setter
     @RequiredArgsConstructor
 	// @GetMapping("/{id}/reserve-view")
-    public class ReserveViewData {
+    public static class ReserveViewData {
         private final Doctors doctor;
         private final CustomerEntity patient;
     }
@@ -74,6 +77,7 @@ public class ReserversPayBO {
         // 환자 데이터 추출
         CustomerEntity patient = customerBO.getCustomerEntityByCustomerId(customerLoginId);
         
+        // 데이터 검증
         if (doctor == null || patient == null) {
             throw new IllegalArgumentException("데이터 불러오기 실패. doctorId 또는 customerLoginId를 확인.");
         }
@@ -96,5 +100,24 @@ public class ReserversPayBO {
 		
 		return uuid4;
 	}
+	
+	
+	
+    /**
+     * 예약 및 결제 상세 데이터를 저장하는 DTO 클래스
+     */
+	// 환자 예약내역(ReserversEntity), 의사 예약내역(DoctorsReservings), 결제내역(PaymentsEntity)
+	// 결제 완료 후 ReserversEntity, DoctorsReservings에 예약 내역 Insert
+	// @GetMapping("/reserve-detail-view")
+	@Getter
+	@Setter
+    @RequiredArgsConstructor // 생성자를 통한 DI(Dependency Injection)
+	public static class reserveDetailData {
+		private final ReserversEntity reserversEntity;
+		private final DoctorsReservings doctorsReservings;
+		private final PaymentsEntity paymentsEntity;
+	}
+	
+	
 	
 }
