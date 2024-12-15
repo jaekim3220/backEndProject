@@ -56,4 +56,13 @@ public class PaymentsBO {
 		return savedPaymentsEntity != null ? 1 : 0;
 	}
 	
+	
+	// input : int id, int customerId
+	// output : PaymentsEntity
+	// @GetMapping("/reserve-detail-view")
+	public PaymentsEntity getPaymentsByIdAndCustomerId(int id, int customerId) {
+		return paymentsRepository.findByIdAndCustomerId(id, customerId);
+	}
+	
+	
 }

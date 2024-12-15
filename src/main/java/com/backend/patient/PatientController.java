@@ -24,6 +24,7 @@ import com.backend.patient.bo.PatientReservingsBO;
 import com.backend.patient.bo.PatientUpdateBO;
 import com.backend.patient.bo.ReserversBO;
 import com.backend.patient.bo.ReserversPayBO;
+import com.backend.patient.bo.ReserversPayBO.ReserveDetailData;
 import com.backend.patient.bo.ReserversPayBO.ReserveViewData;
 import com.backend.patient.entity.CustomerEntity;
 import com.backend.patient.entity.ReserversEntity;
@@ -200,8 +201,16 @@ public class PatientController {
 		// DB SELECT(reservers.id, reservers.customerId - session - breakpoint
 		// id와 customerId가 일치하는 row 데이터 추출(PatientRestController의 session 참고)
 		int customerId = (int) session.getAttribute("customerId");
-		ReserversEntity reservers = reserversBO.getReserversByIdCustomerId(id, customerId);
-		log.info("!!!!! DB SELECT Result : {} !!!!!", reservers);
+
+        // `reservers` 데이터, `payments` 데이터 추출
+		ReserveDetailData reserveDetailData = reserversPayBO.reserveAndPayments(id, customerId);
+        // Model에 삽입
+        // `reservers` 데이터
+        model.addAttribute("reserversData", reserveDetailData.getReserversEntity());
+        log.info("!!!!! DB SELECT `reservers` Result : {} !!!!!", reserveDetailData.getReserversEntity());
+        // `payments` 데이터 
+        model.addAttribute("paymentsData", reserveDetailData.getPaymentsEntity());
+        log.info("!!!!! DB SELECT `payments` Result : {} !!!!!", reserveDetailData.getPaymentsEntity());
 		
 		
 		// 달력에 금일, 최소/최대 예약 날짜 설정을 
@@ -214,8 +223,7 @@ public class PatientController {
 	    DateTimeFormatter dateformat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
 		
-        // Model에 데이터 삽입
-		model.addAttribute("reserveDict", reservers);
+        // Model에 날짜 데이터 삽입
         model.addAttribute("currentDate", now.format(dateformat)); // 오늘 날짜 00:00
         model.addAttribute("minDate", tomorrow.format(dateformat)); // 내일 날짜 00:00
         model.addAttribute("maxDate", nextMonth.format(dateformat)); // 한 달 뒤 날짜 23:59		

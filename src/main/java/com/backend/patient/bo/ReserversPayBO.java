@@ -35,6 +35,9 @@ public class ReserversPayBO {
 	// 생성자를 사용한 DI
 	private final DoctorsBO doctorsBO;
 	private final CustomerBO customerBO;
+	private final ReserversBO reserversBO;
+	private final PaymentsBO paymentsBO;
+
 	
 	@Value("${portone.api-url}")
     private String apiUrl;
@@ -112,12 +115,34 @@ public class ReserversPayBO {
 	@Getter
 	@Setter
     @RequiredArgsConstructor // 생성자를 통한 DI(Dependency Injection)
-	public static class reserveDetailData {
+	public static class ReserveDetailData {
 		private final ReserversEntity reserversEntity;
-		private final DoctorsReservings doctorsReservings;
 		private final PaymentsEntity paymentsEntity;
 	}
-	
+	/**
+	 * 예약내역 및 결제 상세 데이터 조회
+	 */
+	// public ReserversEntity getReserversByIdCustomerId(int id, int customerId)
+	// public DoctorsReservings getReservingsByIdDoctorNumber(int id, Integer doctorNumber)
+	// input : int id, int customerId
+	// @GetMapping("/reserve-detail-view")
+	public ReserveDetailData reserveAndPayments(int id, int customerId) {
+		// 환자 reservers
+		ReserversEntity reservers = reserversBO.getReserversByIdCustomerId(id, customerId);
+		// 결제 payments
+		PaymentsEntity payments = paymentsBO.getPaymentsByIdAndCustomerId(id, customerId); 
+		
+        
+        // 데이터 검증
+        if (reservers == null || payments == null) {
+            throw new IllegalArgumentException("reservers, payments 데이터 불러오기 실패. \n"
+            		+ "id 또는 customerId(환자 고유 번호)를 확인.");
+        }
+
+        // 결과 데이터 객체 생성 및 반환
+        return new ReserveDetailData(reservers, payments);
+        
+	}
 	
 	
 }
