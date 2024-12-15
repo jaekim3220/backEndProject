@@ -71,6 +71,54 @@
     		$("#reservePayCancel").on("click", function(e) {
     			e.preventDefault();
     			
+    			
+    			// 버튼에서 merchant_uid 추출
+    			let merchantUid = $(this).data("merchant-uid");
+    			// 환불 사유 입력
+    			let reason = prompt("환불 사유를 입력해 주세요.");
+    			
+    			if (!reason) {
+    				alert("환불 사유가 입력되지 않아 취소를 중단합니다.");
+    				return;
+    			}
+    			
+    			
+    			// AJAX 요청(결제취소)
+    			$.ajax({
+    				// request
+    				type: "POST",
+    				url: "/payment/cancel",
+    				contentType: "application/json",
+    				data: JSON.stringify({
+    					merchant_uid: merchantUid, // 주문 번호
+    					cancel_request_amount: 100, // 환불 금액 (수정 필요)
+    					reason: reason, // 결제 취소 사유
+    					// refund_holder: "홍길동",
+    					// refund_bank: "88",
+    					// refund_account: "123456789"
+    				}),
+    				dataType: "json", // 응답 데이터 형식(json, key-value, formData)
+    				
+    				// response
+    				success: function(data) { // Response(응답값)
+		    			// Dictionary 형태
+		    			// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
+		    			// => Dictionary 형식으로 변경
+		    			// "{"code" : 200, "result" : "결제를 취소합니다."}"
+    					if (data.code == 200) {
+    						alert("결제가 성공적으로 취소되었습니다.");
+    						location.href = "/patient/reserve-list-view" // 예약 목록으로
+    					} else {
+    						alert("결제 취소에 실패했습니다. : " + data.message);
+    					}
+    				},
+    				error: function(e) {
+    					alert("결제 취소 요청 중 오류가 발생했습니다.");
+    				}
+    			}) // AJAX 요청(결제취소) 종료
+    			
+    			
+    			
     		}); // 결제취소(PostOne API) 버튼 종료
     		
     		
