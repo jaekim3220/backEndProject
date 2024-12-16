@@ -125,9 +125,11 @@
             						// Ajax의 응답은 String => JQuery의 함수가 JSON임을 알면
             						// => Dictionary 형식으로 변경
             						// "{"code" : 200, "result" : "결제 내역 저장 성공"}"
-        			    			alert("결제 내역 저장 성공");
+        			    			alert("결제 내역 저장 성공. 예약을 완료해 주세요.");
         			    			isPaymentCompleted = true; // 결제 완료 상태 업데이트
-                                    $("#confirmReserveBtn").removeClass("disabled").removeAttr("aria-disabled");
+                                    $("#confirmReserveBtn").removeClass("disabled btn-warning") // 비활성화 및 기존 색상 제거
+                                    .addClass("btn-success") // 초록색으로 변경
+                                    .removeAttr("aria-disabled"); // 접근성 속성 제거	    			
         			    		} else {
         			    			alert(data.error_message);
         			    		}

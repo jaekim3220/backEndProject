@@ -6,7 +6,10 @@
 
 <section layout:fragment="content" class="contents d-flex justify-content-center align-content-center">
 	
-	<div class="w-50 reserveDetail-box p-4 d-flex flex-column" th:each="reserves : ${reserveDict}">
+<!-- 	[[${reserversData}]]
+	--------------------
+	[[${paymentsData}]] -->
+	<div class="w-50 reserveDetail-box p-4 d-flex flex-column" th:each="reserves : ${reserversData}">
 		<!-- 페이지 설명 -->
 		<h2 class="text-center mb-4">예약 상세 페이지</h2>
 		
@@ -57,6 +60,16 @@
 			th:data-merchant-uid="${reserves.id}">결제취소</button>
 		</div>
 		
+		<!-- 결제 데이터 (화면에 표시되지 않도록 hidden 처리) -->
+		<div th:each="payments : ${paymentsData}" style="display: none;">
+		    <input type="hidden" id="paymentId" th:value="${payments.id}" />
+		    <input type="hidden" id="merchantUid" th:value="${payments.merchantUid}" />
+		    <input type="hidden" id="amount" th:value="${payments.amount}" />
+		    <input type="hidden" id="customerName" th:value="${payments.customerName}" />
+		    <input type="hidden" id="customerEmail" th:value="${payments.customerEmail}" />
+		    <input type="hidden" id="createdAt" th:value="${payments.createdAt}" />
+		</div>
+		
 	</div>
 	
 </section>
@@ -71,9 +84,22 @@
     		$("#reservePayCancel").on("click", function(e) {
     			e.preventDefault();
     			
-    			
-    			// 버튼에서 merchant_uid 추출
-    			let merchantUid = $(this).data("merchant-uid");
+    		    // 데이터 추출
+    		    let paymentId = $("#paymentId").val();
+    		    let merchantUid = $("#merchantUid").val();
+    		    let amount = $("#amount").val();
+    		    let customerName = $("#customerName").val();
+    		    let customerEmail = $("#customerEmail").val();
+    		    let createdAt = $("#createdAt").val();
+
+    		    console.log("결제 정보:");
+    		    console.log("Payment ID :", paymentId);
+    		    console.log("Merchant UID :", merchantUid);
+    		    console.log("Amount :", amount);
+    		    console.log("Customer Name :", customerName);
+    		    console.log("Customer Email :", customerEmail);
+    		    console.log("Created At :", createdAt);
+    		    
     			// 환불 사유 입력
     			let reason = prompt("환불 사유를 입력해 주세요.");
     			
