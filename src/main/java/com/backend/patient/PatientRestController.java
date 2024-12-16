@@ -360,7 +360,6 @@ public class PatientRestController {
 			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
 			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
 			@RequestParam(value = "id", required = false) int id,
-			@RequestParam(value = "isCanceled", required = false) String isCanceled,
 			HttpSession session) {
 		
 		// session을 사용해 환자 고유 번호 추출(@PostMapping("/sign-in") 참고) - breakpoint 
@@ -376,7 +375,8 @@ public class PatientRestController {
 		
 		// DB UPDATE  - breakpoint
 		// payments.isCanceled column을 'canceled'로 update
-		int rowCount = paymentsBO.updatePaymentsEntity(id, customerId, isCanceled);
+		// 
+		int rowCount = paymentsBO.cancelPayment(id, customerId);
 		
 		
 		// Response(응답 값) - breakpoint

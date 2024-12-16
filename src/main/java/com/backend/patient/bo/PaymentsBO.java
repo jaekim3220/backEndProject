@@ -24,7 +24,9 @@ DB연동 : View영역 <--> Controller영역(Domain) <--> Service(BO)영역 <--> 
 public class PaymentsBO {
 
 	
+	// 생성자를 사용한 DI(Dependency Injection)
 	private final PaymentsRepository paymentsRepository;
+	private final PatientDeleteBO patientDeleteBO;
 	
 	// input : 
 	// int doctorNum, int customerId, int amount,
@@ -65,31 +67,54 @@ public class PaymentsBO {
 	}
 	
 	
+
+    /**
+     * 결제 취소와 관련된 모든 작업을 처리 (결제 상태 업데이트 + 예약 정보 삭제).
+     * 
+     * @param id 결제 ID
+     * @param customerId 환자 ID
+     * @param isCanceled 취소 상태 (예: "canceled")
+     * @return 성공 여부 (1: 성공, 0: 실패)
+     */
 	// input : int id, int customerId, String isCanceled
 	// output : X
 	// @PostMapping("/payments-cancel")
-	public int updatePaymentsEntity(int id, int customerId, String isCanceled) {
+	public int cancelPayment(int id, int customerId) {
 		
-		// 기존 데이터 조회 - breakpoint 
-	    PaymentsEntity existingPayment = paymentsRepository.findByIdAndCustomerId(id, customerId);
-	    if (existingPayment == null) {
-	        // 데이터가 존재하지 않으면 업데이트 실패
-	        log.warn("결제 정보가 존재하지 않습니다. ID: {}, CustomerId: {}", id, customerId);
-	        return 0;
-	    }
-	    
-	    // 변경할 필드 설정 - breakpoint
-	    existingPayment.setIsCanceled(isCanceled);
-	    log.info("Update 할 row 데이터 : {}", existingPayment);
+		try {
+			// 기존 데이터 조회 - breakpoint 
+			PaymentsEntity existingPayment = paymentsRepository.findByIdAndCustomerId(id, customerId);
+			if (existingPayment == null) {
+				// 데이터가 존재하지 않으면 업데이트 실패
+				log.warn("결제 정보가 존재하지 않습니다. ID: {}, CustomerId: {}", id, customerId);
+				return 0;
+			}
+			
+			// 결제 취소 상태 업데이트 - breakpoint
+			existingPayment.setIsCanceled("결제취소");
+			log.info("existingPayment 데이터 : {}", existingPayment);
+			
+			// Save 할 updatePayments 데이터 - breakpoint
+			PaymentsEntity updatedPayment = paymentsRepository.save(existingPayment);
+			log.info("Update 할 row 데이터 : {}", updatedPayment);
+			
+			
+			// 예약 정보 삭제 - breakpoint
+			// `reservers`, `reservings`
+			int deleteDataBase = patientDeleteBO.patientDeleteBO(id, customerId);
+			if (deleteDataBase == 0) {
+				log.warn("@@@@@ 예약 정보 삭제 실패. ID : {}, CustomerId : {} @@@@@", id, customerId);
+				log.warn("@@@@@ 예약 정보 삭제 실패. deleteDataBase : {} @@@@@", deleteDataBase);
+				throw new IllegalStateException("예약 정보 삭제 실패");
+			}
+			
+			return 1; // 모든 작업 성공
+		} catch (Exception e) {
+			log.error("결제 취소 처리 중 오류 발생. 롤백 실행: {}", e.getMessage());
+            throw e; // 트랜잭션 롤백을 유도
+		}
 		
-		
-		// Save 할 updatePayments 데이터
-	    PaymentsEntity updatedPayment = paymentsRepository.save(existingPayment);
-	    log.info("업데이트된 PaymentsEntity: {}", updatedPayment);
-		
-	    // 성공 여부 반환
-		return updatedPayment != null ? 1 : 0;
-	}
+	} // @PostMapping("/payments-cancel") 종료
 	
 	
 }
