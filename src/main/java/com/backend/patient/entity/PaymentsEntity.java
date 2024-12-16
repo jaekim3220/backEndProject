@@ -61,6 +61,9 @@ public class PaymentsEntity {
 	@Column(name = "customerPostcode") // 카멜 케이스 설정
 	private String customerPostcode;
 	
+	@Column(name = "isCanceled") // 카멜 케이스 설정
+	private String isCanceled;
+	
 	@CreationTimestamp // 값이 null 이어도 insert 되는 시간으로 설정
 	@Column(name = "createdAt") // 카멜 케이스 설정
 	private LocalDateTime createdAt;
@@ -68,5 +71,9 @@ public class PaymentsEntity {
 	@UpdateTimestamp // insert, update 일 경우 해당 시간으로 설정
 	@Column(name = "updatedAt") // 카멜 케이스 설정
 	private LocalDateTime updatedAt;
+
+	public void setIsCanceled(String isCanceled) {
+	    this.isCanceled = isCanceled;
+	}
 		
 }

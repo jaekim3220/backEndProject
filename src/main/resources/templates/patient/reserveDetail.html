@@ -87,7 +87,7 @@
     		    // 데이터 추출
     		    let paymentId = $("#paymentId").val();
     		    let merchantUid = $("#merchantUid").val();
-    		    let amount = $("#amount").val();
+    		    let cancelRequestAmount = $("#amount").val();
     		    let customerName = $("#customerName").val();
     		    let customerEmail = $("#customerEmail").val();
     		    let createdAt = $("#createdAt").val();
@@ -95,7 +95,7 @@
     		    console.log("결제 정보:");
     		    console.log("Payment ID :", paymentId);
     		    console.log("Merchant UID :", merchantUid);
-    		    console.log("Amount :", amount);
+    		    console.log("cancelRequestAmount :", cancelRequestAmount);
     		    console.log("Customer Name :", customerName);
     		    console.log("Customer Email :", customerEmail);
     		    console.log("Created At :", createdAt);
@@ -113,11 +113,11 @@
     			$.ajax({
     				// request
     				type: "POST",
-    				url: "/payment/cancel",
+    				url: "/patient/payments-cancel",
     				contentType: "application/json",
     				data: JSON.stringify({
     					merchant_uid: merchantUid, // 주문 번호
-    					cancel_request_amount: 100, // 환불 금액 (수정 필요)
+    					cancel_request_amount: cancelRequestAmount, // 환불 금액 (수정 필요)
     					reason: reason, // 결제 취소 사유
     					// refund_holder: "홍길동",
     					// refund_bank: "88",
@@ -135,10 +135,11 @@
     						alert("결제가 성공적으로 취소되었습니다.");
     						location.href = "/patient/reserve-list-view" // 예약 목록으로
     					} else {
-    						alert("결제 취소에 실패했습니다. : " + data.message);
+    						alert("결제 취소에 실패했습니다. : " + data.error_message);
     					}
     				},
     				error: function(e) {
+    					console.error(e);
     					alert("결제 취소 요청 중 오류가 발생했습니다.");
     				}
     			}) // AJAX 요청(결제취소) 종료

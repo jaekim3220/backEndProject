@@ -65,4 +65,31 @@ public class PaymentsBO {
 	}
 	
 	
+	// input : int id, int customerId, String isCanceled
+	// output : X
+	// @PostMapping("/payments-cancel")
+	public int updatePaymentsEntity(int id, int customerId, String isCanceled) {
+		
+		// 기존 데이터 조회 - breakpoint 
+	    PaymentsEntity existingPayment = paymentsRepository.findByIdAndCustomerId(id, customerId);
+	    if (existingPayment == null) {
+	        // 데이터가 존재하지 않으면 업데이트 실패
+	        log.warn("결제 정보가 존재하지 않습니다. ID: {}, CustomerId: {}", id, customerId);
+	        return 0;
+	    }
+	    
+	    // 변경할 필드 설정 - breakpoint
+	    existingPayment.setIsCanceled(isCanceled);
+	    log.info("Update 할 row 데이터 : {}", existingPayment);
+		
+		
+		// Save 할 updatePayments 데이터
+	    PaymentsEntity updatedPayment = paymentsRepository.save(existingPayment);
+	    log.info("업데이트된 PaymentsEntity: {}", updatedPayment);
+		
+	    // 성공 여부 반환
+		return updatedPayment != null ? 1 : 0;
+	}
+	
+	
 }

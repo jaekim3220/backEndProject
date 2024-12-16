@@ -354,5 +354,45 @@ public class PatientRestController {
 	}
 	
 	
+	// 결제 내역 취소 => payments Update
+	@PostMapping("/payments-cancel")
+	public Map<String, Object> paymentsCancel(
+			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
+			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
+			@RequestParam(value = "id", required = false) int id,
+			@RequestParam(value = "isCanceled", required = false) String isCanceled,
+			HttpSession session) {
+		
+		// session을 사용해 환자 고유 번호 추출(@PostMapping("/sign-in") 참고) - breakpoint 
+		Integer customerId = (Integer) session.getAttribute("customerId");
+		
+		Map<String, Object> result = new HashMap<>();
+		if(customerId == null) {
+			result.put("code", 403);
+			result.put("error_message", "로그인 후 사용 가능한 기능입니다. 로그인 해주세요.");
+			return result;
+		}
+		
+		
+		// DB UPDATE  - breakpoint
+		// payments.isCanceled column을 'canceled'로 update
+		int rowCount = paymentsBO.updatePaymentsEntity(id, customerId, isCanceled);
+		
+		
+		// Response(응답 값) - breakpoint
+		if(rowCount > 0) {
+			result.put("code", 200);
+			result.put("result", "결제 내역 삭제 성공.");			
+		} else {
+			result.put("code", 500);
+			result.put("result", "결제 내역 삭제 실패. 관리자한테 문의하세요.");
+		}
+		
+		
+		return result;
+		
+	}
+	
+	
 	
 }
