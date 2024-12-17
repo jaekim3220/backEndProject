@@ -61,16 +61,16 @@ public class PaymentGatewayServiceBO {
     /**
      * Access Token 요청에 사용될 DTO 클래스
      */
-    @Data
-    private static class AccessTokenRequest {
-        private String imp_key;
-        private String imp_secret;
-
-        public AccessTokenRequest(String impKey, String impSecret) {
-            this.imp_key = impKey;
-            this.imp_secret = impSecret;
-        }
-    }
+//    @Data
+//    private static class AccessTokenRequest {
+//        private String imp_key;
+//        private String imp_secret;
+//
+//        public AccessTokenRequest(String impKey, String impSecret) {
+//            this.imp_key = impKey;
+//            this.imp_secret = impSecret;
+//        }
+//    }
     
     /**
      * Access Token 발급 메서드
@@ -94,14 +94,14 @@ public class PaymentGatewayServiceBO {
     		String url = apiUrl + "/users/getToken";
             log.info("##### url : {} #####", url);
             
-            // 요청 DTO 생성
-            AccessTokenRequest tokenRequest = new AccessTokenRequest(apiKey, apiSecretKey);
-            log.info("##### tokenRequest : {} #####", tokenRequest);
+//            // 요청 DTO 생성
+//            AccessTokenRequest tokenRequest = new AccessTokenRequest(apiKey, apiSecretKey);
+//            log.info("##### tokenRequest : {} #####", tokenRequest);
     		
-//    		// 요청 본문에 필요한 데이터 생성, 저장
-//    		Map<String, String> requestBody = new HashMap<>();
-//    		requestBody.put("imp_key", apiKey); // API 키
-//    		requestBody.put("imp_secret", apiSecretKey); // 시크릿 키
+    		// 요청 본문에 필요한 데이터 생성, 저장
+    		Map<String, String> requestBody = new HashMap<>();
+    		requestBody.put("imp_key", apiKey); // API 키
+    		requestBody.put("imp_secret", apiSecretKey); // 시크릿 키
     		
     		// HTTP 요청 헤더 설정 (JSON 형식)
             HttpHeaders headers = new HttpHeaders();
@@ -109,7 +109,7 @@ public class PaymentGatewayServiceBO {
             log.info("##### HTTP 요청 헤더 : {} #####", headers);
             
             // 요청 본문을 JSON으로 직렬화
-            String jsonBody = objectMapper.writeValueAsString(tokenRequest);
+            String jsonBody = objectMapper.writeValueAsString(requestBody);
             HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
             log.info("##### HttpEntity 객체 : {} #####", request);
             
