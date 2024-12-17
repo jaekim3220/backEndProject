@@ -45,7 +45,7 @@ public class ReserversPayBO {
 	@Value("${portone.api-key}")
     private String apiKey; 
 	
-	@Value("${portone.api-secretk-key}")
+	@Value("${portone.api-secret-key}")
     private String apiSecretKey;
 	
 	@Value("${portone.imp-key}")

@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,12 +49,28 @@ public class PaymentGatewayServiceBO {
     private String apiKey; // PortOne API 키
 
 
-    @Value("${portone.api-secretk-key}")
+    @Value("${portone.api-secret-key}")
     private String apiSecretKey; // PortOne API 시크릿 키
     
     @Value("${portone.imp-key}")
     private String impKey; // PortOne imp key
 	
+    
+    private final ObjectMapper objectMapper = new ObjectMapper(); // JSON 직렬화를 위한 ObjectMapper
+
+    /**
+     * Access Token 요청에 사용될 DTO 클래스
+     */
+    @Data
+    private static class AccessTokenRequest {
+        private String imp_key;
+        private String imp_secret;
+
+        public AccessTokenRequest(String impKey, String impSecret) {
+            this.imp_key = impKey;
+            this.imp_secret = impSecret;
+        }
+    }
     
     /**
      * Access Token 발급 메서드
@@ -73,20 +92,30 @@ public class PaymentGatewayServiceBO {
     	try { 
     		// PortOne Access Token 발급 API URL
     		String url = apiUrl + "/users/getToken";
+            log.info("##### url : {} #####", url);
+            
+            // 요청 DTO 생성
+            AccessTokenRequest tokenRequest = new AccessTokenRequest(apiKey, apiSecretKey);
+            log.info("##### tokenRequest : {} #####", tokenRequest);
     		
-    		// 요청 본문에 필요한 데이터 생성, 저장
-    		Map<String, Object> requestBody = new HashMap<>();
-    		requestBody.put("imp_key", apiKey); // API 키
-    		requestBody.put("imp_secret", apiSecretKey); // 시크릿 키
+//    		// 요청 본문에 필요한 데이터 생성, 저장
+//    		Map<String, String> requestBody = new HashMap<>();
+//    		requestBody.put("imp_key", apiKey); // API 키
+//    		requestBody.put("imp_secret", apiSecretKey); // 시크릿 키
     		
     		// HTTP 요청 헤더 설정 (JSON 형식)
-    		HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             log.info("##### HTTP 요청 헤더 : {} #####", headers);
             
-            // 요청 데이터와 헤더를 합쳐 HttpEntity 객체 생성
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+            // 요청 본문을 JSON으로 직렬화
+            String jsonBody = objectMapper.writeValueAsString(tokenRequest);
+            HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
             log.info("##### HttpEntity 객체 : {} #####", request);
+            
+//            // 요청 데이터와 헤더를 합쳐 HttpEntity 객체 생성
+//            HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
+//            log.info("##### HttpEntity 객체 : {} #####", request);
             
             // RestTemplate을 사용해 POST 요청
             ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
