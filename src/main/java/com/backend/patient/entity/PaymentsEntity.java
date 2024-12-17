@@ -64,6 +64,9 @@ public class PaymentsEntity {
 	@Column(name = "isCanceled") // 카멜 케이스 설정
 	private String isCanceled;
 	
+	@Column(name = "cancelReason") // 카멜 케이스 설정
+	private String cancelReason;
+	
 	@CreationTimestamp // 값이 null 이어도 insert 되는 시간으로 설정
 	@Column(name = "createdAt") // 카멜 케이스 설정
 	private LocalDateTime createdAt;
@@ -74,6 +77,11 @@ public class PaymentsEntity {
 
 	public void setIsCanceled(String isCanceled) {
 	    this.isCanceled = isCanceled;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
+		
 	}
 		
 }

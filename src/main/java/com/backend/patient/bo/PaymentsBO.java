@@ -1,6 +1,7 @@
 package com.backend.patient.bo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,6 +28,7 @@ public class PaymentsBO {
 	// 생성자를 사용한 DI(Dependency Injection)
 	private final PaymentsRepository paymentsRepository;
 	private final PatientDeleteBO patientDeleteBO;
+	private final PaymentGatewayService paymentGatewayService;
 	
 	// input : 
 	// int doctorNum, int customerId, int amount,
@@ -79,7 +81,8 @@ public class PaymentsBO {
 	// input : int id, int customerId, String isCanceled
 	// output : X
 	// @PostMapping("/payments-cancel")
-	public int cancelPayment(int id, int customerId) {
+	@Transactional
+	public int cancelPayment(int id, int customerId, String cancelReason) {
 		
 		try {
 			// 기존 데이터 조회 - breakpoint 
@@ -90,8 +93,16 @@ public class PaymentsBO {
 				return 0;
 			}
 			
+			// 결제 시스템에 결제 취소 요청
+            boolean isCanceled = paymentGatewayService.cancelPayment(existingPayment.getMerchantUid(), cancelReason);
+            if (!isCanceled) {
+                log.error("결제 취소 실패. PaymentId: {}, MerchantUid: {}", id, existingPayment.getMerchantUid());
+                return 0;
+            }
+			
 			// 결제 취소 상태 업데이트 - breakpoint
 			existingPayment.setIsCanceled("결제취소");
+			existingPayment.setCancelReason(cancelReason);
 			log.info("existingPayment 데이터 : {}", existingPayment);
 			
 			// Save 할 updatePayments 데이터 - breakpoint

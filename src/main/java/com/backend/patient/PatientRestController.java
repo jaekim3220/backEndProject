@@ -373,11 +373,13 @@ public class PatientRestController {
 		
 		try {
 			// 요청 본문에서 id 값 추출
+			// {id=29, merchant_uid=20241216-ec7dc5c68d614b778250a69c1d6fac44, cancel_request_amount=100, reason=날짜 변경}
 			Integer id = Integer.parseInt((String) request.get("id"));
+			String cancelReason = (String) request.get("cancelReason");
 			
 			// DB UPDATE  - breakpoint
 			// payments.isCanceled column을 'canceled'로 update
-			int rowCount = paymentsBO.cancelPayment(id, customerId);
+			int rowCount = paymentsBO.cancelPayment(id, customerId, cancelReason);
 
 			// Response(응답 값) - breakpoint
 			if(rowCount > 0) {

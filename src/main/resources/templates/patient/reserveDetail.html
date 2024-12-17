@@ -101,9 +101,9 @@
     		    console.log("Created At :", createdAt);
     		    
     			// 환불 사유 입력
-    			let reason = prompt("환불 사유를 입력해 주세요.");
+    			let cancelReason = prompt("환불 사유를 입력해 주세요.");
     			
-    			if (!reason) {
+    			if (!cancelReason) {
     				alert("환불 사유가 입력되지 않아 취소를 중단합니다.");
     				return;
     			}
@@ -119,7 +119,7 @@
     					id:paymentId,
     					merchant_uid: merchantUid, // 주문 번호
     					cancel_request_amount: cancelRequestAmount, // 환불 금액 (수정 필요)
-    					reason: reason, // 결제 취소 사유
+    					cancelReason: cancelReason, // 결제 취소 사유
     					// refund_holder: "홍길동",
     					// refund_bank: "88",
     					// refund_account: "123456789"
