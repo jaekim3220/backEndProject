@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -357,9 +358,7 @@ public class PatientRestController {
 	// 결제 내역 취소 => payments Update
 	@PostMapping("/payments-cancel")
 	public Map<String, Object> paymentsCancel(
-			// 필수 파라미터 불러오기1 : value, required 생략 (추천) - null이 아닌 column
-			// 비필수 파라미터 불러오기2 : 기본값 설정 value, required 입력 (추천)
-			@RequestParam(value = "id", required = false) int id,
+			@RequestBody Map<String, Object> request,
 			HttpSession session) {
 		
 		// session을 사용해 환자 고유 번호 추출(@PostMapping("/sign-in") 참고) - breakpoint 
@@ -372,21 +371,29 @@ public class PatientRestController {
 			return result;
 		}
 		
-		
-		// DB UPDATE  - breakpoint
-		// payments.isCanceled column을 'canceled'로 update
-		// 
-		int rowCount = paymentsBO.cancelPayment(id, customerId);
-		
-		
-		// Response(응답 값) - breakpoint
-		if(rowCount > 0) {
-			result.put("code", 200);
-			result.put("result", "결제 내역 삭제 성공.");			
-		} else {
-			result.put("code", 500);
-			result.put("result", "결제 내역 삭제 실패. 관리자한테 문의하세요.");
-		}
+		try {
+			// 요청 본문에서 id 값 추출
+			Integer id = Integer.parseInt((String) request.get("id"));
+			
+			// DB UPDATE  - breakpoint
+			// payments.isCanceled column을 'canceled'로 update
+			int rowCount = paymentsBO.cancelPayment(id, customerId);
+
+			// Response(응답 값) - breakpoint
+			if(rowCount > 0) {
+				result.put("code", 200);
+				result.put("result", "결제 내역 삭제 성공.");			
+			} else {
+				result.put("code", 500);
+				result.put("result", "결제 내역 삭제 실패. 관리자한테 문의하세요.");
+			}
+		} catch (NumberFormatException e) {
+			result.put("code", 400);
+	        result.put("error_message", "잘못된 데이터 형식입니다. ID를 찾지 못했습니다.");
+		} catch (Exception e) {
+	        result.put("code", 500);
+	        result.put("error_message", "서버 오류가 발생했습니다. 관리자에게 문의해주세요.");
+	    }
 		
 		
 		return result;
