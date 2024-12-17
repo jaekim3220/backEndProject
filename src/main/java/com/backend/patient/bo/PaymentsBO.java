@@ -28,7 +28,7 @@ public class PaymentsBO {
 	// 생성자를 사용한 DI(Dependency Injection)
 	private final PaymentsRepository paymentsRepository;
 	private final PatientDeleteBO patientDeleteBO;
-	private final PaymentGatewayService paymentGatewayService;
+	private final PaymentGatewayServiceBO paymentGatewayService;
 	
 	// input : 
 	// int doctorNum, int customerId, int amount,
