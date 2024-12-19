@@ -79,7 +79,7 @@ public class PaymentGatewayServiceBO {
      * "access_token의 만료기한은 발행 시간 부터 30분입니다. 
      * 만료된 토큰으로 API 요청을 하면 401 Unauthorized 응답을 받습니다."
      */
-    private String getAccessToken() {
+    public String getAccessToken() {
     	// 현재 시간이 Access Token 만료 시간 이전이면, 기존 Token은 유효함
 //    	long currentTime = System.currentTimeMillis() / 1000; // 현재 시간 (초 단위)
 //    	if (accessToken != null && currentTime < tokenExpiredAt) {

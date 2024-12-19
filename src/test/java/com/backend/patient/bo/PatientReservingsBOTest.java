@@ -127,5 +127,13 @@ class PatientReservingsBOTest {
 		int a = paymentsBO.addPaymentsEntity(1, 2, 3, "merchantUid", "impUid", "customerName", "customerEmail", "customerPostcode");
 		log.info("%%%%% ROW 데이터 INSERT 결과 :  {} %%%%%", a);
 	}
+	
+	@Autowired
+	PaymentGatewayServiceBO	paymentGatewayServiceBO;
+	@Transactional
+	@Test
+	void 토큰생성() {
+		paymentGatewayServiceBO.getAccessToken();
+	}
 
 }
