@@ -19,7 +19,8 @@ public class FileManagerService {
 	
 	
 	// 실제 업로드 된 이미지가 저장될 서버 경로
-	public static final String FILE_UPLOAD_PATH = "D:\\JAVA\\0_backend_project\\workspace\\images/";
+	// public static final String FILE_UPLOAD_PATH = "D:\\JAVA\\0_backend_project\\workspace\\images/";
+	public final static String FILE_UPLOAD_PATH = "/home/ec2-user/images/";
 	
 	
 	// 메서드 생성
