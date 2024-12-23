@@ -3,7 +3,7 @@ services:
     image: mysql:5.7
     container_name: spring-mysql
     ports:
-      - 3307:3306  # DB 포트가 3306인 경우 둘 다 3306
+      - 3304:3306  # 외부:내부
     environment:
       MYSQL_ROOT_PASSWORD: "root"    # DB 비밀번호 확인
       MYSQL_DATABASE: "medinfo_241121"  # DB명 확인
@@ -16,13 +16,13 @@ services:
     container_name: myapp-test
     image: hellcat3220/myapp # 아까 생성한 이미지명 확인
     ports:
-      - "8080:8080"
+      - "8080:8080" # 외부:내부
     depends_on:
       - db
     volumes:
       - upload_volumes:/home/ec2-user/images
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/medinfo_241121?characterEncoding=UTF-8 # DB명 확인, 3307이었어도 3306인 것 주의
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/medinfo_241121?characterEncoding=UTF-8 # 내부 포트번호 일치
     networks:
       - myapp_network
 
