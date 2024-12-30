@@ -127,6 +127,9 @@
       },
   });
   ```
+https://github.com/user-attachments/assets/5c18c476-2a2f-4241-93e8-71d2092c63af
+
+
     
 ### 2. PortOne API
 
@@ -136,8 +139,12 @@
     - 결제가 성공적으로 완료되면, **AJAX 요청**으로 서버에 결제 데이터를 전송하고, 데이터베이스에 저장되도록 구현했습니다. 이를 통해 결제 내역의 관리와 추적이 가능하도록 기능을 구현했습니다.
     - **RestTemplate**을 사용해 **HTTP 통신을 진행**해 PortOne API 서버에 접속, PortOne API의 결제 취소 기능 구현에 필요한 액세스 **토큰을 발급** 받고 저장하는 기능을 구현했습니다.
     - 결제가 완료된 후에 예약 화면의 **예약하기 버튼**이 활성화 되도록 설정해 잘못된 예약 데이터가 DB에 저장되는 것을 방지했습니다.
-![결제창](https://github.com/user-attachments/assets/2e8c98e6-d77c-4673-af63-f2aa5db4d05f)
 
+      https://github.com/user-attachments/assets/c5510d88-e9b7-46b6-a9af-430153669988
+
+      https://github.com/user-attachments/assets/c65ac67d-e528-4252-afb2-52334d360499
+
+      ![결제창](https://github.com/user-attachments/assets/2e8c98e6-d77c-4673-af63-f2aa5db4d05f)
 
 ### 3. 트랜잭션 관리를 통한 데이터 안정성
 
